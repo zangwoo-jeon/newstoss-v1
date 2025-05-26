@@ -19,7 +19,7 @@ public class StockApiController {
     public EntityResponse<List<IndicesResponseDto>> getIndicesByMarket(@PathVariable String market,
                                                                        @RequestParam LocalDateTime startDate,
                                                                        @RequestParam LocalDateTime endDate) {
-
+        return null;
     }
 
 }
