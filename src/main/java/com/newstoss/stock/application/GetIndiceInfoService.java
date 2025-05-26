@@ -27,7 +27,7 @@ public class GetIndiceInfoService {
     private final RestTemplate restTemplate;
 
     public List<KisIndicePriceDto> getIndiceInfo(String market, LocalDateTime startDate, LocalDateTime endDate) {
-        String marketCode = "";
+        String marketCode;
         if (market == "KOSPI") {
             marketCode = "0001";
         } else{

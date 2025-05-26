@@ -42,7 +42,7 @@ public class StockInit implements CommandLineRunner {
         for (StockInitDto stockDto : stockDtos) {
             try {
                 KisStockDto stockInfo = getKisStockService.getStockInfo(stockDto.getStockCode());
-                String setCategoryName = "";
+                String setCategoryName;
                 if (stockInfo.getCategoryName() == null || stockInfo.getCategoryName().equals(" ")) {
                     setCategoryName = "기타";
                 } else {
