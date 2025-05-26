@@ -1,4 +1,5 @@
 HELP.md
+/.gradle/
 .gradle/
 build/
 !gradle/wrapper/gradle-wrapper.jar
@@ -39,3 +40,4 @@ out/
 application.yml
 application.yaml
 application.properties
+
