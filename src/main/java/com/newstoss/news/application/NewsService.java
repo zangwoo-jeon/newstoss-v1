@@ -1,8 +1,12 @@
 package com.newstoss.news.application;
 
 import com.newstoss.news.adapter.in.web.dto.NewsDTO;
-import com.newstoss.news.application.query.GetDetailNews;
-import com.newstoss.news.application.query.GetRealTimeNews;
+import com.newstoss.news.adapter.in.web.dto.RelatedNewsDTO;
+import com.newstoss.news.application.port.in.GetNewsDetailUseCase;
+import com.newstoss.news.application.port.in.GetRealTimeNewsUseCase;
+import com.newstoss.news.application.port.in.GetRelatedNewsUseCase;
+import com.newstoss.news.application.service.GetDetailNews;
+import com.newstoss.news.application.service.GetRealTimeNews;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -12,9 +16,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class NewsService {
 
-    private final GetRealTimeNews getRealTimeNews;
-    private final GetDetailNews getDetailNews;
-    private final Get
+    private final GetRealTimeNewsUseCase getRealTimeNews;
+    private final GetNewsDetailUseCase getDetailNews;
+    private final GetRelatedNewsUseCase getRelatedNews;
 
     public List<NewsDTO> getRealTimeNews(){
         return getRealTimeNews.exec();
@@ -22,5 +26,9 @@ public class NewsService {
 
     public NewsDTO getDetailNews(String newsId){
         return getDetailNews.exec(newsId);
+    }
+
+    public List<RelatedNewsDTO> getRelatedNew(String newsId) {
+        return getRelatedNews.exec(newsId);
     }
 }

@@ -3,9 +3,9 @@ package com.newstoss.news.adapter.out;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.newstoss.global.errorcode.NewsErrorCode;
 import com.newstoss.global.handler.CustomException;
-import com.newstoss.news.adapter.in.web.dto.NewsDTO;
 import com.newstoss.news.adapter.out.dto.MLNewsDTO;
-import com.newstoss.news.domain.MLNewsPort;
+import com.newstoss.news.adapter.out.dto.MLRelatedNewsDTO;
+import com.newstoss.news.application.port.out.MLNewsPort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
@@ -24,7 +24,6 @@ public class MLNewsAdapter implements MLNewsPort {
     private final RestTemplate restTemplate;
     private final ObjectMapper objectMapper;
     private static final String BASE_URL = "http://3.37.207.16:8000/news/";
-
     @Override
     public List<MLNewsDTO> getRealTimeNews() {
         try {
@@ -43,10 +42,27 @@ public class MLNewsAdapter implements MLNewsPort {
 
     @Override
     public MLNewsDTO getDetailNews(String newsId) {
+
         try {
-            return restTemplate.getForObject(BASE_URL + newsId, MLNewsDTO.class);
+            return restTemplate.getForObject(BASE_URL + newsId , MLNewsDTO.class);
         } catch (HttpClientErrorException.NotFound e) {
             throw new CustomException(NewsErrorCode.NEWS_NOT_FOUND);
+        } catch (Exception e) {
+            throw new CustomException(NewsErrorCode.ML_SERVER_ERROR);
+        }
+    }
+
+    @Override
+    public List<MLRelatedNewsDTO> getSimilarNews(String newsId) {
+        try {
+            ResponseEntity<List<MLRelatedNewsDTO>> response = restTemplate.exchange(
+                    BASE_URL + newsId + "/related/news",
+                    HttpMethod.GET,
+                    null,
+                    new ParameterizedTypeReference<>() {
+                    }
+            );
+            return Optional.ofNullable(response.getBody()).orElse(List.of());
         } catch (Exception e) {
             throw new CustomException(NewsErrorCode.ML_SERVER_ERROR);
         }
