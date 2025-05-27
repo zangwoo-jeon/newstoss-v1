@@ -25,7 +25,8 @@ public class SecurityConfig {
                 )
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/h2-console/**", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
-                        .requestMatchers("/api/auth/login", "/api/auth/register").permitAll() // 로그인, 회원가입은 인증 제외
+                        .requestMatchers("/**").permitAll() // 로그인, 회원가입은 인증 제외
+//                        .requestMatchers("/api/auth/login", "/api/auth/register").permitAll() // 로그인, 회원가입은 인증 제외
                         .anyRequest().authenticated() // 나머지는 인증 필요
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
