@@ -92,11 +92,13 @@ jobs:
         run: |
           echo "Checking environment variables..."
           echo "Spring Boot related:"
-          env | grep -E "SPRING_"
+          env | grep -E "SPRING_" || true
           echo "KIS API related:"
-          env | grep -E "KIS_"
+          env | grep -E "KIS_" || true
           echo "Test environment:"
-          env | grep -E "TEST_"
+          env | grep -E "TEST_" || true
+          echo "All environment variables:"
+          env | sort
 
       # 5. 애플리케이션 빌드 및 테스트 실행
       - name: Build and Run Tests
@@ -105,8 +107,20 @@ jobs:
           echo "Current directory: $(pwd)"
           echo "Directory contents:"
           ls -la
-          echo "Building and running tests with debug output..."
-          ./gradlew clean build --debug --stacktrace --info
+
+          echo "Gradle version:"
+          ./gradlew --version
+
+          echo "Running Gradle build with debug output..."
+          ./gradlew clean build --debug --stacktrace --info --console=plain
+
+          echo "Checking build output directory..."
+          ls -la build/
+          echo "Checking build/libs directory..."
+          ls -la build/libs/
+          echo "Checking build/reports directory..."
+          ls -la build/reports/
+
           echo "Build and test process completed"
         env:
           # Spring Boot 테스트가 services 블록의 DB 정보를 환경 변수에서 읽도록 구성되었다면 추가합니다.
@@ -136,8 +150,37 @@ jobs:
         if: always()
         run: |
           echo "Checking test results..."
+          echo "Current directory: $(pwd)"
+          echo "Directory contents:"
+          ls -la
+
+          echo "Checking build directory:"
+          if [ -d "build" ]; then
+            echo "Build directory exists"
+            ls -la build/
+          else
+            echo "Build directory not found"
+          fi
+
+          echo "Checking reports directory:"
+          if [ -d "build/reports" ]; then
+            echo "Reports directory exists"
+            ls -la build/reports/
+          else
+            echo "Reports directory not found"
+          fi
+
+          echo "Checking tests directory:"
+          if [ -d "build/reports/tests" ]; then
+            echo "Tests directory exists"
+            ls -la build/reports/tests/
+          else
+            echo "Tests directory not found"
+          fi
+
+          echo "Checking test directory:"
           if [ -d "build/reports/tests/test" ]; then
-            echo "Test report directory exists"
+            echo "Test directory exists"
             ls -la build/reports/tests/test/
             if [ -f "build/reports/tests/test/index.html" ]; then
               echo "Test report file exists"
@@ -145,7 +188,7 @@ jobs:
               echo "Test report file not found"
             fi
           else
-            echo "Test report directory not found"
+            echo "Test directory not found"
           fi
 
       # 6. (선택) 테스트 결과 보고
