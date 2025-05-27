@@ -81,8 +81,8 @@ jobs:
       # 5. 애플리케이션 빌드 및 테스트 실행
       - name: Build and Run Tests
         run: |
-          echo "Building and running tests..." # 메시지 수정
-          ./gradlew clean build # -x test 옵션 제거
+          echo "Building and running tests..."
+          ./gradlew clean build
 
         env:
           # Spring Boot 테스트가 services 블록의 DB 정보를 환경 변수에서 읽도록 구성되었다면 추가합니다.
@@ -152,7 +152,7 @@ jobs:
 
       # 11. Docker 이미지 빌드 및 ECR 푸시
       - name: Build and push Docker image to ECR
-        if: github.event_name == 'push' # Push 이벤트 시에만 실행
+        if: github.event_name == 'push'
         uses: docker/build-push-action@v5 # 최신 버전 확인 권장
         with:
           context: . # 빌드 컨텍스트를 저장소 루트로
