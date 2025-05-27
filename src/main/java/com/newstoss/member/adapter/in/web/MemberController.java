@@ -8,10 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
 import java.util.UUID;
 
-//@Tag(name = "알람 API", description = "알람 관련 API")
 @RequestMapping("/api/auth")
 @CrossOrigin("*")
 @RestController
