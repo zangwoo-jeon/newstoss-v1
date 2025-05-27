@@ -1,7 +1,9 @@
 package com.newstoss.member.adapter.in.web;
 
 import com.newstoss.global.response.SuccessResponse;
+import com.newstoss.member.adapter.in.web.dto.requestDTO.DuplicateDTO;
 import com.newstoss.member.adapter.in.web.dto.requestDTO.SignupRequestDTO;
+import com.newstoss.member.adapter.in.web.dto.requestDTO.WithdrawDTO;
 import com.newstoss.member.application.MemberService;
 import com.newstoss.member.domain.Member;
 import lombok.RequiredArgsConstructor;
@@ -24,8 +26,14 @@ public class MemberController {
     }
 
     @DeleteMapping("/withdraw")
-    public ResponseEntity<SuccessResponse<Object>> withdraw(@RequestBody UUID memberId){
-        memberService.withdraw(memberId);
+    public ResponseEntity<SuccessResponse<Object>> withdraw(@RequestBody WithdrawDTO withdrawDTO){
+        memberService.withdraw(withdrawDTO.getMemberId());
         return ResponseEntity.ok(new SuccessResponse<>(true, "회원탈퇴 성공", null));
+    }
+
+    @PostMapping("/duplicate")
+    public ResponseEntity<SuccessResponse<Object>> duplicateCheck(@RequestBody DuplicateDTO duplicateDTO){
+        boolean success = memberService.duplicateCheck(duplicateDTO.getAccount());
+        return ResponseEntity.ok(new SuccessResponse<>(true, "중복된 아이디 없음", null));
     }
 }

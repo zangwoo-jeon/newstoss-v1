@@ -16,15 +16,9 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class SignupService {
-    private final MemberQueryPort memberQueryPort;
     private final MemberCommandPort memberCommandPort;
 
     public Member exec(SignupRequestDTO signupRequestDTO){
-        Optional<Member> existing = memberQueryPort.findByAccount(signupRequestDTO.getAccount());
-        if (existing.isPresent()) {
-            throw new CustomException(UserErrorCode.DUPLICATE_ACCOUNT);
-        }
-
         Member member = Member.builder()
                 .memberId(UUID.randomUUID())
                 .account(signupRequestDTO.getAccount())
