@@ -5,18 +5,16 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class KisApiResponseDto<T> {
-    @JsonProperty("output")
-    private T output;
+public class KisIndicePrevDto {
+    @JsonProperty("bstp_nmix_prdy_vrss")
+    private String prev;
 
-    @JsonProperty("output1")
-    private T output1;
+    @JsonProperty("prdy_vrss_sign")
+    private String sign;
 
-    @JsonProperty("output2")
-    private List<T> output2;
+    @JsonProperty("bstp_nmix_prdy_ctrt")
+    private String prev_rate;
 }

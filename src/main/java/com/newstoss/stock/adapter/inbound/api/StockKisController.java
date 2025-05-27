@@ -1,0 +1,113 @@
+package com.newstoss.stock.adapter.inbound.api;
+
+import com.newstoss.global.response.SuccessResponse;
+import com.newstoss.stock.adapter.inbound.api.dto.response.IndicesResponseDto;
+import com.newstoss.stock.adapter.outbound.kis.dto.*;
+import com.newstoss.stock.adapter.outbound.kis.dto.response.KisApiResponseDto;
+import com.newstoss.stock.application.port.in.GetIndiceUseCase;
+import com.newstoss.stock.application.port.in.GetPopularStockUseCase;
+import com.newstoss.stock.application.port.in.GetStockInfoUseCase;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+
+@RestController
+@RequiredArgsConstructor
+@RequestMapping("/api/stocks")
+@Slf4j
+public class StockKisController {
+    private final GetIndiceUseCase getIndiceUseCase;
+    private final GetPopularStockUseCase getPopularStockUseCase;
+    private final GetStockInfoUseCase getStockInfoUseCase;
+    // 주요 지수 일자별 조회
+    /**
+     * 특정 시장의 주요 지수를 일자별로 조회합니다.
+     *
+     * @param market    조회할 시장 (예: KOSPI, KOSDAQ)
+     * @param startDate 조회 시작 날짜 (String 형식)
+     * @param endDate   조회 종료 날짜 (String 형식)
+     * @return 지수 정보와 가격 정보를 포함한 응답
+     */
+    @Operation(summary = "주요 지수 일자별 조회",
+            description = "특정 시장의 주요 지수를 일자별로 조회합니다. KOSPI와 KOSDAQ 시장을 지원합니다. " +
+                    "시작 날짜와 종료 날짜는 String 형식으로 입력해야 합니다.ex) 20250220",
+            responses = {
+            @ApiResponse(responseCode = "200", description = "지수 조회 성공",
+                    content = @Content(schema = @Schema(implementation = IndicesResponseDto.class)))
+            })
+    @GetMapping("/indices/{market}")
+    public ResponseEntity<?> getIndicesByMarket(@PathVariable String market,
+                                                @RequestParam String startDate,
+                                                @RequestParam String endDate) {
+        log.info("getIndicesByMarket called with market: {}, startDate: {}, endDate: {}", market, startDate, endDate);
+        KisApiResponseDto<KisIndicePrevDto, List<KisIndicePriceDto>> indiceInfo = getIndiceUseCase.getIndiceInfo(market, startDate, endDate);
+        IndicesResponseDto responseDto = new IndicesResponseDto(indiceInfo.getOutput1(),indiceInfo.getOutput2());
+        return ResponseEntity.ok(new SuccessResponse<>(true, "지수 조회 성공", responseDto ));
+    }
+
+    @Operation(summary = "상위 6개 인기 종목 조회",
+            description = "인기 종목을 조회합니다. 인기 종목은 KIS API를 통해 제공됩니다.",
+            responses = {
+            @ApiResponse(responseCode = "200", description = "인기 종목 조회 성공",
+                    content = @Content(schema = @Schema(implementation = KisPopularDto.class)))
+            })
+    @GetMapping("/popular")
+    public ResponseEntity<?> getPopularStocks() {
+        List<KisPopularDto> popularStocks = getPopularStockUseCase.getPopularStock().getOutput();
+        List<KisPopularDto> top6 = popularStocks.stream()
+                .sorted(Comparator.comparing(KisPopularDto::getRank))
+                .limit(6)
+                .toList();
+        return ResponseEntity.ok(new SuccessResponse<>(true, "상위 6개 인기종목을 조회하는데 성공하였습니다.", top6));
+    }
+
+    @Operation(summary = "주식 가격 조회",
+            description = "특정 주식의 현재 가격 또는 기간별 가격을 조회합니다. " +
+                    "기간을 지정하지 않으면 현재 가격을 반환하며, 기간을 지정하면 해당 기간의 주식 가격을 반환합니다.",
+            responses = {
+            @ApiResponse(responseCode = "200", description = "주식 가격 조회 성공",
+                    content = @Content(schema = @Schema(implementation = KisPeriodStockDto.class)))
+            })
+
+    @GetMapping("/{stockCode}")
+    public ResponseEntity<?> getStockPrice(@PathVariable String stockCode,
+                                           @RequestParam(required = false) String period) {
+        if (period == null || period.isEmpty()) {
+            String price = getStockInfoUseCase.getStockInfo(stockCode).getPrice();
+            return ResponseEntity.ok(new SuccessResponse<>(true, "주식 가격 조회 성공", price));
+        } else {
+            String today = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+            List<KisPeriodStockDto> stocks = new ArrayList<>();
+            if (period.equals("D")) {
+                log.info("period = D");
+                for (int i = 1; i < 5; i++) {
+                    String startDate = LocalDateTime.now()
+                            .minusDays(i*100)
+                            .format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+                    List<KisPeriodStockDto> stockInfoByPeriod = getStockInfoUseCase.getStockInfoByPeriod(stockCode, period, startDate, today);
+                    stocks.addAll(stockInfoByPeriod);
+                }
+                return ResponseEntity.ok(new SuccessResponse<>(true, "주식 일간 가격 조회 성공", stocks));
+            } else {
+                String startDate = LocalDateTime.now()
+                        .minusDays(100)
+                        .format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+                List<KisPeriodStockDto> stockInfoByPeriod = getStockInfoUseCase.getStockInfoByPeriod(stockCode, period, startDate, today);
+                return ResponseEntity.ok(new SuccessResponse<>(true, "주식 가격 조회 성공", stockInfoByPeriod));
+            }
+        }
+
+    }
+
+}
