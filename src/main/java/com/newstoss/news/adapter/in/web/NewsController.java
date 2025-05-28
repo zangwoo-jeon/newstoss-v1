@@ -6,12 +6,13 @@ import com.newstoss.news.adapter.in.web.dto.RelatedNewsDTO;
 import com.newstoss.news.adapter.in.web.dto.RelatedStockDTO;
 import com.newstoss.news.application.NewsService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
+@Tag(name = "뉴스 API", description = "뉴스 관련 API")
 @RequestMapping("/api/news")
 @CrossOrigin("*")
 @RestController
