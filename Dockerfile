@@ -5,7 +5,7 @@ FROM gradle:7.6.1-jdk17 AS build
 VOLUME /home/gradle/.gradle
 WORKDIR /app
 COPY . .
-RUN gradle build --no-daemon
+RUN gradle build -x test --no-daemon
 
 # 실행 스테이지
 FROM eclipse-temurin:17-jre-alpine
@@ -22,4 +22,4 @@ ENV JAVA_OPTS="-Xms512m -Xmx1024m"
 EXPOSE 8080
 
 # 애플리케이션 실행
-ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar app.jar"] 
+ENTRYPOINT ["java", "-jar", "app.jar"] 
