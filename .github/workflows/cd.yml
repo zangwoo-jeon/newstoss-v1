@@ -50,31 +50,32 @@ jobs:
       # appleboy/ssh-action 액션을 사용하여 EC2에 SSH 접속 후 배포 스크립트를 실행합니다.
       # EC2 접속 정보는 GitHub Secrets에 등록해야 합니다.
       - name: Deploy to EC2 via SSH
-        uses: appleboy/ssh-action@v0.1.10 # 최신 버전 확인 권장
+        uses: appleboy/ssh-action@v0.1.10
         with:
-          host: ${{ secrets.EC2_HOST }} # EC2 인스턴스의 퍼블릭 IP 또는 도메인
-          username: ${{ secrets.EC2_USER }} # EC2 인스턴스 접속 사용자 이름 (예: ubuntu, ec2-user)
-          key: ${{ secrets.EC2_SSH_KEY }} # GitHub Secrets에 저장된 SSH Private Key 내용
-          # secrets: EC2_PASSWORD # 암호로 접속 시 사용 (키 사용 권장)
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
           script: |
+            echo "Installing AWS CLI..."
+            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+            unzip awscliv2.zip
+            sudo ./aws/install
+            aws --version
 
             ECR_REGISTRY="${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com"
             ECR_REPOSITORY="newstoss/repo" 
 
-            IMAGE_TAG="${{ github.event.workflow_run.sha }}"
+            IMAGE_TAG="${{ github.event.workflow_run.head_sha }}"
             FULL_IMAGE_URI="${ECR_REGISTRY}/${ECR_REPOSITORY}:${IMAGE_TAG}"
-
 
             CONTAINER_NAME="newstoss-app" 
             HOST_APP_PORT=8080 
             CONTAINER_APP_PORT=8080 
 
-
             PG_CONTAINER_NAME="my-postgres" 
             DOCKER_NETWORK_NAME="my-app-network"
 
             echo "Deploying Docker image ${FULL_IMAGE_URI} to EC2..."
-
 
             echo "Logging in to ECR..."
             aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${ECR_REGISTRY} || { echo "ECR Login failed!"; exit 1; }
@@ -83,18 +84,15 @@ jobs:
             docker pull ${FULL_IMAGE_URI} || { echo "Docker pull failed!"; exit 1; }
 
             echo "Stopping and removing old container ${CONTAINER_NAME}..."
-            # 실행 중인 컨테이너가 있는지 확인하고 있으면 중지 및 삭제
             if docker ps -a -f name=${CONTAINER_NAME} -q | grep .; then
-              docker stop ${CONTAINER_NAME} || true # 중지 실패해도 다음 단계 진행
-              docker rm ${CONTAINER_NAME} || true  # 삭제 실패해도 다음 단계 진행
+              docker stop ${CONTAINER_NAME} || true
+              docker rm ${CONTAINER_NAME} || true
               echo "Old container stopped and removed."
             else
               echo "No existing container ${CONTAINER_NAME} found."
             fi
 
-
             echo "Running new container ${CONTAINER_NAME}..."
-
             docker run -d \
               -p ${HOST_APP_PORT}:${CONTAINER_APP_PORT} \
               --name ${CONTAINER_NAME} \
@@ -106,12 +104,11 @@ jobs:
               -e KIS_APPSECRET="${{ secrets.KIS_APP_SECRET }}" \
               -e KIS_GRANT_TYPE=client_credentials \
               -e KIS_TOKEN_URL=https://openapi.koreainvestment.com:9443/oauth2/token \
-              # 필요한 다른 운영 환경 변수 추가...
               ${FULL_IMAGE_URI} || { echo "Docker run failed!"; exit 1; }
 
             echo "New container ${CONTAINER_NAME} started with image ${FULL_IMAGE_URI}."
 
-            sleep 20 # 컨테이너 시작 및 앱 구동 시간 고려하여 충분히 대기
+            sleep 20
             echo "Checking container status..."
             docker ps -f name=${CONTAINER_NAME} || { echo "Container is not running!"; exit 1; }
 
@@ -119,6 +116,6 @@ jobs:
             curl -f http://127.0.0.1:${HOST_APP_PORT}/actuator/health || { echo "Health check failed after deployment!"; exit 1; }
 
             echo "Pruning unused Docker images..."
-            docker image prune -f || true # 이미지 정리 실패해도 배포 자체는 성공으로 간주 (선택 사항)
+            docker image prune -f || true
 
             echo "Deployment completed successfully!"
