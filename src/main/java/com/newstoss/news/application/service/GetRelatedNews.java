@@ -11,7 +11,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class GetRelatedNews implements GetRelatedNewsUseCase {
-    private MLNewsPort mlNewsPort;
+    private final MLNewsPort mlNewsPort;
 
     @Override
     public List<RelatedNewsDTO> exec(String newsId) {

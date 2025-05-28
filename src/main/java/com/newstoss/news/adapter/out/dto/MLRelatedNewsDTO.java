@@ -17,13 +17,5 @@ public class MLRelatedNewsDTO {
     private String title;
     private String content;
     private String url;
-    private Long similarity;
+    private double similarity;
 }
-//  {
-//          "news_id": "string",
-//          "date": "2025-05-27",
-//          "title": "string",
-//          "content": "string",
-//          "url": "string",
-//          "similarity": 0
-//          }

@@ -15,5 +15,5 @@ public class RelatedNewsDTO {
     private String title;
     private String content;
     private String url;
-    private Long similarity;
+    private double similarity;
 }
