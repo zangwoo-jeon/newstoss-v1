@@ -85,6 +85,15 @@ jobs:
             PG_CONTAINER_NAME="my-postgres" 
             DOCKER_NETWORK_NAME="my-app-network"
 
+            # Docker 네트워크 생성 (없는 경우)
+            echo "Creating Docker network if not exists..."
+            if ! docker network ls | grep -q ${DOCKER_NETWORK_NAME}; then
+              docker network create ${DOCKER_NETWORK_NAME}
+              echo "Docker network ${DOCKER_NETWORK_NAME} created."
+            else
+              echo "Docker network ${DOCKER_NETWORK_NAME} already exists."
+            fi
+
             echo "Deploying Docker image ${FULL_IMAGE_URI} to EC2..."
 
             echo "Logging in to ECR..."
