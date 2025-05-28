@@ -66,7 +66,6 @@ jobs:
             sudo ./aws/install
             aws --version
 
-            # AWS 자격 증명 설정
             echo "Configuring AWS credentials..."
             aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
             aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -85,7 +84,6 @@ jobs:
             PG_CONTAINER_NAME="my-postgres" 
             DOCKER_NETWORK_NAME="my-app-network"
 
-            # Docker 네트워크 생성 (없는 경우)
             echo "Creating Docker network if not exists..."
             if ! docker network ls | grep -q ${DOCKER_NETWORK_NAME}; then
               docker network create ${DOCKER_NETWORK_NAME}
@@ -127,12 +125,28 @@ jobs:
 
             echo "New container ${CONTAINER_NAME} started with image ${FULL_IMAGE_URI}."
 
-            sleep 20
+            echo "Checking container logs..."
+            docker logs ${CONTAINER_NAME}
+
             echo "Checking container status..."
-            docker ps -f name=${CONTAINER_NAME} || { echo "Container is not running!"; exit 1; }
+            if ! docker ps -f name=${CONTAINER_NAME} | grep -q ${CONTAINER_NAME}; then
+              echo "Container is not running. Checking exit code..."
+              EXIT_CODE=$(docker inspect ${CONTAINER_NAME} --format='{{.State.ExitCode}}')
+              echo "Container exit code: ${EXIT_CODE}"
+              echo "Container logs:"
+              docker logs ${CONTAINER_NAME}
+              exit 1
+            fi
+
+            echo "Waiting for application to start..."
+            sleep 30
 
             echo "Performing health check..."
-            curl -f http://127.0.0.1:${HOST_APP_PORT}/actuator/health || { echo "Health check failed after deployment!"; exit 1; }
+            curl -v http://127.0.0.1:${HOST_APP_PORT}/actuator/health || { 
+              echo "Health check failed. Container logs:"
+              docker logs ${CONTAINER_NAME}
+              exit 1 
+            }
 
             echo "Pruning unused Docker images..."
             docker image prune -f || true
