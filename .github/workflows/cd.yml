@@ -11,6 +11,11 @@ on:
     branches:
       - main
 
+# OIDC 인증을 위한 권한 설정
+permissions:
+  id-token: write
+  contents: read
+
 jobs:
   deploy:
     name: Deploy to EC2 via Docker
