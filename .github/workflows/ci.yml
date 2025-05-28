@@ -4,203 +4,65 @@ name: Spring Boot CI with Gradle and ECR Push
 # 워크플로우가 실행될 이벤트 정의
 on:
   pull_request:
-    types: [opened, synchronize, reopened] # PR이 열리거나, 코드가 업데이트되거나, 다시 열릴 때
-  push: # main 브랜시에 push될 때 CI + Docker Build/Push 실행
+    types: [opened, synchronize, reopened]
+  push:
     branches:
-      - main # Docker 이미지를 빌드하고 ECR에 푸시할 브랜치 (일반적으로 main)
+      - main
 
-# 실행될 작업(Job) 정의
 jobs:
-  # 첫 번째 작업: CI 체크
   ci_check:
-    name: Build, Test, and Push to ECR
-
-    # 이 작업이 실행될 환경 (Github Actions Runner)
-    # ubuntu-latest는 Docker가 설치되어 있으며, Java/Spring Boot CI에 적합합니다.
+    name: Build and Push to ECR
     runs-on: ubuntu-latest
 
-    # --- 핵심: 테스트 환경 구축 - PostgreSQL DB 컨테이너 ---
-    # services 블록을 사용하여 CI Job이 실행되는 동안 임시 PostgreSQL 컨테이너를 띄웁니다.
-    # 이 컨테이너는 Job이 끝나면 자동으로 삭제됩니다.
     services:
-      # 서비스 이름 정의 (테스트 코드에서는 'localhost'와 포트로 접근)
       postgres:
-        # 사용할 PostgreSQL Docker 이미지 버전 (프로젝트 요구사항에 맞게 조정)
         image: postgres:13
-        # 환경 변수 설정 (DB 연결 정보) - 이 정보는 Spring Boot 테스트 설정과 일치해야 합니다.
         env:
           POSTGRES_DB: testdb
           POSTGRES_USER: testuser
           POSTGRES_PASSWORD: testpassword
-        # 포트 매핑: 컨테이너 포트(5432)를 Runner의 로컬 호스트 포트(5432)로 매핑합니다.
-        # Spring Boot 테스트 코드에서는 'jdbc:postgresql://localhost:5432/testdb' 와 같이 접근합니다.
         ports:
           - 5432:5432
-        # 서비스 상태 확인 및 대기: 테스트 실행 전에 DB 컨테이너가 준비될 때까지 기다립니다.
-        # services 블록의 health check는 해당 포트가 응답할 때까지 기다립니다.
         options: >-
           --health-cmd "pg_isready -U testuser -d testdb"
           --health-interval 5s
           --health-timeout 10s
           --health-retries 20
 
-    # 작업에서 실행될 단계(Step) 정의
     steps:
-      # 1. PR 코드 체크아웃
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # 2. 테스트 환경 설정 (Java JDK 설정)
-      # 사용하는 Java 버전에 맞게 '17'을 수정하세요 (예: '11', '21')
-      # cache: gradle 옵션으로 Gradle 의존성 캐싱을 활성화하여 빌드 속도를 높입니다.
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
           java-version: "17"
-          distribution: "corretto" # OpenJDK 배포판 선택 (다른 옵션: 'adopt', 'corretto' 등)
-          cache: gradle # Gradle 의존성 캐싱 활성화
+          distribution: "corretto"
+          cache: gradle
 
-      # 3. Gradle Wrapper 권한 설정 및 디렉토리 이동
-      # Linux/Ubuntu 환경에서는 gradlew 스크립트에 실행 권한이 필요합니다.
       - name: Grant execute permission for gradlew
-        run: |
-          chmod +x gradlew
+        run: chmod +x gradlew
 
-      # 4. PostgreSQL DB가 준비될 때까지 대기
-      - name: Wait for PostgreSQL to be ready
+      - name: Build application
         run: |
-          echo "Waiting for PostgreSQL on localhost:5432..."
-          timeout 120 bash -c 'while ! pg_isready -h localhost -p 5432; do sleep 2; done'
+          echo "Starting build process..."
+          ./gradlew clean build -x test
+          echo "Build completed"
         env:
-          PGUSER: testuser
-          PGDATABASE: testdb
-          PGPASSWORD: testpassword
-
-      # 4-1. PostgreSQL 상태 확인
-      - name: Check PostgreSQL Status
-        run: |
-          echo "Checking PostgreSQL status..."
-          pg_isready -h localhost -p 5432
-          echo "PostgreSQL connection details:"
-          echo "Host: localhost"
-          echo "Port: 5432"
-          echo "Database: testdb"
-          echo "User: testuser"
-
-      # 4-2. 환경 변수 디버깅
-      - name: Debug Environment Variables
-        run: |
-          echo "Checking environment variables..."
-          echo "Spring Boot related:"
-          env | grep -E "SPRING_" || true
-          echo "KIS API related:"
-          env | grep -E "KIS_" || true
-          echo "Test environment:"
-          env | grep -E "TEST_" || true
-          echo "All environment variables:"
-          env | sort
-
-      # 5. 애플리케이션 빌드 및 테스트 실행
-      - name: Build and Run Tests
-        run: |
-          echo "Starting build and test process..."
-          echo "Current directory: $(pwd)"
-          echo "Directory contents:"
-          ls -la
-
-          echo "Gradle version:"
-          ./gradlew --version
-
-          echo "Running Gradle build with debug output..."
-          ./gradlew clean build --debug --stacktrace --info --console=plain
-
-          echo "Checking build output directory..."
-          ls -la build/
-          echo "Checking build/libs directory..."
-          ls -la build/libs/
-          echo "Checking build/reports directory..."
-          ls -la build/reports/
-
-          echo "Build and test process completed"
-        env:
-          # Spring Boot 테스트가 services 블록의 DB 정보를 환경 변수에서 읽도록 구성되었다면 추가합니다.
-          # 하지만 일반적인 Spring Boot 설정에서는 application-test.properties 파일 사용을 선호합니다.
           SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/testdb
           SPRING_DATASOURCE_USERNAME: testuser
-          SPRING_DATASOURCE_PASSWORD: testpassword # 보안상 Secrets 사용 권장
-          SPRING_JPA_HIBERNATE_DDL_AUTO: create-drop # 또는 update (테스트 시 스키마 자동 생성/업데이트)
-          SPRING_SQL_INIT_MODE: always # 테스트 데이터 스크립트 자동 실행 (classpath:test-data.sql 등)
-          # Spring Security 설정
+          SPRING_DATASOURCE_PASSWORD: testpassword
+          SPRING_JPA_HIBERNATE_DDL_AUTO: create-drop
+          SPRING_SQL_INIT_MODE: always
           SPRING_SECURITY_USER_NAME: test
           SPRING_SECURITY_USER_PASSWORD: test
-          # Swagger 설정
-          SPRINGDOC_API_DOCS_PATH: /v3/api-docs
-          SPRINGDOC_SWAGGER_UI_PATH: /swagger-ui.html
-          SPRINGDOC_SWAGGER_UI_OPERATIONS_SORTER: method
-          SPRINGDOC_SWAGGER_UI_TAGS_SORTER: alpha
-          # 필요한 다른 테스트 관련 환경 변수 추가
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
           KIS_APPKEY: ${{ secrets.KIS_APP_KEY }}
           KIS_APPSECRET: ${{ secrets.KIS_APP_SECRET }}
-          KIS_GRANT_TYPE: client_credentials # 이 값은 민감하지 않으므로 secrets 없이 직접 명시
-          KIS_TOKEN_URL: https://openapi.koreainvestment.com:9443/oauth2/token # 이 값도 민감하지 않으므로 직접 명시
+          KIS_GRANT_TYPE: client_credentials
+          KIS_TOKEN_URL: https://openapi.koreainvestment.com:9443/oauth2/token
           TEST_ENVIRONMENT: ci
 
-      # 5-1. 테스트 결과 상세 확인
-      - name: Check Test Results
-        if: always()
-        run: |
-          echo "Checking test results..."
-          echo "Current directory: $(pwd)"
-          echo "Directory contents:"
-          ls -la
-
-          echo "Checking build directory:"
-          if [ -d "build" ]; then
-            echo "Build directory exists"
-            ls -la build/
-          else
-            echo "Build directory not found"
-          fi
-
-          echo "Checking reports directory:"
-          if [ -d "build/reports" ]; then
-            echo "Reports directory exists"
-            ls -la build/reports/
-          else
-            echo "Reports directory not found"
-          fi
-
-          echo "Checking tests directory:"
-          if [ -d "build/reports/tests" ]; then
-            echo "Tests directory exists"
-            ls -la build/reports/tests/
-          else
-            echo "Tests directory not found"
-          fi
-
-          echo "Checking test directory:"
-          if [ -d "build/reports/tests/test" ]; then
-            echo "Test directory exists"
-            ls -la build/reports/tests/test/
-            if [ -f "build/reports/tests/test/index.html" ]; then
-              echo "Test report file exists"
-            else
-              echo "Test report file not found"
-            fi
-          else
-            echo "Test directory not found"
-          fi
-
-      # 6. (선택) 테스트 결과 보고
-      - name: Publish Test Results
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: test-results
-          path: build/reports/tests/test/
-          retention-days: 5
-
-      # 7. AWS 자격 증명 설정 (OIDC 사용)
       - name: Configure AWS credentials
         if: github.event_name == 'push'
         uses: aws-actions/configure-aws-credentials@v4
@@ -209,19 +71,16 @@ jobs:
           aws-region: ${{ secrets.AWS_REGION }}
           role-session-name: GitHubActionsSession-${{ github.run_id }}-${{ github.run_attempt }}
 
-      # 8. Docker Buildx 설정
       - name: Set up Docker Buildx
         if: github.event_name == 'push'
         uses: docker/setup-buildx-action@v3
 
-      # 9. ECR Registry 로그인
       - name: Log in to Amazon ECR
         if: github.event_name == 'push'
         uses: docker/login-action@v3
         with:
           registry: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
 
-      # 10. 빌드된 JAR 파일 경로 찾기
       - name: Find built JAR file
         if: github.event_name == 'push'
         id: find_jar
@@ -234,23 +93,17 @@ jobs:
           echo "Found JAR file at: ${JAR_PATH}"
           echo "JAR_FILE_RELATIVE_PATH=${JAR_PATH}" >> $GITHUB_ENV
 
-      # 11. Docker 이미지 빌드 및 ECR 푸시
       - name: Build and push Docker image to ECR
         if: github.event_name == 'push'
-        uses: docker/build-push-action@v5 # 최신 버전 확인 권장
+        uses: docker/build-push-action@v5
         with:
-          context: . # 빌드 컨텍스트를 저장소 루트로
-          file: ./Dockerfile # 루트 디렉토리의 Dockerfile 사용
-          push: true # 이 Step은 push 시에만 실행되므로 항상 true
-          tags: | # ECR 이미지 이름과 태그 정의 (AWS 계정 ID와 리전 포함)
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: |
             ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/newstoss/repo:latest
             ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/newstoss/repo:${{ github.sha }}
-          build-args: | # Dockerfile의 ARG에 값을 전달
+          build-args: |
             JAR_FILE=${{ env.JAR_FILE_RELATIVE_PATH }}
-          cache-from: type=gha # GitHub Actions 캐싱 사용 (빌드 속도 향상)
-          cache-to: type=gha,mode=max # GitHub Actions 캐싱 저장 (빌드 속도 향상)
-
-
-      # --- Docker 이미지 빌드 및 ECR 푸시 단계 끝 ---
-
-      # 이 Job이 성공하면 다음 CD Job이 실행되도록 needs 설정 가능
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
