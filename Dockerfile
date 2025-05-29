@@ -22,10 +22,9 @@ COPY --from=build /app/build/libs/*.jar app.jar
 ENV TZ=Asia/Seoul
 ENV JAVA_OPTS="-Xms512m -Xmx1024m -Duser.timezone=Asia/Seoul"
 ENV SPRING_PROFILES_ACTIVE=prod
-ENV INIT_ENABLED=false
 
 # 포트 노출
 EXPOSE 8080
 
 # 애플리케이션 실행
-ENTRYPOINT ["java", "-jar", "app.jar"] 
+ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar app.jar"] 
