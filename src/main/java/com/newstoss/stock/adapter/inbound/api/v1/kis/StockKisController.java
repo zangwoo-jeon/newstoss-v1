@@ -1,7 +1,7 @@
-package com.newstoss.stock.adapter.inbound.api;
+package com.newstoss.stock.adapter.inbound.api.v1.kis;
 
 import com.newstoss.global.response.SuccessResponse;
-import com.newstoss.stock.adapter.inbound.api.dto.response.IndicesResponseDto;
+import com.newstoss.stock.adapter.inbound.dto.response.IndicesResponseDto;
 import com.newstoss.stock.adapter.outbound.kis.dto.*;
 import com.newstoss.stock.adapter.outbound.kis.dto.response.KisApiResponseDto;
 import com.newstoss.stock.application.port.in.GetIndiceUseCase;
@@ -24,7 +24,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/stocks")
+@RequestMapping("/api/v1/stocks")
 @Slf4j
 public class StockKisController {
     private final GetIndiceUseCase getIndiceUseCase;
@@ -66,7 +66,7 @@ public class StockKisController {
     public ResponseEntity<?> getPopularStocks() {
         List<KisPopularDto> popularStocks = getPopularStockUseCase.getPopularStock().getOutput();
         List<KisPopularDto> top6 = popularStocks.stream()
-                .sorted(Comparator.comparing(KisPopularDto::getRank))
+                .sorted(Comparator.comparing(popularStock -> Integer.parseInt(popularStock.getRank())))
                 .limit(6)
                 .toList();
         return ResponseEntity.ok(new SuccessResponse<>(true, "상위 6개 인기종목을 조회하는데 성공하였습니다.", top6));
@@ -101,7 +101,7 @@ public class StockKisController {
                 return ResponseEntity.ok(new SuccessResponse<>(true, "주식 일간 가격 조회 성공", stocks));
             } else {
                 String startDate = LocalDateTime.now()
-                        .minusDays(100)
+                        .minusMonths(100)
                         .format(DateTimeFormatter.ofPattern("yyyyMMdd"));
                 List<KisPeriodStockDto> stockInfoByPeriod = getStockInfoUseCase.getStockInfoByPeriod(stockCode, period, startDate, today);
                 return ResponseEntity.ok(new SuccessResponse<>(true, "주식 가격 조회 성공", stockInfoByPeriod));
