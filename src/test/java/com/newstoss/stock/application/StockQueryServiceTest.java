@@ -3,6 +3,11 @@ package com.newstoss.stock.application;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.newstoss.global.kis.KisTokenManager;
 import com.newstoss.global.kis.KisTokenProperties;
+import com.newstoss.stock.adapter.outbound.kis.dto.KisHTS20Stock;
+import com.newstoss.stock.adapter.outbound.kis.dto.response.KisApiResponseDto;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -18,6 +23,8 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.http.HttpMethod.GET;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
 
 @SpringBootTest
 @Transactional
@@ -66,16 +73,16 @@ class StockQueryServiceTest {
                 .queryParam("FID_MRKT_CLS_CODE", "K") // KOSPI
                 .queryParam("FID_BLNG_CLS_CODE", "0"); // 전체
 
-        ResponseEntity<ResponseDto<examDto>> response = restTemplate.exchange(
+        ResponseEntity<String> response = restTemplate.exchange(
                 builder.toUriString(), 
-                HttpMethod.GET,
+                GET,
                 entity, 
                 new ParameterizedTypeReference<>() {});
-
-        List<examDto> output2 = response.getBody().getOutput2();
-        for (examDto Dto : output2) {
-            System.out.println("Dto.getName() = " + Dto.getName());
-        }
+        System.out.println("Raw response: " + response.getBody());
+//        List<examDto> output2 = response.getBody().getOutput2();
+//        for (examDto Dto : output2) {
+//            System.out.println("Dto.getName() = " + Dto.getName());
+//        }
 
     }
 
@@ -95,5 +102,40 @@ class StockQueryServiceTest {
         public List<T> getOutput2() {
             return Output2;
         }
+    }
+
+    @Test
+    public void HTS20() {
+        //given
+        String token = kisTokenManager.getToken();
+        String url = "https://openapi.koreainvestment.com:9443/uapi/domestic-stock/v1/ranking/hts-top-view";
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(APPLICATION_JSON);
+        headers.set("authorization", "Bearer " + token);
+        headers.set("appkey", kisTokenProperties.getAppkey());
+        headers.set("appsecret", kisTokenProperties.getAppsecret());
+        headers.set("tr_id", "FHPST02350000");
+        headers.set("custtype", "P");
+
+        HttpEntity<String> entity = new HttpEntity<>(headers);
+        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url).queryParam("");
+
+        ResponseEntity<String> response = restTemplate.exchange(
+                url,
+                GET,
+                entity,
+                new ParameterizedTypeReference<>() {}
+        );
+        System.out.println("Raw response: " + response.getBody());
+
+        //when
+        //then
+    }
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    static class ResponseOutput1<T> {
+        @JsonProperty("output1")
+        private List<T> output2;
     }
 }

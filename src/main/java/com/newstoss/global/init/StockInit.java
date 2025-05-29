@@ -1,7 +1,7 @@
 package com.newstoss.global.init;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.newstoss.stock.adapter.outbound.kis.GetKisStockService;
+import com.newstoss.stock.application.GetKisStockService;
 import com.newstoss.stock.adapter.outbound.kis.dto.KisStockDto;
 import com.newstoss.stock.adapter.outbound.persistence.repository.StockRepository;
 import com.newstoss.stock.entity.Stock;

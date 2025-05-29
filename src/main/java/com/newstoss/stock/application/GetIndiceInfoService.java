@@ -2,7 +2,6 @@ package com.newstoss.stock.application;
 
 import com.newstoss.global.kis.KisTokenManager;
 import com.newstoss.global.kis.KisTokenProperties;
-import com.newstoss.global.kis.TokenSchedular;
 import com.newstoss.stock.adapter.outbound.kis.dto.response.KisApiResponseDto;
 import com.newstoss.stock.adapter.outbound.kis.dto.KisIndicePrevDto;
 import com.newstoss.stock.adapter.outbound.kis.dto.KisIndicePriceDto;
@@ -23,7 +22,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 public class GetIndiceInfoService implements GetIndiceUseCase {
-    private final TokenSchedular tokenSchedular;
+    private final KisTokenManager kisTokenManager;
     private final KisTokenProperties kisTokenProperties;
     private final RestTemplate restTemplate;
 
@@ -36,7 +35,7 @@ public class GetIndiceInfoService implements GetIndiceUseCase {
             marketCode = "1001";
         }
         log.info("MARKETCODE: {}", marketCode);
-        String token = tokenSchedular.getToken();
+        String token = kisTokenManager.getToken();
         String url = "https://openapi.koreainvestment.com:9443/uapi/domestic-stock/v1/quotations/inquire-daily-indexchartprice";
 
         HttpHeaders headers = new HttpHeaders();
