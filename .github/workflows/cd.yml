@@ -99,8 +99,7 @@ jobs:
 
             echo "Pulling new image ${FULL_IMAGE_URI}..."
             docker pull ${FULL_IMAGE_URI} || { echo "Docker pull failed!"; exit 1; }
-            
-            # 컨테이너를 시작하기 전에 기존 컨테이너를 확실하게 제거
+
             if docker ps -a -f name=${CONTAINER_NAME} -q | grep -q .; then
               echo "Forcefully stopping and removing existing container ${CONTAINER_NAME}..."
               docker stop ${CONTAINER_NAME} || true
@@ -120,6 +119,8 @@ jobs:
               -e KIS_APPSECRET="${{ secrets.KIS_APP_SECRET }}" \
               -e KIS_GRANT_TYPE=client_credentials \
               -e KIS_TOKEN_URL=https://openapi.koreainvestment.com:9443/oauth2/token \
+              -e JWT_SECRET="${{ secrets.JWT_SECRET }}" \
+              -e INIT_ENABLED=false \
               ${FULL_IMAGE_URI} || { echo "Docker run failed!"; exit 1; }
 
             echo "New container ${CONTAINER_NAME} started with image ${FULL_IMAGE_URI}."
@@ -134,11 +135,11 @@ jobs:
               exit 1
             fi
 
- 
+
             echo "Container is running. Checking logs..."
             docker logs ${CONTAINER_NAME}
 
- 
+
             echo "Waiting for application to start..."
             sleep 30
 
@@ -146,7 +147,7 @@ jobs:
             echo "Checking port binding..."
             docker port ${CONTAINER_NAME}
 
-    
+
             echo "Performing health check..."
             MAX_RETRIES=3
             RETRY_INTERVAL=10
