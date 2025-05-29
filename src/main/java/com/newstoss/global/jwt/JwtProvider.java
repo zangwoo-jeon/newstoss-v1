@@ -1,10 +1,9 @@
 package com.newstoss.global.jwt;
 
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.JwtException;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import com.newstoss.global.errorcode.JwtErrorCode;
+import com.newstoss.global.handler.CustomException;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -43,8 +42,16 @@ public class JwtProvider {
                     .build()
                     .parseClaimsJws(token);
             return true;
-        } catch (JwtException e) {
-            return false;
+        } catch (ExpiredJwtException e) {
+            throw new CustomException(JwtErrorCode.EXPIRED_TOKEN);
+        } catch (UnsupportedJwtException e) {
+            throw new CustomException(JwtErrorCode.UNSUPPORTED_TOKEN);
+        } catch (MalformedJwtException e) {
+            throw new CustomException(JwtErrorCode.MALFORMED_TOKEN);
+        } catch (SecurityException e) {
+            throw new CustomException(JwtErrorCode.INVALID_TOKEN);
+        } catch (IllegalArgumentException e) {
+            throw new CustomException(JwtErrorCode.MISSING_TOKEN);
         }
     }
 
