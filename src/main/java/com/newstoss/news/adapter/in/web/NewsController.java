@@ -3,6 +3,7 @@ package com.newstoss.news.adapter.in.web;
 import com.newstoss.global.response.SuccessResponse;
 import com.newstoss.news.adapter.in.web.dto.NewsDTO;
 import com.newstoss.news.adapter.in.web.dto.RelatedNewsDTO;
+import com.newstoss.news.adapter.in.web.dto.RelatedReportDTO;
 import com.newstoss.news.adapter.in.web.dto.RelatedStockDTO;
 import com.newstoss.news.application.NewsService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -46,5 +47,12 @@ public class NewsController {
     public ResponseEntity<SuccessResponse<Object>> relatedStocks(@RequestParam String newsId){
         List<RelatedStockDTO> stocks = newsService.getRelatedStock(newsId);
         return ResponseEntity.ok(new SuccessResponse<>(true, "뉴스 관련 종목 조회 성공", stocks));
+    }
+
+    @Operation(summary = "뉴스 관련 리포트 조회", description = "특정 뉴스와 연관된 리포트 리스트를 조회합니다.(5개)")
+    @GetMapping("/related/report")
+    public ResponseEntity<SuccessResponse<Object>> relatedReport(@RequestParam String newsId){
+        List<RelatedReportDTO> report = newsService.getRelatedReport(newsId);
+        return ResponseEntity.ok(new SuccessResponse<>(true, "뉴스 관련 종목 조회 성공", report));
     }
 }

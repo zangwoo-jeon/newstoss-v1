@@ -23,7 +23,7 @@ public class GetRelatedNews implements GetRelatedNewsUseCase {
                 ,news.getTitle()
                 ,news.getContent()
                 ,news.getUrl()
-                , news.getSimilarity()))
+                ,news.getSimilarity()))
                 .toList();
     }
 }

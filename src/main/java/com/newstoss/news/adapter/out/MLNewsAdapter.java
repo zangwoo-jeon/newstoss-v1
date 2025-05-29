@@ -3,9 +3,7 @@ package com.newstoss.news.adapter.out;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.newstoss.global.errorcode.NewsErrorCode;
 import com.newstoss.global.handler.CustomException;
-import com.newstoss.news.adapter.out.dto.MLNewsDTO;
-import com.newstoss.news.adapter.out.dto.MLRelatedNewsDTO;
-import com.newstoss.news.adapter.out.dto.MLRelatedStockDTO;
+import com.newstoss.news.adapter.out.dto.*;
 import com.newstoss.news.application.port.out.MLNewsPort;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -43,13 +41,27 @@ public class MLNewsAdapter implements MLNewsPort {
         String url = BASE_URL + newsId + "/related/news";
         return safeExchangeList(url, new ParameterizedTypeReference<>() {});
     }
+// stock_code, stock_name 줄 때 코드
+//    @Override
+//    public List<MLRelatedStockDTO> getRelatedStock(String newsId) {
+//        String url = BASE_URL + newsId + "/related/stocks";
+//        return safeExchangeList(url, new ParameterizedTypeReference<>() {});
+//    }
 
+    // stock_name만 줄 때 코드
     @Override
     public List<MLRelatedStockDTO> getRelatedStock(String newsId) {
         String url = BASE_URL + newsId + "/related/stocks";
         return safeExchangeList(url, new ParameterizedTypeReference<>() {});
     }
 
+    public List<MLRelatedReportDTO> getRelatedReport(String newsId) {
+        String url = BASE_URL + newsId + "/related/reports";
+        MLRelatedReportListWrapper wrapper = safeExchange(url, new ParameterizedTypeReference<>() {});
+        return wrapper.getResults();
+    }
+
+    // 반환 값이 리스트고 응답 DTO랑 같을 경우
     private <T> List<T> safeExchangeList(String url, ParameterizedTypeReference<List<T>> typeRef) {
         try {
             ResponseEntity<List<T>> response = restTemplate.exchange(url, HttpMethod.GET, null, typeRef);
@@ -67,7 +79,24 @@ public class MLNewsAdapter implements MLNewsPort {
             throw new CustomException(NewsErrorCode.ML_UNKNOWN_ERROR);
         }
     }
-
+    // 반환 값이 리스트고 응답 DTO랑 같지 않을경우 ex) 응답이 result로 묶여있고 그 안에 리스트 형태로 응답이 올 경우
+    private <T> T safeExchange(String url, ParameterizedTypeReference<T> typeRef) {
+        try {
+            return restTemplate.exchange(url, HttpMethod.GET, null, typeRef).getBody();
+        } catch (HttpClientErrorException.NotFound e) {
+            throw new CustomException(NewsErrorCode.NEWS_NOT_FOUND);
+        } catch (HttpClientErrorException.BadRequest e) {
+            throw new CustomException(NewsErrorCode.ML_INVALID_RESPONSE);
+        } catch (HttpClientErrorException.Unauthorized e) {
+            throw new CustomException(NewsErrorCode.ML_UNAUTHORIZED);
+        } catch (org.springframework.web.client.ResourceAccessException e) {
+            throw new CustomException(NewsErrorCode.ML_TIMEOUT);
+        } catch (Exception e) {
+            log.error("[ML ERROR] 요청 실패. URL: {}, 예외: ", url, e);
+            throw new CustomException(NewsErrorCode.ML_UNKNOWN_ERROR);
+        }
+    }
+    // 응답이 리스트가 아닌 단일 객체로 올 경우
     private <T> T safeGetObject(String url, Class<T> responseType) {
         try {
             return restTemplate.getForObject(url, responseType);
