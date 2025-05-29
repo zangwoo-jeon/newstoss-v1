@@ -16,6 +16,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -29,6 +30,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/stocks")
 @Slf4j
+@Tag(name = "주식 API", description = "주식 관련 API")
 public class StockApiController {
     private final GetCategoryUseCase getCategoryUseCase;
     private final SearchStockUseCase searchStockUseCase;
