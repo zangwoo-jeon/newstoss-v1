@@ -14,13 +14,14 @@ import java.util.List;
 public class MLRelatedStockDTO {
     @JsonProperty("news_id")
     private String newsId;
-    private List<StockInfo> stocks;
+    private List<String> stocks;
+//    private List<StockInfo> stocks;
 
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class StockInfo {
-        private String name;
-        private String code;
-    }
+//    @Data
+//    @NoArgsConstructor
+//    @AllArgsConstructor
+//    public static class StockInfo {
+//        private String name;
+//        private String code;
+//    }
 }
