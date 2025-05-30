@@ -28,4 +28,13 @@ public class Member {
     private UUID fgOffset;
     @Embedded
     private Address address;
+
+    public void changeFgOffset(UUID newOffset) {
+        if (newOffset == null) {
+            throw new IllegalArgumentException("FG offset cannot be null");
+        }
+        if (!newOffset.equals(this.fgOffset)) {
+            this.fgOffset = newOffset;
+        }
+    }
 }

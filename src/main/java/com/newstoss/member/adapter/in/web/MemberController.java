@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.UUID;
+
 
 @RequestMapping("/api/auth")
 @CrossOrigin("*")
@@ -34,5 +36,11 @@ public class MemberController {
     public ResponseEntity<SuccessResponse<Object>> duplicateCheck(@RequestBody DuplicateDTO duplicateDTO){
         boolean success = memberService.duplicateCheck(duplicateDTO.getAccount());
         return ResponseEntity.ok(new SuccessResponse<>(true, "중복된 아이디 없음", null));
+    }
+
+    @GetMapping("/fgoffset")
+    public ResponseEntity<SuccessResponse<Object>> fgSet(@RequestParam UUID memberId, @RequestParam UUID fgOffset){
+        memberService.fgOffset(memberId,fgOffset);
+        return ResponseEntity.ok(new SuccessResponse<>(true, "현재 보고 있는 관심 그룹 변경 완료", null));
     }
 }
