@@ -2,9 +2,10 @@ package com.newstoss.stock.application;
 
 import com.newstoss.global.kis.KisTokenManager;
 import com.newstoss.global.kis.KisTokenProperties;
-import com.newstoss.stock.adapter.outbound.kis.dto.KisApiResponseDto;
+import com.newstoss.stock.adapter.outbound.kis.dto.response.KisApiResponseDto;
+import com.newstoss.stock.adapter.outbound.kis.dto.KisIndicePrevDto;
 import com.newstoss.stock.adapter.outbound.kis.dto.KisIndicePriceDto;
-import com.newstoss.stock.adapter.outbound.kis.dto.KisStockDto;
+import com.newstoss.stock.application.port.in.GetIndiceUseCase;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.ParameterizedTypeReference;
@@ -15,26 +16,27 @@ import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class GetIndiceInfoService {
+public class GetIndiceInfoService implements GetIndiceUseCase {
     private final KisTokenManager kisTokenManager;
     private final KisTokenProperties kisTokenProperties;
     private final RestTemplate restTemplate;
 
-    public List<KisIndicePriceDto> getIndiceInfo(String market, LocalDateTime startDate, LocalDateTime endDate) {
+    public KisApiResponseDto<KisIndicePrevDto,List<KisIndicePriceDto>> getIndiceInfo(String market, String startDate, String endDate) {
         String marketCode;
-        if (market == "KOSPI") {
+
+        if (market.equals("KOSPI")) {
             marketCode = "0001";
         } else{
             marketCode = "1001";
         }
+        log.info("MARKETCODE: {}", marketCode);
         String token = kisTokenManager.getToken();
-        String url = "https://openapi.koreainvestment.com:9443/uapi/domestic-stock/v1//inquire-daily-indexchartprice";
+        String url = "https://openapi.koreainvestment.com:9443/uapi/domestic-stock/v1/quotations/inquire-daily-indexchartprice";
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -48,17 +50,17 @@ public class GetIndiceInfoService {
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
                 .queryParam("FID_COND_MRKT_DIV_CODE", "U")
                 .queryParam("FID_INPUT_ISCD", marketCode)           // 코스피
-                .queryParam("FID_INPUT_DATE_1", startDate.toString())
-                .queryParam("FID_INPUT_DATE_2", endDate.toString())
+                .queryParam("FID_INPUT_DATE_1", startDate)
+                .queryParam("FID_INPUT_DATE_2", endDate)
                 .queryParam("FID_PERIOD_DIV_CODE", "D");         // 일간
         try {
-            ResponseEntity<KisApiResponseDto<KisIndicePriceDto>> response = restTemplate.exchange(
+            ResponseEntity<KisApiResponseDto<KisIndicePrevDto,List<KisIndicePriceDto>>> response = restTemplate.exchange(
                     builder.toUriString(),
                     HttpMethod.GET,
                     entity,
                     new ParameterizedTypeReference<>() {}
             );
-            return response.getBody().getOutput2();
+            return response.getBody();
         } catch (HttpServerErrorException e) {
             log.error(e.getMessage(),e);
             return null;

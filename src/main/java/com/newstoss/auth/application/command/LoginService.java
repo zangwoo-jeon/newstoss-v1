@@ -7,6 +7,7 @@ import com.newstoss.global.handler.CustomException;
 import com.newstoss.member.application.query.GetMemberService;
 import com.newstoss.member.domain.Member;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -15,14 +16,15 @@ public class LoginService {
 
     private final GetMemberService getMemberService;  //
     private final JwtProvider jwtProvider;
+    private final PasswordEncoder passwordEncoder;
 
     public String exec(LoginDTO dto) {
         Member member = getMemberService.findByAccount(dto.getAccount());
 
-        if (!dto.getPassword().equals(member.getPassword())) {
+        if (!passwordEncoder.matches(dto.getPassword(), member.getPassword())) {
             throw new CustomException(UserErrorCode.INVALID_PASSWORD);
         }
 
-        return jwtProvider.generateToken(member.getMemberId(), member.getName());
+        return jwtProvider.generateToken(member);
     }
 }

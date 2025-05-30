@@ -1,12 +1,14 @@
 package com.newstoss.global.kis;
 
 import jakarta.annotation.PostConstruct;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
+@Getter
 public class TokenSchedular {
     private final KisTokenManager kisTokenManager;
 

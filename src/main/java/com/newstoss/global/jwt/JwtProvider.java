@@ -1,10 +1,10 @@
 package com.newstoss.global.jwt;
 
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.JwtException;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import com.newstoss.global.errorcode.JwtErrorCode;
+import com.newstoss.global.handler.CustomException;
+import com.newstoss.member.domain.Member;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -22,14 +22,20 @@ public class JwtProvider {
         this.secretKey = Keys.hmacShaKeyFor(secret.getBytes());
     }
 
-    public String generateToken(UUID memberId, String memberName) {
+    public String generateToken(Member member) {
         Date now = new Date();
         Date expiry = new Date(now.getTime() + ACCESS_EXPIRATION);
 
         return Jwts.builder()
                 .setSubject("ACCESS_TOKEN")
-                .claim("memberId", memberId.toString())
-                .claim("memberName", memberName)
+                .setSubject("ACCESS_TOKEN")
+                .claim("memberId", member.getMemberId())
+                .claim("memberName", member.getName())
+                .claim("phoneNumber", member.getPhoneNumber())
+                .claim("email", member.getEmail())
+                .claim("zipCode", member.getAddress().getZipcode())
+                .claim("Address", member.getAddress().getAddress())
+                .claim("AddressDetail", member.getAddress().getAddressDetail())
                 .setIssuedAt(now)
                 .setExpiration(expiry)
                 .signWith(secretKey, SignatureAlgorithm.HS256)
@@ -43,8 +49,16 @@ public class JwtProvider {
                     .build()
                     .parseClaimsJws(token);
             return true;
-        } catch (JwtException e) {
-            return false;
+        } catch (ExpiredJwtException e) {
+            throw new CustomException(JwtErrorCode.EXPIRED_TOKEN);
+        } catch (UnsupportedJwtException e) {
+            throw new CustomException(JwtErrorCode.UNSUPPORTED_TOKEN);
+        } catch (MalformedJwtException e) {
+            throw new CustomException(JwtErrorCode.MALFORMED_TOKEN);
+        } catch (SecurityException e) {
+            throw new CustomException(JwtErrorCode.INVALID_TOKEN);
+        } catch (IllegalArgumentException e) {
+            throw new CustomException(JwtErrorCode.MISSING_TOKEN);
         }
     }
 

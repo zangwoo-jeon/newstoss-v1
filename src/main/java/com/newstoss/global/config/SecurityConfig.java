@@ -1,5 +1,7 @@
 package com.newstoss.global.config;
 
+import com.newstoss.global.jwt.JwtAccessDeniedHandler;
+import com.newstoss.global.jwt.JwtAuthenticationEntryPoint;
 import com.newstoss.global.jwt.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -15,6 +17,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+    private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -28,6 +32,10 @@ public class SecurityConfig {
                         .requestMatchers("/**").permitAll() // 로그인, 회원가입은 인증 제외
 //                        .requestMatchers("/api/auth/login", "/api/auth/register").permitAll() // 로그인, 회원가입은 인증 제외
                         .anyRequest().authenticated() // 나머지는 인증 필요
+                )
+                .exceptionHandling(ex -> ex
+                        .authenticationEntryPoint(jwtAuthenticationEntryPoint) // 401
+                        .accessDeniedHandler(jwtAccessDeniedHandler)           // 403
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 

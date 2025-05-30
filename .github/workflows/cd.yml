@@ -1,0 +1,173 @@
+# 워크플로우 이름
+name: Spring Boot Docker CD to EC2
+
+# 워크플로우가 실행될 이벤트 정의
+on:
+  workflow_run:
+    workflows:
+      - "Spring Boot CI with Gradle and ECR Push"
+    types:
+      - completed
+    branches:
+      - main
+
+# OIDC 인증을 위한 권한 설정
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  deploy:
+    name: Deploy to EC2 via Docker
+    if: ${{ github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main' }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Debug Workflow Run
+        run: |
+          echo "Workflow Run ID: ${{ github.event.workflow_run.id }}"
+          echo "Workflow Run Conclusion: ${{ github.event.workflow_run.conclusion }}"
+          echo "Workflow Run Status: ${{ github.event.workflow_run.status }}"
+          echo "Workflow Run Head Branch: ${{ github.event.workflow_run.head_branch }}"
+          echo "Workflow Run Head SHA: ${{ github.event.workflow_run.head_sha }}"
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # 2. AWS 자격 증명 설정 (ECR에서 이미지 Pull 받기 위해 필요)
+      # CI 워크플로우에서 사용한 Role (ECR 푸시 권한)과 동일하거나,
+      # ECR 이미지 Pull 권한만 가진 다른 Role을 사용해도 됩니다.
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4 # 최신 버전 확인 권장
+        with:
+          # CD 실행용 IAM Role ARN (GitHub Secret) - ECR Pull 권한 필요
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN_CD }} # CI Role과 분리하려면 이름 변경
+          aws-region: ${{ secrets.AWS_REGION }} # AWS 리전 (GitHub Secret)
+          # Role Session Name 설정 (CloudTrail 로그에 표시)
+          role-session-name: GitHubActionsCD-${{ github.run_id }}-${{ github.run_attempt }}
+
+      # 3. EC2로 배포 (SSH 접속 및 Docker 명령어 실행)
+      # appleboy/ssh-action 액션을 사용하여 EC2에 SSH 접속 후 배포 스크립트를 실행합니다.
+      # EC2 접속 정보는 GitHub Secrets에 등록해야 합니다.
+      - name: Deploy to EC2 via SSH
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            echo "Installing required packages..."
+            sudo apt-get update || { echo "apt-get update failed!"; exit 1; }
+            sudo apt-get install -y unzip curl || { echo "apt-get install failed!"; exit 1; }
+
+            echo "Installing/Updating AWS CLI..."
+            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" || { echo "curl failed!"; exit 1; }
+            unzip -o awscliv2.zip || { echo "unzip failed!"; exit 1; }
+            sudo ./aws/install --update || true
+            aws --version
+
+            echo "Configuring AWS credentials..."
+            aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
+            aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+            aws configure set default.region ${{ secrets.AWS_REGION }}
+
+            ECR_REGISTRY="${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com"
+            ECR_REPOSITORY="newstoss/repo" 
+
+            IMAGE_TAG="${{ github.event.workflow_run.head_sha }}"
+            FULL_IMAGE_URI="${ECR_REGISTRY}/${ECR_REPOSITORY}:${IMAGE_TAG}"
+
+            CONTAINER_NAME="newstoss-app" 
+            HOST_APP_PORT=8080 
+            CONTAINER_APP_PORT=8080 
+
+            PG_CONTAINER_NAME="my-postgres" 
+            DOCKER_NETWORK_NAME="my-app-network"
+
+            echo "Creating Docker network if not exists..."
+            if ! docker network ls | grep -q ${DOCKER_NETWORK_NAME}; then
+              docker network create ${DOCKER_NETWORK_NAME} || { echo "Docker network creation failed!"; exit 1; }
+              echo "Docker network ${DOCKER_NETWORK_NAME} created."
+            else
+              echo "Docker network ${DOCKER_NETWORK_NAME} already exists."
+            fi
+
+            echo "Deploying Docker image ${FULL_IMAGE_URI} to EC2..."
+
+            echo "Logging in to ECR..."
+            aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${ECR_REGISTRY} || { echo "ECR Login failed!"; exit 1; }
+
+            echo "Pulling new image ${FULL_IMAGE_URI}..."
+            docker pull ${FULL_IMAGE_URI} || { echo "Docker pull failed!"; exit 1; }
+
+            if docker ps -a -f name=${CONTAINER_NAME} -q | grep -q .; then
+              echo "Forcefully stopping and removing existing container ${CONTAINER_NAME}..."
+              docker stop ${CONTAINER_NAME} || true
+              docker rm ${CONTAINER_NAME} -f || true
+              echo "Existing container forcefully stopped and removed."
+            fi
+
+            echo "Running new container ${CONTAINER_NAME}..."
+            docker run -d \
+              -p ${HOST_APP_PORT}:${CONTAINER_APP_PORT} \
+              --name ${CONTAINER_NAME} \
+              --network ${DOCKER_NETWORK_NAME} \
+              -e SPRING_DATASOURCE_URL="${{ secrets.SPRING_DATASOURCE_URL }}" \
+              -e SPRING_DATASOURCE_USERNAME="${{ secrets.SPRING_DATASOURCE_USERNAME }}" \
+              -e SPRING_DATASOURCE_PASSWORD="${{ secrets.SPRING_DATASOURCE_PASSWORD }}" \
+              -e KIS_APPKEY="${{ secrets.KIS_APP_KEY }}" \
+              -e KIS_APPSECRET="${{ secrets.KIS_APP_SECRET }}" \
+              -e KIS_GRANT_TYPE=client_credentials \
+              -e KIS_TOKEN_URL=https://openapi.koreainvestment.com:9443/oauth2/token \
+              -e JWT_SECRET="${{ secrets.JWT_SECRET }}" \
+              -e INIT_ENABLED=false \
+              ${FULL_IMAGE_URI} || { echo "Docker run failed!"; exit 1; }
+
+            echo "New container ${CONTAINER_NAME} started with image ${FULL_IMAGE_URI}."
+
+            echo "Checking container status and logs..."
+            if ! docker ps -f name=${CONTAINER_NAME} | grep -q ${CONTAINER_NAME}; then
+              echo "Container is not running. Checking exit code and logs..."
+              EXIT_CODE=$(docker inspect ${CONTAINER_NAME} --format='{{.State.ExitCode}}')
+              echo "Container exit code: ${EXIT_CODE}"
+              echo "Container logs:"
+              docker logs ${CONTAINER_NAME}
+              exit 1
+            fi
+
+
+            echo "Container is running. Checking logs..."
+            docker logs ${CONTAINER_NAME}
+
+
+            echo "Waiting for application to start..."
+            sleep 30
+
+
+            echo "Checking port binding..."
+            docker port ${CONTAINER_NAME}
+
+
+            echo "Performing health check..."
+            MAX_RETRIES=3
+            RETRY_INTERVAL=10
+            for i in $(seq 1 $MAX_RETRIES); do
+              echo "Health check attempt $i of $MAX_RETRIES..."
+              if curl -v http://127.0.0.1:${HOST_APP_PORT}/actuator/health; then
+                echo "Health check passed!"
+                break
+              fi
+              if [ $i -lt $MAX_RETRIES ]; then
+                echo "Health check failed. Waiting ${RETRY_INTERVAL} seconds before next attempt..."
+                sleep ${RETRY_INTERVAL}
+              else
+                echo "Health check failed after $MAX_RETRIES attempts. Container logs:"
+                docker logs ${CONTAINER_NAME}
+                exit 1
+              fi
+            done
+
+            echo "Pruning unused Docker images..."
+            docker image prune -f || true
+
+            echo "Deployment completed successfully!"

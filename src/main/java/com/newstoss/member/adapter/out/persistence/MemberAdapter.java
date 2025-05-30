@@ -12,7 +12,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class MemberAdapter implements MemberCommandPort, MemberQueryPort {
 
-    private final JPAMemberRepository jpaMemberRepository;
+    private final JpaMemberRepository jpaMemberRepository;
 
     @Override
     public Member save(Member member) {

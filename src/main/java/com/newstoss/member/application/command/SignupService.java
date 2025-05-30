@@ -8,6 +8,7 @@ import com.newstoss.member.domain.Member;
 import com.newstoss.member.domain.MemberCommandPort;
 import com.newstoss.member.domain.MemberQueryPort;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -16,19 +17,16 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class SignupService {
-    private final MemberQueryPort memberQueryPort;
     private final MemberCommandPort memberCommandPort;
+    private final PasswordEncoder passwordEncoder;
 
     public Member exec(SignupRequestDTO signupRequestDTO){
-        Optional<Member> existing = memberQueryPort.findByAccount(signupRequestDTO.getAccount());
-        if (existing.isPresent()) {
-            throw new CustomException(UserErrorCode.DUPLICATE_ACCOUNT);
-        }
+        String passwordHash = passwordEncoder.encode(signupRequestDTO.getPassword());
 
         Member member = Member.builder()
                 .memberId(UUID.randomUUID())
                 .account(signupRequestDTO.getAccount())
-                .password(signupRequestDTO.getPassword())
+                .password(passwordHash)
                 .name(signupRequestDTO.getName())
                 .phoneNumber(signupRequestDTO.getPhoneNumber())
                 .email(signupRequestDTO.getEmail())
