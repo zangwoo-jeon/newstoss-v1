@@ -16,7 +16,6 @@ public class FavoriteController {
 
     private final FavoriteService favoriteService;
 
-    @Operation(summary = "회원별 관심종목 조회", description = "특정 회원의 관심종목 목록을 조회합니다.")
     @GetMapping("/{memberId}")
     public ResponseEntity<SuccessResponse<Object>> getFavoriteGroup(@PathVariable UUID memberId) {
         List<Favorite> result = favoriteService.getFavoritesByMemberId(memberId);
