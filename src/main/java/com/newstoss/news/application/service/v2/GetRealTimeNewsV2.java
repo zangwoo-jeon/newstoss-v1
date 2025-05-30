@@ -4,7 +4,6 @@ import com.newstoss.news.adapter.in.web.dto.v2.NewsDTOv2;
 import com.newstoss.news.adapter.out.dto.v2.MLNewsDTOv2;
 import com.newstoss.news.application.port.in.v2.GetRealTimeNewsUseCaseV2;
 import com.newstoss.news.application.port.out.MLNewsRelatedPortV2;
-import com.newstoss.news.application.service.v1.NewsDTOv1Mapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
