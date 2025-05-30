@@ -26,13 +26,13 @@ public class MLNewsRelatedAdapterV2 implements MLNewsRelatedPortV2 {
 
     @Override
     public List<MLNewsDTOv2> getRealTimeNews() {
-        String url = BASE_URL + "?skip=0&limit=10";
+        String url = BASE_URL + "v2/" + "?skip=0&limit=10";
         return safeExchangeList(url, new ParameterizedTypeReference<>() {});
     }
 
     @Override
     public MLNewsDTOv2 getDetailNews(String newsId) {
-        String url = BASE_URL + newsId;
+        String url = BASE_URL + "v2/" + newsId;
         return safeGetObject(url, MLNewsDTOv2.class);
     }
 

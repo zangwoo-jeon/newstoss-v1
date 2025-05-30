@@ -11,9 +11,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class NewsDTOv2 {
-    @JsonProperty("news_id")
     private String newsId;
-    @JsonProperty("wdate")
     private LocalDateTime wdate;
     private String title;
     private String article;
