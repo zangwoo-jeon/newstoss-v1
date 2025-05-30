@@ -119,6 +119,11 @@ jobs:
               -e KIS_APPSECRET="${{ secrets.KIS_APP_SECRET }}" \
               -e KIS_GRANT_TYPE=client_credentials \
               -e KIS_TOKEN_URL=https://openapi.koreainvestment.com:9443/oauth2/token \
+              -e MANAGEMENT_SERVER_PORT="${{ secrets.MANAGEMENT_SERVER_PORT }}" \
+              -e MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE="${{ secrets.MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE }}" \
+              -e MANAGEMENT_ENDPOINT_HEALTH_SHOWDETAILS="${{ secrets.MANAGEMENT_ENDPOINT_HEALTH_SHOWDETAILS }}" \
+              -e MANAGEMENT_INFO_JAVA_ENABLED="${{ secrets.MANAGEMENT_INFO_JAVA_ENABLED }}" \
+              -e MANAGEMENT_INFO_OS_ENABLED="${{ secrets.MANAGEMENT_INFO_OS_ENABLED }}" \
               -e JWT_SECRET="${{ secrets.JWT_SECRET }}" \
               -e INIT_ENABLED=false \
               ${FULL_IMAGE_URI} || { echo "Docker run failed!"; exit 1; }

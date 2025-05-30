@@ -44,6 +44,11 @@ jobs:
           KIS_APPSECRET: ${{ secrets.KIS_APP_SECRET }}
           KIS_GRANT_TYPE: client_credentials
           KIS_TOKEN_URL: https://openapi.koreainvestment.com:9443/oauth2/token
+          MANAGEMENT_SERVER_PORT: ${{ secrets.MANAGEMENT_SERVER_PORT }}
+          MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE: ${{ secrets.MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE }}
+          MANAGEMENT_ENDPOINT_HEALTH_SHOWDETAILS: ${{ secrets.MANAGEMENT_ENDPOINT_HEALTH_SHOWDETAILS }}
+          MANAGEMENT_INFO_JAVA_ENABLED: ${{ secrets.MANAGEMENT_INFO_JAVA_ENABLED }}
+          MANAGEMENT_INFO_OS_ENABLED: ${{ secrets.MANAGEMENT_INFO_OS_ENABLED }}
 
       - name: Upload build artifacts
         if: success()
