@@ -22,7 +22,7 @@ public class KisToken {
     private LocalDateTime expireAt;
 
     public boolean isExpired() {
-        return LocalDateTime.now().isAfter(expireAt.minusSeconds(5)); // 5초 여유
+        return LocalDateTime.now().isAfter(expireAt.minusSeconds(30)); // 30초 여유
     }
     public static KisToken createToken(KisTokenResponse response) {
         KisToken newToken = new KisToken();

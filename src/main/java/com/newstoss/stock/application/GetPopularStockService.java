@@ -2,7 +2,6 @@ package com.newstoss.stock.application;
 
 import com.newstoss.global.kis.KisTokenManager;
 import com.newstoss.global.kis.KisTokenProperties;
-import com.newstoss.global.kis.TokenSchedular;
 import com.newstoss.stock.adapter.outbound.kis.dto.response.KisListOutputDto;
 import com.newstoss.stock.adapter.outbound.kis.dto.KisPopularDto;
 import com.newstoss.stock.application.port.in.GetPopularStockUseCase;
@@ -16,9 +15,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
-
-import java.util.List;
-
 import static org.springframework.http.HttpMethod.*;
 
 @Service
@@ -26,12 +22,12 @@ import static org.springframework.http.HttpMethod.*;
 @Slf4j
 public class GetPopularStockService implements GetPopularStockUseCase {
     private final KisTokenProperties kisProperties;
-    private final TokenSchedular tokenSchedular;
+    private final KisTokenManager kisTokenManager;
     private final RestTemplate restTemplate;
 
     @Override
     public KisListOutputDto<KisPopularDto> getPopularStock() {
-        String token = tokenSchedular.getToken();
+        String token = kisTokenManager.getToken();
         String url = "https://openapi.koreainvestment.com:9443/uapi/domestic-stock/v1/quotations/volume-rank";
 
         HttpHeaders headers = new HttpHeaders();
@@ -44,11 +40,11 @@ public class GetPopularStockService implements GetPopularStockUseCase {
 
         HttpEntity<String> entity = new HttpEntity<>(headers);
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
-                .queryParam("FID_COND_MRKT_DIV_CODE", "J") // J: 코스피, K: 코스닥
+                .queryParam("FID_COND_MRKT_DIV_CODE", "J")
                 .queryParam("FID_COND_SCR_DIV_CODE", "20171")
                 .queryParam("FID_INPUT_ISCD", "0000") // 0000: 전체
-                .queryParam("FID_DIV_CLS_CODE", "0") // D: 일간
-                .queryParam("FID_BLNG_CLS_CODE", "0") // 조회 시작일
+                .queryParam("FID_DIV_CLS_CODE", "0") // 0(전체) 1(보통주) 2(우선주)
+                .queryParam("FID_BLNG_CLS_CODE", "3") // 0 : 평균거래량 1:거래증가율 2:평균거래회전율 3:거래금액순 4:평균거래금액회전율
                 .queryParam("FID_TRGT_CLS_CODE", "111111111")
                 .queryParam("FID_TRGT_EXLS_CLS_CODE", "0000000000")
                 .queryParam("FID_INPUT_PRICE_1", "") // 가격 하한
@@ -62,6 +58,5 @@ public class GetPopularStockService implements GetPopularStockUseCase {
                 new ParameterizedTypeReference<>() {}
         );
         return response.getBody();
-
     }
 }

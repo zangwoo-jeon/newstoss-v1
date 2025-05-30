@@ -1,10 +1,9 @@
-package com.newstoss.stock.adapter.outbound.kis;
+package com.newstoss.stock.application;
 
 import com.newstoss.global.errorcode.StockErrorCode;
 import com.newstoss.global.handler.CustomException;
 import com.newstoss.global.kis.KisTokenManager;
 import com.newstoss.global.kis.KisTokenProperties;
-import com.newstoss.global.kis.TokenSchedular;
 import com.newstoss.stock.adapter.outbound.kis.dto.KisPeriodStockDto;
 import com.newstoss.stock.adapter.outbound.kis.dto.response.KisApiResponseDto;
 import com.newstoss.stock.adapter.outbound.kis.dto.response.KisOutputDto;
@@ -20,9 +19,6 @@ import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
@@ -30,11 +26,11 @@ import java.util.List;
 @Slf4j
 public class GetKisStockService implements GetStockInfoUseCase {
     private final KisTokenProperties kisProperties;
-    private final TokenSchedular tokenSchedular;
+    private final KisTokenManager kisTokenManager;
     private final RestTemplate restTemplate;
 
     public KisStockDto getStockInfo(String stockCode) {
-        String token = tokenSchedular.getToken();
+        String token = kisTokenManager.getToken();
         String url = "https://openapi.koreainvestment.com:9443/uapi/domestic-stock/v1/quotations/inquire-price";
 
         HttpHeaders headers = new HttpHeaders();
@@ -75,7 +71,7 @@ public class GetKisStockService implements GetStockInfoUseCase {
 
     @Override
     public List<KisPeriodStockDto> getStockInfoByPeriod(String stockCode, String period, String startDate, String endDate) {
-        String token = tokenSchedular.getToken();
+        String token = kisTokenManager.getToken();
         String url = "https://openapi.koreainvestment.com:9443/uapi/domestic-stock/v1/quotations/inquire-daily-itemchartprice";
 
         HttpHeaders headers = new HttpHeaders();

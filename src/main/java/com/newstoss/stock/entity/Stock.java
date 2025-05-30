@@ -20,12 +20,13 @@ public class Stock extends BaseTimeEntity {
     @Column(name = "stock_name")
     private String name;
 
-    @Column(name = "stock_price")
-    private Integer price;
-
     @Column(name = "market_name")
     private String marketName;
 
+    @Column(name = "stock_image")
+    private String stockImage;
+
+    private Integer stockSearchCount;
     private String category;
 
     //== 생성 메서드 ==//
@@ -33,15 +34,17 @@ public class Stock extends BaseTimeEntity {
         Stock stock = new Stock();
         stock.stockCode = stockCode;
         stock.name = name;
-        stock.price = price;
         stock.marketName = marketName;
         stock.category = category;
+        stock.stockSearchCount = 0; // 초기 검색 횟수는 0으로 설정
         return stock;
     }
 
     //== 비즈니스 로직 ==//
-    public void updatePrice(Integer price) {
-        this.price = price;
+    public void incrementStockSearchCount() {
+        if (stockSearchCount == null) {
+            stockSearchCount = 0;
+        }
+        stockSearchCount++;
     }
-
 }
