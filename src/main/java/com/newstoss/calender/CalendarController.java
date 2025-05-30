@@ -10,12 +10,12 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/calen")
 @RequiredArgsConstructor
 public class CalendarController {
-    private final CalendarRepository calendarRepository;
+   private final CalendarRepository calendarRepository;
 
-   @GetMapping("/calen")
+   @GetMapping("/")
    public ResponseEntity<List<Calendar>> getMonthCalen(
            @RequestParam Integer year,
            @RequestParam Integer month,
