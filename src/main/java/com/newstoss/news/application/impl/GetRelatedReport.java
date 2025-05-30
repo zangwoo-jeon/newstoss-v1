@@ -1,8 +1,8 @@
-package com.newstoss.news.application.service;
+package com.newstoss.news.application.impl;
 
 import com.newstoss.news.adapter.in.web.dto.common.RelatedReportDTO;
 import com.newstoss.news.adapter.out.dto.MLRelatedReportDTO;
-import com.newstoss.news.application.port.in.GetRelatedReportUseCase;
+import com.newstoss.news.application.port.in.ml.GetRelatedReportUseCase;
 import com.newstoss.news.application.port.out.MLNewsRelatedPortV1;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

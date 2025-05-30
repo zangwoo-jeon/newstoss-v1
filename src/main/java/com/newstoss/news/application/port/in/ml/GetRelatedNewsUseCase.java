@@ -1,4 +1,4 @@
-package com.newstoss.news.application.port.in;
+package com.newstoss.news.application.port.in.ml;
 
 import com.newstoss.news.adapter.in.web.dto.common.RelatedNewsDTO;
 

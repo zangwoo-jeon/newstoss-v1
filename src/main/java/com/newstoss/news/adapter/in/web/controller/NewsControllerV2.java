@@ -5,7 +5,7 @@ import com.newstoss.news.adapter.in.web.dto.common.RelatedNewsDTO;
 import com.newstoss.news.adapter.in.web.dto.common.RelatedReportDTO;
 import com.newstoss.news.adapter.in.web.dto.common.RelatedStockDTO;
 import com.newstoss.news.adapter.in.web.dto.v2.NewsDTOv2;
-import com.newstoss.news.application.NewsServiceV2;
+import com.newstoss.news.application.service.NewsServiceV2;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;

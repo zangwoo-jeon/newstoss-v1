@@ -1,12 +1,14 @@
-package com.newstoss.news.application;
+package com.newstoss.news.application.service;
 
+import com.newstoss.news.adapter.in.web.dto.v1.NewsDTOv1;
 import com.newstoss.news.adapter.in.web.dto.common.RelatedNewsDTO;
 import com.newstoss.news.adapter.in.web.dto.common.RelatedReportDTO;
 import com.newstoss.news.adapter.in.web.dto.common.RelatedStockDTO;
-import com.newstoss.news.adapter.in.web.dto.v2.NewsDTOv2;
-import com.newstoss.news.application.port.in.*;
-import com.newstoss.news.application.port.in.v2.GetNewsDetailUseCaseV2;
-import com.newstoss.news.application.port.in.v2.GetRealTimeNewsUseCaseV2;
+import com.newstoss.news.application.port.in.ml.GetRelatedNewsUseCase;
+import com.newstoss.news.application.port.in.ml.GetRelatedReportUseCase;
+import com.newstoss.news.application.port.in.ml.GetRelatedStocksUseCase;
+import com.newstoss.news.application.port.in.ml.v1.GetNewsDetailUseCaseV1;
+import com.newstoss.news.application.port.in.ml.v1.GetRealTimeNewsUseCaseV1;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -14,19 +16,19 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class NewsServiceV2 {
+public class NewsServiceV1 {
 
-    private final GetRealTimeNewsUseCaseV2 getRealTimeNews;
-    private final GetNewsDetailUseCaseV2 getDetailNews;
+    private final GetRealTimeNewsUseCaseV1 getRealTimeNews;
+    private final GetNewsDetailUseCaseV1 getDetailNews;
     private final GetRelatedNewsUseCase getRelatedNews;
     private final GetRelatedStocksUseCase getRelatedStocks;
     private final GetRelatedReportUseCase getRelatedReport;
 
-    public List<NewsDTOv2> getRealTimeNews(){
+    public List<NewsDTOv1> getRealTimeNews(){
         return getRealTimeNews.exec();
     }
 
-    public NewsDTOv2 getDetailNews(String newsId){
+    public NewsDTOv1 getDetailNews(String newsId){
         return getDetailNews.exec(newsId);
     }
 
