@@ -42,7 +42,7 @@ public class StockQueryService implements GetCategoryUseCase , SearchStockUseCas
     }
 
     public Page<Stock> getStockByCategory(String category , int page) {
-        Pageable pageable = PageRequest.of(page, 5, Sort.Direction.ASC, "name");
+        Pageable pageable = PageRequest.of(page, 10, Sort.Direction.ASC, "name");
         Page<Stock> stockPagingByCategory = stockRepository.findStockCodeByCategory(category,pageable);
         if (stockPagingByCategory.isEmpty()) {
             throw new CustomException(StockErrorCode.STOCK_NOT_FOUND);

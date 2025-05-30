@@ -82,8 +82,13 @@ public class StockApiController {
         List<CategoryStockResponseDto> categoryStockResponseDtos = stockByCategory.stream()
                 .map(stock -> {
                     CategoryStockResponseDto categoryStockResponseDto = new CategoryStockResponseDto();
+                    KisStockDto stockInfo = getStockInfoUseCase.getStockInfo(stock.getStockCode());
                     categoryStockResponseDto.setStockName(stock.getName());
                     categoryStockResponseDto.setStockCode(stock.getStockCode());
+                    categoryStockResponseDto.setCurrentPrice(stockInfo.getPrice());
+                    categoryStockResponseDto.setChangeRate(stockInfo.getChangeRate());
+                    categoryStockResponseDto.setSign(stockInfo.getSign());
+                    categoryStockResponseDto.setChangeAmount(stockInfo.getChangeAmount());
                     return categoryStockResponseDto;
                 }).toList();
         CategoryPageResponseDto categoryPageResponseDto = new CategoryPageResponseDto(stockByCategory.getTotalPages(), categoryStockResponseDtos);
