@@ -25,6 +25,6 @@ public class LoginService {
             throw new CustomException(UserErrorCode.INVALID_PASSWORD);
         }
 
-        return jwtProvider.generateToken(member.getMemberId(), member.getName());
+        return jwtProvider.generateToken(member);
     }
 }
