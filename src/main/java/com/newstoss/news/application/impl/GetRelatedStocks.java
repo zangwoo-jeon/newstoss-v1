@@ -1,8 +1,8 @@
-package com.newstoss.news.application.service;
+package com.newstoss.news.application.impl;
 
 import com.newstoss.news.adapter.in.web.dto.common.RelatedStockDTO;
 import com.newstoss.news.adapter.out.dto.MLRelatedStockDTO;
-import com.newstoss.news.application.port.in.GetRelatedStocksUseCase;
+import com.newstoss.news.application.port.in.ml.GetRelatedStocksUseCase;
 import com.newstoss.news.application.port.out.MLNewsRelatedPortV1;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

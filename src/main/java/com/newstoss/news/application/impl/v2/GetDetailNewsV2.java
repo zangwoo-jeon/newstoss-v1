@@ -1,8 +1,8 @@
-package com.newstoss.news.application.service.v2;
+package com.newstoss.news.application.impl.v2;
 
 import com.newstoss.news.adapter.in.web.dto.v2.NewsDTOv2;
 import com.newstoss.news.adapter.out.dto.v2.MLNewsDTOv2;
-import com.newstoss.news.application.port.in.v2.GetNewsDetailUseCaseV2;
+import com.newstoss.news.application.port.in.ml.v2.GetNewsDetailUseCaseV2;
 import com.newstoss.news.application.port.out.MLNewsRelatedPortV2;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

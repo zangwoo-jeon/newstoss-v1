@@ -1,4 +1,4 @@
-package com.newstoss.news.application.service;
+package com.newstoss.news.application.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.newstoss.news.adapter.in.web.sse.SseEmitters;
