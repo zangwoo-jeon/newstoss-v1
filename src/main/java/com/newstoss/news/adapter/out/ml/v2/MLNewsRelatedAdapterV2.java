@@ -1,10 +1,10 @@
-package com.newstoss.news.adapter.out;
+package com.newstoss.news.adapter.out.ml.v2;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.newstoss.global.errorcode.NewsErrorCode;
 import com.newstoss.global.handler.CustomException;
 import com.newstoss.news.adapter.out.dto.*;
-import com.newstoss.news.application.port.out.MLNewsPort;
+import com.newstoss.news.adapter.out.dto.v2.MLNewsDTOv2;
+import com.newstoss.news.application.port.out.MLNewsRelatedPortV2;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.ParameterizedTypeReference;
@@ -20,20 +20,20 @@ import java.util.Optional;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class MLNewsAdapter implements MLNewsPort {
+public class MLNewsRelatedAdapterV2 implements MLNewsRelatedPortV2 {
     private final RestTemplate restTemplate;
     private static final String BASE_URL = "http://3.37.207.16:8000/news/";
 
     @Override
-    public List<MLNewsDTO> getRealTimeNews() {
+    public List<MLNewsDTOv2> getRealTimeNews() {
         String url = BASE_URL + "?skip=0&limit=10";
         return safeExchangeList(url, new ParameterizedTypeReference<>() {});
     }
 
     @Override
-    public MLNewsDTO getDetailNews(String newsId) {
+    public MLNewsDTOv2 getDetailNews(String newsId) {
         String url = BASE_URL + newsId;
-        return safeGetObject(url, MLNewsDTO.class);
+        return safeGetObject(url, MLNewsDTOv2.class);
     }
 
     @Override
