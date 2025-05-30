@@ -1,6 +1,5 @@
-package com.newstoss.news.adapter.in.web.dto;
+package com.newstoss.news.adapter.in.web.dto.common;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
