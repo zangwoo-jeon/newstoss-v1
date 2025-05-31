@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class KisIndicePrevDto {
+public class KisIndiceInfoDto {
     @JsonProperty("bstp_nmix_prdy_vrss")
     private String prev;
 

@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
+@Schema(description = "KIS 기간 주식 DTO")
 public class KisPeriodStockDto {
 
     @JsonProperty("stck_bsop_date")

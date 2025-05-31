@@ -1,16 +1,16 @@
-package com.newstoss.stock.application;
+package com.newstoss.stock.adapter.outbound.kis;
 
 import com.newstoss.global.kis.KisTokenManager;
 import com.newstoss.global.kis.KisTokenProperties;
+import com.newstoss.stock.adapter.outbound.kis.dto.KisIndiceInfoDto;
 import com.newstoss.stock.adapter.outbound.kis.dto.response.KisApiResponseDto;
-import com.newstoss.stock.adapter.outbound.kis.dto.KisIndicePrevDto;
 import com.newstoss.stock.adapter.outbound.kis.dto.KisIndicePriceDto;
-import com.newstoss.stock.application.port.in.GetIndiceUseCase;
+import com.newstoss.stock.application.port.out.kis.KisIndicePort;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
@@ -18,15 +18,15 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
 
-@Service
+@Component
 @RequiredArgsConstructor
 @Slf4j
-public class GetIndiceInfoService implements GetIndiceUseCase {
+public class GetIndiceInfoClient implements KisIndicePort {
     private final KisTokenManager kisTokenManager;
     private final KisTokenProperties kisTokenProperties;
     private final RestTemplate restTemplate;
 
-    public KisApiResponseDto<KisIndicePrevDto,List<KisIndicePriceDto>> getIndiceInfo(String market, String startDate, String endDate) {
+    public KisApiResponseDto<KisIndiceInfoDto,List<KisIndicePriceDto>> getIndiceInfo(String market, String startDate, String endDate) {
         String marketCode;
 
         if (market.equals("KOSPI")) {
@@ -54,7 +54,7 @@ public class GetIndiceInfoService implements GetIndiceUseCase {
                 .queryParam("FID_INPUT_DATE_2", endDate)
                 .queryParam("FID_PERIOD_DIV_CODE", "D");         // 일간
         try {
-            ResponseEntity<KisApiResponseDto<KisIndicePrevDto,List<KisIndicePriceDto>>> response = restTemplate.exchange(
+            ResponseEntity<KisApiResponseDto<KisIndiceInfoDto,List<KisIndicePriceDto>>> response = restTemplate.exchange(
                     builder.toUriString(),
                     HttpMethod.GET,
                     entity,

@@ -1,9 +1,9 @@
 package com.newstoss.global.init;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.newstoss.stock.application.GetKisStockService;
 import com.newstoss.stock.adapter.outbound.kis.dto.KisStockDto;
 import com.newstoss.stock.adapter.outbound.persistence.repository.StockRepository;
+import com.newstoss.stock.application.port.in.GetStockInfoUseCase;
 import com.newstoss.stock.entity.Stock;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +23,7 @@ import java.util.List;
 public class StockInit implements CommandLineRunner {
     private final StockRepository stockRepository;
     private final ObjectMapper objectMapper;
-    private final GetKisStockService getKisStockService;
+    private final GetStockInfoUseCase getStockInfoUseCase;
 
     @Value("${init.enabled}")
     private boolean initEnabled;
@@ -41,7 +41,7 @@ public class StockInit implements CommandLineRunner {
         List<StockInitDto> stockDtos = Arrays.asList(objectMapper.readValue(is, StockInitDto[].class));
         for (StockInitDto stockDto : stockDtos) {
             try {
-                KisStockDto stockInfo = getKisStockService.getStockInfo(stockDto.getStockCode());
+                KisStockDto stockInfo = getStockInfoUseCase.GetStockInfo(stockDto.getStockCode());
                 String setCategoryName;
                 if (stockInfo.getCategoryName() == null || stockInfo.getCategoryName().equals(" ")) {
                     setCategoryName = "기타";

@@ -1,4 +1,4 @@
-package com.newstoss.stock.application;
+package com.newstoss.stock.adapter.outbound.kis;
 
 import com.newstoss.global.errorcode.StockErrorCode;
 import com.newstoss.global.handler.CustomException;
@@ -9,11 +9,12 @@ import com.newstoss.stock.adapter.outbound.kis.dto.response.KisApiResponseDto;
 import com.newstoss.stock.adapter.outbound.kis.dto.response.KisOutputDto;
 import com.newstoss.stock.adapter.outbound.kis.dto.KisStockDto;
 import com.newstoss.stock.application.port.in.GetStockInfoUseCase;
+import com.newstoss.stock.application.port.out.kis.KisStockInfoPort;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
@@ -21,10 +22,10 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
 
-@Service
+@Component
 @RequiredArgsConstructor
 @Slf4j
-public class GetKisStockService implements GetStockInfoUseCase {
+public class GetKisStockClient implements KisStockInfoPort {
     private final KisTokenProperties kisProperties;
     private final KisTokenManager kisTokenManager;
     private final RestTemplate restTemplate;
