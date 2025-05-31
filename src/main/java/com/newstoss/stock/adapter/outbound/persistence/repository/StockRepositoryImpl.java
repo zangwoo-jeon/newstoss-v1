@@ -1,7 +1,6 @@
 package com.newstoss.stock.adapter.outbound.persistence.repository;
 
-import com.newstoss.stock.application.port.out.StockRepositoryCustom;
-import com.newstoss.stock.entity.QStock;
+import com.newstoss.stock.application.port.out.persistence.StockRepositoryCustom;
 import com.newstoss.stock.entity.Stock;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;

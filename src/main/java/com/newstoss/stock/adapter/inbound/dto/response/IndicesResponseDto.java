@@ -1,6 +1,6 @@
 package com.newstoss.stock.adapter.inbound.dto.response;
 
-import com.newstoss.stock.adapter.outbound.kis.dto.KisIndicePrevDto;
+import com.newstoss.stock.adapter.outbound.kis.dto.KisIndiceInfoDto;
 import com.newstoss.stock.adapter.outbound.kis.dto.KisIndicePriceDto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
@@ -28,7 +28,7 @@ public class IndicesResponseDto {
     @Schema(description = "지수 가격 정보 리스트")
     private List<KisIndicePriceDto> indices;
 
-    public IndicesResponseDto(KisIndicePrevDto prevInfo, List<KisIndicePriceDto> indices) {
+    public IndicesResponseDto(KisIndiceInfoDto prevInfo, List<KisIndicePriceDto> indices) {
         prev = prevInfo.getPrev();
         sign = prevInfo.getSign();
         prev_rate = prevInfo.getPrev_rate();

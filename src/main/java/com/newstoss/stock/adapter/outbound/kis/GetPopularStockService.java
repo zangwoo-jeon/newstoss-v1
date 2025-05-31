@@ -1,10 +1,10 @@
-package com.newstoss.stock.application;
+package com.newstoss.stock.adapter.outbound.kis;
 
 import com.newstoss.global.kis.KisTokenManager;
 import com.newstoss.global.kis.KisTokenProperties;
 import com.newstoss.stock.adapter.outbound.kis.dto.response.KisListOutputDto;
 import com.newstoss.stock.adapter.outbound.kis.dto.KisPopularDto;
-import com.newstoss.stock.application.port.in.GetPopularStockUseCase;
+import com.newstoss.stock.application.port.out.kis.KisPopularStockPort;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.ParameterizedTypeReference;
@@ -12,21 +12,24 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
+
+import java.util.List;
+
 import static org.springframework.http.HttpMethod.*;
 
-@Service
+@Component
 @RequiredArgsConstructor
 @Slf4j
-public class GetPopularStockService implements GetPopularStockUseCase {
+public class GetPopularStockService implements KisPopularStockPort {
     private final KisTokenProperties kisProperties;
     private final KisTokenManager kisTokenManager;
     private final RestTemplate restTemplate;
 
     @Override
-    public KisListOutputDto<KisPopularDto> getPopularStock() {
+    public List<KisPopularDto> getPopularStock() {
         String token = kisTokenManager.getToken();
         String url = "https://openapi.koreainvestment.com:9443/uapi/domestic-stock/v1/quotations/volume-rank";
 
@@ -57,6 +60,6 @@ public class GetPopularStockService implements GetPopularStockUseCase {
                 entity,
                 new ParameterizedTypeReference<>() {}
         );
-        return response.getBody();
+        return response.getBody().getOutput();
     }
 }
