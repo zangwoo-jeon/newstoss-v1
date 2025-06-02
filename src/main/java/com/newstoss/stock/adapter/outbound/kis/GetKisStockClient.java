@@ -73,6 +73,7 @@ public class GetKisStockClient implements KisStockInfoPort {
 
     @Override
     public List<KisPeriodStockDto> getStockInfoByPeriod(String stockCode, String period, String startDate, String endDate) {
+        System.out.println("stockCode,period, startDate,endDate = " + stockCode + period + startDate +endDate);
         String token = kisTokenManager.getToken();
         String url = "https://openapi.koreainvestment.com:9443/uapi/domestic-stock/v1/quotations/inquire-daily-itemchartprice";
 
