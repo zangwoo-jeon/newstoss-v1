@@ -55,6 +55,7 @@ public class GetKisStockClient implements KisStockInfoPort {
                     new ParameterizedTypeReference<>() {}
                 );
             if (response.getBody() != null) {
+                System.out.println("response = " + response);
                 return response.getBody().getOutput();
             } else {
                 log.error("KIS API 응답이 null입니다.");
@@ -72,6 +73,7 @@ public class GetKisStockClient implements KisStockInfoPort {
 
     @Override
     public List<KisPeriodStockDto> getStockInfoByPeriod(String stockCode, String period, String startDate, String endDate) {
+        System.out.println("stockCode,period, startDate,endDate = " + stockCode + period + startDate +endDate);
         String token = kisTokenManager.getToken();
         String url = "https://openapi.koreainvestment.com:9443/uapi/domestic-stock/v1/quotations/inquire-daily-itemchartprice";
 
@@ -94,13 +96,13 @@ public class GetKisStockClient implements KisStockInfoPort {
                 .queryParam("FID_ORG_ADJ_PRC" , "1"); // 1: 수정주가, 0: 수정주가 미적용
 
         try {
-            ResponseEntity<KisApiResponseDto<Object,List<KisPeriodStockDto>>> response = restTemplate.exchange(
+            ResponseEntity<KisApiResponseDto<KisStockDto,List<KisPeriodStockDto>>> response = restTemplate.exchange(
                     uri.toUriString(),
                     HttpMethod.GET,
                     entity,
                     new ParameterizedTypeReference<>() {}
             );
-
+            System.out.println("response.getBody() = " + response.getBody());
             return response.getBody().getOutput2();
         } catch (HttpServerErrorException e) {
             log.error(e.getMessage(),e);
