@@ -33,6 +33,8 @@ public class StockInfoService implements GetStockInfoUseCase {
     public List<KisPeriodStockDto> getStockInfoByPeriod(String stockCode, String period) {
         if (period.equals("D")) {
             return getDailyStockByPeriod(stockCode);
+        } else if (period.equals("W")) {
+            return getWeeklyStockByPeriod(stockCode);
         } else if (period.equals("M")) {
             return getMonthlyStockByPeriod(stockCode);
         } else if (period.equals("Y")) {
@@ -63,6 +65,20 @@ public class StockInfoService implements GetStockInfoUseCase {
             throw new CustomException(StockErrorCode.STOCK_NOT_FOUND);
         }
         return stockDailyPeriod;
+    }
+
+    @Override
+    public List<KisPeriodStockDto> getWeeklyStockByPeriod(String stockCode) {
+        List<KisPeriodStockDto> stockWeeklyPeriod = new ArrayList<>();
+        for (int i = 0; i < 2; i++) {
+            String endDate = LocalDate.now().minusWeeks(i*100).format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+            String startDate = LocalDate.now().minusWeeks(i*100+100).format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+            stockWeeklyPeriod.addAll(stockInfoPort.getStockInfoByPeriod(stockCode, "W", startDate, endDate));
+        }
+        if (stockWeeklyPeriod.isEmpty()) {
+            throw new CustomException(StockErrorCode.STOCK_NOT_FOUND);
+        }
+        return stockWeeklyPeriod;
     }
 
     @Override
