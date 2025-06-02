@@ -26,6 +26,8 @@ public class StockKisController {
     private final GetStockInfoUseCase stockInfoUseCase;
     private final GetPopularStockUseCase getPopularStockUseCase;
     private final GetIndiceUseCase indiceUseCase;
+    private final GetStockInfoUseCase getStockInfoUseCase;
+
     // 주요 지수 일자별 조회
     @Operation(summary = "주요 지수 일자별 조회",
             description = "특정 시장의 주요 지수를 일자별로 조회합니다. KOSPI와 KOSDAQ 시장을 지원합니다. " +
@@ -67,17 +69,11 @@ public class StockKisController {
     public ResponseEntity<?> StockPrice(@PathVariable String stockCode,
                                            @RequestParam(required = false) String period) {
         if (period == null || period.isEmpty()) {
-            String price = stockInfoUseCase.GetStockPrice(stockCode);
+            String price = stockInfoUseCase.getStockPrice(stockCode);
             return ResponseEntity.ok(new SuccessResponse<>(true, "주식 가격 조회 성공", price));
-        } else if (period.equals("D")) {
-            List<KisPeriodStockDto> kisPeriodStockDtos = stockInfoUseCase.GetDailyStockByPeriod(stockCode);
-            return ResponseEntity.ok(new SuccessResponse<>(true, "주식 일간 가격 조회 성공", kisPeriodStockDtos));
-        } else if (period.equals("M")) {
-            List<KisPeriodStockDto> kisPeriodStockDtos = stockInfoUseCase.GetMonthlyStockByPeriod(stockCode);
-            return ResponseEntity.ok(new SuccessResponse<>(true, "주식 가격 조회 성공", kisPeriodStockDtos));
         } else {
-            List<KisPeriodStockDto> kisPeriodStockDtos = stockInfoUseCase.GetYearlyStockByPeriod(stockCode);
-            return ResponseEntity.ok(new SuccessResponse<>(true, "주식 가격 조회 성공", kisPeriodStockDtos));
+            List<KisPeriodStockDto> stockInfoByPeriod = getStockInfoUseCase.getStockInfoByPeriod(stockCode, period);
+            return ResponseEntity.ok(new SuccessResponse<>(true, "주식 기간별 가격 조회 성공", stockInfoByPeriod));
         }
 
     }

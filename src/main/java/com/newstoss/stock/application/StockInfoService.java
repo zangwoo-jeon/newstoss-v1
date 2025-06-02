@@ -21,7 +21,7 @@ public class StockInfoService implements GetStockInfoUseCase {
     private final KisStockInfoPort stockInfoPort;
 
     @Override
-    public String GetStockPrice(String stockCode) {
+    public String getStockPrice(String stockCode) {
         KisStockDto stockInfo = stockInfoPort.getStockInfo(stockCode);
         if (stockInfo == null) {
             throw new CustomException(StockErrorCode.STOCK_NOT_FOUND);
@@ -30,7 +30,20 @@ public class StockInfoService implements GetStockInfoUseCase {
     }
 
     @Override
-    public KisStockDto GetStockInfo(String stockCode) {
+    public List<KisPeriodStockDto> getStockInfoByPeriod(String stockCode, String period) {
+        if (period.equals("D")) {
+            return getDailyStockByPeriod(stockCode);
+        } else if (period.equals("M")) {
+            return getMonthlyStockByPeriod(stockCode);
+        } else if (period.equals("Y")) {
+             return getYearlyStockByPeriod(stockCode);
+        } else {
+            throw new CustomException(StockErrorCode.INVALID_PERIOD_TYPE);
+        }
+    }
+
+    @Override
+    public KisStockDto getStockInfo(String stockCode) {
         KisStockDto stockInfo = stockInfoPort.getStockInfo(stockCode);
         if (stockInfo == null) {
             throw new CustomException(StockErrorCode.STOCK_NOT_FOUND);
@@ -38,9 +51,8 @@ public class StockInfoService implements GetStockInfoUseCase {
         return stockInfo;
     }
 
-
     @Override
-    public List<KisPeriodStockDto> GetDailyStockByPeriod (String stockCode) {
+    public List<KisPeriodStockDto> getDailyStockByPeriod (String stockCode) {
         List<KisPeriodStockDto> stockDailyPeriod = new ArrayList<>();
         for (int i = 0; i < 5; i++) {
             String StartDate = LocalDate.now().minusDays(i*100).format(DateTimeFormatter.ofPattern("yyyyMMdd"));
@@ -54,7 +66,7 @@ public class StockInfoService implements GetStockInfoUseCase {
     }
 
     @Override
-    public List<KisPeriodStockDto> GetMonthlyStockByPeriod(String stockCode) {
+    public List<KisPeriodStockDto> getMonthlyStockByPeriod(String stockCode) {
         List<KisPeriodStockDto> stockMonthlyPeriod = stockInfoPort.getStockInfoByPeriod(stockCode, "M",
                 LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")),
                 LocalDate.now().minusMonths(100).format(DateTimeFormatter.ofPattern("yyyyMMdd")));
@@ -65,7 +77,7 @@ public class StockInfoService implements GetStockInfoUseCase {
     }
 
     @Override
-    public List<KisPeriodStockDto> GetYearlyStockByPeriod(String stockCode) {
+    public List<KisPeriodStockDto> getYearlyStockByPeriod(String stockCode) {
         List<KisPeriodStockDto> stockYearlyPeriod = stockInfoPort.getStockInfoByPeriod(stockCode, "Y",
                 LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")),
                 LocalDate.now().minusYears(10).format(DateTimeFormatter.ofPattern("yyyyMMdd")));

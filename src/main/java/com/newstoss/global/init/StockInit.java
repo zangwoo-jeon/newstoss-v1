@@ -41,7 +41,7 @@ public class StockInit implements CommandLineRunner {
         List<StockInitDto> stockDtos = Arrays.asList(objectMapper.readValue(is, StockInitDto[].class));
         for (StockInitDto stockDto : stockDtos) {
             try {
-                KisStockDto stockInfo = getStockInfoUseCase.GetStockInfo(stockDto.getStockCode());
+                KisStockDto stockInfo = getStockInfoUseCase.getStockInfo(stockDto.getStockCode());
                 String setCategoryName;
                 if (stockInfo.getCategoryName() == null || stockInfo.getCategoryName().equals(" ")) {
                     setCategoryName = "기타";

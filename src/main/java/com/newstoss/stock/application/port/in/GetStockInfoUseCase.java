@@ -13,33 +13,41 @@ public interface GetStockInfoUseCase {
      * @param stockCode 조회할 주식 코드
      * @return 주식의 현재가
      */
-    String GetStockPrice(String stockCode);
+    String getStockPrice(String stockCode);
+    /**
+     * 주식 1개의 기간별 정보를 조회한다.
+     * @author Hyeongjun Park
+     * @param stockCode 조회할 주식 코드
+     * @param period 조회할 기간(D: 일별, M: 월별, Y: 연별 )
+     * @return 주식 정보 DTO 목록
+     */
+    List<KisPeriodStockDto> getStockInfoByPeriod(String stockCode, String period);
     /**
      * 주식 1개의 정보를 조회한다.
      * @author Hyeongjun Park
      * @param stockCode 조회할 주식 코드
      * @return 주식 정보 DTO
      */
-    KisStockDto GetStockInfo(String stockCode);
+    KisStockDto getStockInfo(String stockCode);
     /**
      * 주식 1개의 일별 데이터를 조회한다(지금으로부터 500일전까지)
      * @author Hyeongjun Park
      * @param stockCode 조회할 주식 코드
      * @return 주식의 일별 데이터 목록
      */
-    List<KisPeriodStockDto> GetDailyStockByPeriod (String stockCode);
+    List<KisPeriodStockDto> getDailyStockByPeriod (String stockCode);
     /**
      * 주식 1개의 월별 데이터를 조회한다.(지금으로부터 100달전까지)
      * @author Hyeongjun Park
      * @param stockCode 조회할 주식 코드
      * @return 월별 주식 데이터 목록
      */
-    List<KisPeriodStockDto> GetMonthlyStockByPeriod (String stockCode);
+    List<KisPeriodStockDto> getMonthlyStockByPeriod (String stockCode);
     /**
      * 주식 1개의 연별 데이터를 조회한다.(지금으로부터 10년전까지)
      * @author Hyeongjun Park
      * @param stockCode 조회할 주식 코드
      * @return 연도별 주식 데이터 목록
      */
-    List<KisPeriodStockDto> GetYearlyStockByPeriod (String stockCode);
+    List<KisPeriodStockDto> getYearlyStockByPeriod (String stockCode);
 }
