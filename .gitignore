@@ -36,7 +36,7 @@ out/
 
 ### VS Code ###
 .vscode/
-
+prometheus.yml
 application.yml
 application.yaml
 application.properties

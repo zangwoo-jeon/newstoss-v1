@@ -14,6 +14,13 @@ import java.util.Map;
 
 @Component
 public class JwtAccessDeniedHandler implements AccessDeniedHandler {
+
+    private final ObjectMapper objectMapper;
+
+    public JwtAccessDeniedHandler(ObjectMapper objectMapper) {
+        this.objectMapper = objectMapper;
+    }
+
     @Override
     public void handle(HttpServletRequest request,
                        HttpServletResponse response,
@@ -26,6 +33,6 @@ public class JwtAccessDeniedHandler implements AccessDeniedHandler {
         body.put("code", JwtErrorCode.ACCESS_DENIED.getCode());
         body.put("message", JwtErrorCode.ACCESS_DENIED.getMessage());
 
-        new ObjectMapper().writeValue(response.getWriter(), body);
+        objectMapper.writeValue(response.getWriter(), body); // ✅ Spring 설정 반영된 mapper 사용
     }
 }

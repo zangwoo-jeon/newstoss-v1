@@ -14,9 +14,7 @@ import java.time.LocalDateTime;
 public class MLNewsDTOv2 {
     @JsonProperty("news_id")
     private String newsId;
-    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
-    @JsonProperty("wdate")
-    private LocalDateTime wdate;
+    private String wdate;
     private String title;
     private String article;
     private String url;

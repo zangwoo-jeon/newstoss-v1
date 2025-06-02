@@ -2,11 +2,11 @@ package com.newstoss.member.application;
 
 import com.newstoss.auth.adapter.in.web.dto.requestDTO.LoginDTO;
 import com.newstoss.member.adapter.in.web.dto.requestDTO.SignupRequestDTO;
-import com.newstoss.member.application.command.FgOffsetService;
-import com.newstoss.member.application.command.SignupService;
-import com.newstoss.member.application.command.WithdrawService;
-import com.newstoss.member.application.query.DuplicateCheck;
-import com.newstoss.member.application.query.GetMemberService;
+import com.newstoss.member.application.in.command.FgOffsetService;
+import com.newstoss.member.application.in.command.SignupService;
+import com.newstoss.member.application.in.command.WithdrawService;
+import com.newstoss.member.application.in.query.DuplicateCheck;
+import com.newstoss.member.application.in.query.GetMemberService;
 import com.newstoss.member.domain.Member;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
