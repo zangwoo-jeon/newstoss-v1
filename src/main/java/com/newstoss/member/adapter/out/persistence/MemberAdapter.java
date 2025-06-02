@@ -1,8 +1,8 @@
 package com.newstoss.member.adapter.out.persistence;
 
 import com.newstoss.member.domain.Member;
-import com.newstoss.member.domain.MemberCommandPort;
-import com.newstoss.member.domain.MemberQueryPort;
+import com.newstoss.member.application.out.MemberCommandPort;
+import com.newstoss.member.application.out.MemberQueryPort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
