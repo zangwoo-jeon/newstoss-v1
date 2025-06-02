@@ -7,6 +7,8 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -31,9 +33,8 @@ public class Stock extends BaseTimeEntity {
     private Integer stockSearchCount;
     private String category;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "stock")
-    private Portfolio portfolio;
+    @OneToMany(mappedBy = "stock", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Portfolio> portfolios;
 
     //== 생성 메서드 ==//
     public static Stock createStock(String stockCode, String name, Integer price, String marketName, String category) {
