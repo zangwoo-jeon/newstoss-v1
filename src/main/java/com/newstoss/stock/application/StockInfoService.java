@@ -55,9 +55,9 @@ public class StockInfoService implements GetStockInfoUseCase {
     public List<KisPeriodStockDto> getDailyStockByPeriod (String stockCode) {
         List<KisPeriodStockDto> stockDailyPeriod = new ArrayList<>();
         for (int i = 0; i < 5; i++) {
-            String StartDate = LocalDate.now().minusDays(i*100).format(DateTimeFormatter.ofPattern("yyyyMMdd"));
-            String endDate = LocalDate.now().minusDays(i*100+100).format(DateTimeFormatter.ofPattern("yyyyMMdd"));
-            stockDailyPeriod.addAll(stockInfoPort.getStockInfoByPeriod(stockCode, "D", StartDate, endDate));
+            String endDate = LocalDate.now().minusDays(i*100).format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+            String startDate = LocalDate.now().minusDays(i*100+100).format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+            stockDailyPeriod.addAll(stockInfoPort.getStockInfoByPeriod(stockCode, "D", startDate, endDate));
         }
         if (stockDailyPeriod.isEmpty()) {
             throw new CustomException(StockErrorCode.STOCK_NOT_FOUND);
@@ -68,8 +68,8 @@ public class StockInfoService implements GetStockInfoUseCase {
     @Override
     public List<KisPeriodStockDto> getMonthlyStockByPeriod(String stockCode) {
         List<KisPeriodStockDto> stockMonthlyPeriod = stockInfoPort.getStockInfoByPeriod(stockCode, "M",
-                LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")),
-                LocalDate.now().minusMonths(100).format(DateTimeFormatter.ofPattern("yyyyMMdd")));
+                LocalDate.now().minusMonths(100).format(DateTimeFormatter.ofPattern("yyyyMMdd")),
+                LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")));
         if (stockMonthlyPeriod.isEmpty()) {
             throw new CustomException(StockErrorCode.STOCK_NOT_FOUND);
         }
@@ -79,8 +79,8 @@ public class StockInfoService implements GetStockInfoUseCase {
     @Override
     public List<KisPeriodStockDto> getYearlyStockByPeriod(String stockCode) {
         List<KisPeriodStockDto> stockYearlyPeriod = stockInfoPort.getStockInfoByPeriod(stockCode, "Y",
-                LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")),
-                LocalDate.now().minusYears(10).format(DateTimeFormatter.ofPattern("yyyyMMdd")));
+                LocalDate.now().minusYears(10).format(DateTimeFormatter.ofPattern("yyyyMMdd")),
+                LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")));
         if (stockYearlyPeriod.isEmpty()) {
             throw new CustomException(StockErrorCode.STOCK_NOT_FOUND);
         }
