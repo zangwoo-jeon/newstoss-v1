@@ -7,9 +7,8 @@ import java.util.List;
 
 public interface GetPopularStockUseCase {
     /**
-     * 인기 주식 정보를 조회하는 메서드
-     *
+     * 최대 10개의 인기 주식 정보를 가져온다.
      * @return 인기 주식 정보 리스트
      */
-    KisListOutputDto<KisPopularDto> getPopularStock();
+    List<KisPopularDto> getPopularStock();
 }

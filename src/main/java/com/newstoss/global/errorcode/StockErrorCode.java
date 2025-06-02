@@ -9,8 +9,8 @@ import org.springframework.http.HttpStatus;
 public enum StockErrorCode implements ErrorCode {
     KIS_NULL_CODE(HttpStatus.BAD_REQUEST, false, "KIS-001", "KIS 응답이 null입니다."),
     CATEGORY_NOT_FOUND(HttpStatus.NOT_FOUND, false, "KIS-002", "카테고리를 찾을 수 없습니다."),
-    STOCK_NOT_FOUND(HttpStatus.NOT_FOUND, false, "KIS-003", "해당 주식을 찾을 수 없습니다.");
-
+    STOCK_NOT_FOUND(HttpStatus.NOT_FOUND, false, "KIS-003", "해당 주식을 찾을 수 없습니다."),
+    INVALID_PERIOD_TYPE(HttpStatus.BAD_REQUEST, false, "KIS-004", "유효하지 않은 기간 타입입니다.");
 
     private final HttpStatus httpStatus;
     private final boolean isSuccess;
