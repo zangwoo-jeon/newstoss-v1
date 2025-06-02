@@ -1,9 +1,9 @@
 package com.newstoss.news.application.service;
 
-import com.newstoss.news.adapter.in.web.dto.v1.NewsDTOv1;
-import com.newstoss.news.adapter.in.web.dto.common.RelatedNewsDTO;
-import com.newstoss.news.adapter.in.web.dto.common.RelatedReportDTO;
-import com.newstoss.news.adapter.in.web.dto.common.RelatedStockDTO;
+import com.newstoss.news.adapter.in.web.dto.news.v1.NewsDTOv1;
+import com.newstoss.news.adapter.in.web.dto.news.common.RelatedNewsDTO;
+import com.newstoss.news.adapter.in.web.dto.news.common.RelatedReportDTO;
+import com.newstoss.news.adapter.in.web.dto.news.common.RelatedStockDTO;
 import com.newstoss.news.application.port.in.ml.GetRelatedNewsUseCase;
 import com.newstoss.news.application.port.in.ml.GetRelatedReportUseCase;
 import com.newstoss.news.application.port.in.ml.GetRelatedStocksUseCase;

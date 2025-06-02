@@ -1,6 +1,6 @@
 package com.newstoss.news.application.port.in.ml;
 
-import com.newstoss.news.adapter.in.web.dto.common.RelatedNewsDTO;
+import com.newstoss.news.adapter.in.web.dto.news.common.RelatedNewsDTO;
 
 import java.util.List;
 
