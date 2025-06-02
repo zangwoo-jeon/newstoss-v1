@@ -1,7 +1,7 @@
 package com.newstoss.news.application.impl.scrap;
 
 import com.newstoss.news.adapter.in.web.dto.news.v2.NewsDTOv2;
-import com.newstoss.news.application.impl.news.ml.v2.NewsDTOv2Mapper;
+import com.newstoss.news.application.impl.news.v2.NewsDTOv2Mapper;
 import com.newstoss.news.application.port.out.ml.MLNewsRelatedPortV2;
 import com.newstoss.news.application.port.in.scrap.GetScrapNewsListUseCase;
 import com.newstoss.news.application.port.out.scrap.ScrapNewsPort;

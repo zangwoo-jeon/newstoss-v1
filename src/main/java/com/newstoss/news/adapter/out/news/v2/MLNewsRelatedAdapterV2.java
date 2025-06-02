@@ -2,6 +2,7 @@ package com.newstoss.news.adapter.out.news.v2;
 
 import com.newstoss.global.errorcode.NewsErrorCode;
 import com.newstoss.global.handler.CustomException;
+import com.newstoss.news.adapter.in.web.dto.news.common.GetAllNewsDTO;
 import com.newstoss.news.adapter.out.dto.MLRelatedNewsDTO;
 import com.newstoss.news.adapter.out.dto.MLRelatedReportDTO;
 import com.newstoss.news.adapter.out.dto.MLRelatedReportListWrapper;
@@ -38,6 +39,15 @@ public class MLNewsRelatedAdapterV2 implements MLNewsRelatedPortV2 {
         String url = BASE_URL + "v2/" + newsId;
         return safeGetObject(url, MLNewsDTOv2.class);
     }
+
+    @Override
+    public List<MLNewsDTOv2> getAllNews(GetAllNewsDTO getAllNewsDTO) {
+        Integer skip = getAllNewsDTO.getSkip();
+        Integer limit = getAllNewsDTO.getLimit();
+        String url = BASE_URL + "v/2" + "?skip="+skip+"&limit="+limit;
+        return safeExchangeList(url, new ParameterizedTypeReference<>() {});
+    }
+
 
     @Override
     public List<MLRelatedNewsDTO> getSimilarNews(String newsId) {

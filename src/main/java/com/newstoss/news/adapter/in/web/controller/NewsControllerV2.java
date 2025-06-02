@@ -1,6 +1,7 @@
 package com.newstoss.news.adapter.in.web.controller;
 
 import com.newstoss.global.response.SuccessResponse;
+import com.newstoss.news.adapter.in.web.dto.news.common.GetAllNewsDTO;
 import com.newstoss.news.adapter.in.web.dto.news.common.RelatedNewsDTO;
 import com.newstoss.news.adapter.in.web.dto.news.common.RelatedReportDTO;
 import com.newstoss.news.adapter.in.web.dto.news.common.RelatedStockDTO;
@@ -54,5 +55,12 @@ public class NewsControllerV2{
     public ResponseEntity<SuccessResponse<Object>> relatedReport(@RequestParam String newsId){
         List<RelatedReportDTO> report = newsServiceV2.getRelatedReport(newsId);
         return ResponseEntity.ok(new SuccessResponse<>(true, "뉴스 관련 종목 조회 성공", report));
+    }
+
+    @Operation(summary = "전체 뉴스 조회", description = "입력 받은 파라미터 값에 따라 뉴스를 조회합니다.")
+    @GetMapping("/all")
+    public ResponseEntity<SuccessResponse<Object>> relatedReport(@ModelAttribute GetAllNewsDTO getAllNewsDTO){
+        List<NewsDTOv2> news = newsServiceV2.getAllNews(getAllNewsDTO);
+        return ResponseEntity.ok(new SuccessResponse<>(true, "뉴스 관련 종목 조회 성공", news));
     }
 }

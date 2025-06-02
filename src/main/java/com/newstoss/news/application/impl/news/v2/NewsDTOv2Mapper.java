@@ -1,4 +1,4 @@
-package com.newstoss.news.application.impl.news.ml.v2;
+package com.newstoss.news.application.impl.news.v2;
 
 
 import com.newstoss.news.adapter.in.web.dto.news.v2.NewsDTOv2;

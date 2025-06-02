@@ -1,9 +1,11 @@
 package com.newstoss.news.application.service;
 
+import com.newstoss.news.adapter.in.web.dto.news.common.GetAllNewsDTO;
 import com.newstoss.news.adapter.in.web.dto.news.common.RelatedNewsDTO;
 import com.newstoss.news.adapter.in.web.dto.news.common.RelatedReportDTO;
 import com.newstoss.news.adapter.in.web.dto.news.common.RelatedStockDTO;
 import com.newstoss.news.adapter.in.web.dto.news.v2.NewsDTOv2;
+import com.newstoss.news.application.port.in.ml.GetAllNewsUseCase;
 import com.newstoss.news.application.port.in.ml.GetRelatedNewsUseCase;
 import com.newstoss.news.application.port.in.ml.GetRelatedReportUseCase;
 import com.newstoss.news.application.port.in.ml.GetRelatedStocksUseCase;
@@ -23,6 +25,7 @@ public class NewsServiceV2 {
     private final GetRelatedNewsUseCase getRelatedNews;
     private final GetRelatedStocksUseCase getRelatedStocks;
     private final GetRelatedReportUseCase getRelatedReport;
+    private final GetAllNewsUseCase getAllNews;
 
     public List<NewsDTOv2> getRealTimeNews(){
         return getRealTimeNews.exec();
@@ -42,5 +45,9 @@ public class NewsServiceV2 {
 
     public List<RelatedReportDTO> getRelatedReport(String newsId){
         return getRelatedReport.exec(newsId);
+    }
+
+    public List<NewsDTOv2> getAllNews(GetAllNewsDTO getAllNewsDTO) {
+        return getAllNews.exec(getAllNewsDTO);
     }
 }
