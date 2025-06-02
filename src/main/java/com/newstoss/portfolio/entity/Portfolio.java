@@ -26,6 +26,20 @@ public class Portfolio extends BaseTimeEntity {
     @JoinColumn(name = "member_id")
     private Member member;
 
-    @OneToMany(mappedBy = "portfolio" , cascade = CascadeType.ALL)
-    private List<Stock> stocks;
+    @OneToOne(mappedBy = "portfolio")
+    private Stock stock;
+
+    //== 생성 메서드 ==//
+    public static Portfolio createPortfolio(Member member, Integer stockCount, Integer entryPrice) {
+        Portfolio portfolio = new Portfolio();
+        portfolio.member = member;
+        portfolio.stockCount = stockCount;
+        portfolio.entryPrice = entryPrice;
+        return portfolio;
+    }
+
+    //== 비즈니스 로직 ==//
+    public void addStock(Stock stock, Integer stockCount, Integer entryPrice) {
+
+    }
 }

@@ -100,6 +100,9 @@ public class StockApiController {
     public ResponseEntity<?> searchStocks(@RequestParam(required = false) String keyword) {
         log.info("searchStocks called with keyword: {}", keyword);
         List<SearchResponseDto> searchResponseDtos = searchStockUseCase.searchStock(keyword);
+        if (keyword == null || keyword.isEmpty()) {
+            return ResponseEntity.ok(new SuccessResponse<>(false, "검색어가 비어있습니다.", searchResponseDtos));
+        }
         return ResponseEntity.ok(new SuccessResponse<>(true, "검색 결과 조회에 성공하였습니다.", searchResponseDtos));
     }
 
