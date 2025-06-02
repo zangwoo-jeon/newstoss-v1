@@ -1,7 +1,7 @@
 package com.newstoss.news.application.port.in.ml.v1;
 
 
-import com.newstoss.news.adapter.in.web.dto.v1.NewsDTOv1;
+import com.newstoss.news.adapter.in.web.dto.news.v1.NewsDTOv1;
 
 import java.util.List;
 
