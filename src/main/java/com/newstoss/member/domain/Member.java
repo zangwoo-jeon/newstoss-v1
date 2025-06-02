@@ -1,8 +1,10 @@
 package com.newstoss.member.domain;
 
+import com.newstoss.portfolio.entity.Portfolio;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -28,6 +30,9 @@ public class Member {
     private UUID fgOffset;
     @Embedded
     private Address address;
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    private List<Portfolio> portfolios;
 
     public void changeFgOffset(UUID newOffset) {
         if (newOffset == null) {

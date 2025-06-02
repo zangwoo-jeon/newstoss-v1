@@ -31,8 +31,8 @@ public class Stock extends BaseTimeEntity {
     private Integer stockSearchCount;
     private String category;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "portfolio_id")
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "stock")
     private Portfolio portfolio;
 
     //== 생성 메서드 ==//
