@@ -37,6 +37,12 @@ public interface GetStockInfoUseCase {
      */
     List<KisPeriodStockDto> getDailyStockByPeriod (String stockCode);
     /**
+     * 주식 1개의 주별 데이터를 조회한다.(지금으로부터 200주전까지)
+     * @param stockCode 주식의 종목 코드
+     * @return 주봉 데이터 목록
+     */
+    List<KisPeriodStockDto> getWeeklyStockByPeriod (String stockCode);
+    /**
      * 주식 1개의 월별 데이터를 조회한다.(지금으로부터 100달전까지)
      * @author Hyeongjun Park
      * @param stockCode 조회할 주식 코드
