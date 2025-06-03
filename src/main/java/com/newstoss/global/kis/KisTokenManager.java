@@ -40,7 +40,7 @@ public class KisTokenManager {
         expireAt = newToken.getExpireAt();
         return newToken.getToken();
     }
-
+    // 토큰을 가져오는 메서드
     public synchronized String getToken() {
         if (token == null || isTokenExpired()) {
             log.info("KisTokenManager.getToken() called - Token is null or expired, refreshing token");
