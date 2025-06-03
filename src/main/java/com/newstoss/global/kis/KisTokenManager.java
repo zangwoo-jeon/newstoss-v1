@@ -21,6 +21,17 @@ public class KisTokenManager {
 
     public synchronized String refresh() {
         log.info("KisTokenManager.refresh() called");
+        Optional<KisToken> findToken = kisTokenRepository.findTopByOrderByIdDesc();
+        if (findToken.isPresent()) {
+            KisToken existingToken = findToken.get();
+            token = existingToken.getToken();
+            expireAt = existingToken.getExpireAt();
+
+            if (!isTokenExpired()) {
+                log.info("KisTokenManager.refresh() - Existing token is still valid, returning existing token");
+                return token;
+            }
+        }
         KisTokenResponse tokenResponse = kisTokenClient.fetchToken();
         KisToken newToken = KisToken.createToken(tokenResponse);
         kisTokenRepository.save(newToken);
