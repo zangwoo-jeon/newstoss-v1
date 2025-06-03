@@ -42,4 +42,10 @@ public class Member {
             this.fgOffset = newOffset;
         }
     }
+
+    //== 연관관계 메서드 ==//
+    public void addPortfolio(Portfolio portfolio) {
+        this.portfolios.add(portfolio);
+        portfolio.setMember(this); // 포트폴리오와 회원 간의 양방향 관계 설정
+    }
 }

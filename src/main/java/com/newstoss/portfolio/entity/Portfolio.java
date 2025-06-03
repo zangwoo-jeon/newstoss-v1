@@ -16,7 +16,8 @@ import java.util.List;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Portfolio extends BaseTimeEntity {
-    @Id @GeneratedValue
+    @Id
+    @GeneratedValue
     @Column(name = "portfolio_id")
     private Long id;
 
@@ -29,13 +30,14 @@ public class Portfolio extends BaseTimeEntity {
     private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "portfolios")
+    @JoinColumn(name = "stock_id")
     private Stock stock;
 
     //== 생성 메서드 ==//
-    public static Portfolio createPortfolio(Member member, Integer stockCount, Float entryPrice) {
+    public static Portfolio createPortfolio(Member member, Stock stock, Integer stockCount, Float entryPrice) {
         Portfolio portfolio = new Portfolio();
-        portfolio.member = member;
+        portfolio.setMember(member);
+        portfolio.setStock(stock);
         portfolio.stockCount = stockCount;
         portfolio.entryPrice = entryPrice;
         return portfolio;
@@ -43,7 +45,7 @@ public class Portfolio extends BaseTimeEntity {
 
     //== 비즈니스 로직 ==//
     public void addStock(Integer stockCount, Float entryPrice) {
-        this.entryPrice = (this.entryPrice * this.stockCount + entryPrice * stockCount) / (this.stockCount+ stockCount);
+        this.entryPrice = (this.entryPrice * this.stockCount + entryPrice * stockCount) / (this.stockCount + stockCount);
         this.stockCount += stockCount;
     }
 
@@ -56,4 +58,17 @@ public class Portfolio extends BaseTimeEntity {
 
     //== 연관관계 메서드==//
 
+    public void setMember(Member member) {
+        this.member = member;
+        if (!member.getPortfolios().contains(this)) {
+            member.getPortfolios().add(this);
+        }
+    }
+
+    public void setStock(Stock stock) {
+        this.stock = stock;
+        if (!stock.getPortfolios().contains(this)) {
+            stock.getPortfolios().add(this);
+        }
+    }
 }
