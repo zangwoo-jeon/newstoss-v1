@@ -17,32 +17,44 @@ public class KisTokenManager {
     private final KisTokenClient kisTokenClient;
     private final KisTokenRepository kisTokenRepository;
     private String token;
-    public String refresh() {
+    private LocalDateTime expireAt;
+
+    public synchronized String refresh() {
         log.info("KisTokenManager.refresh() called");
+        Optional<KisToken> findToken = kisTokenRepository.findTopByOrderByIdDesc();
+        if (findToken.isPresent()) {
+            KisToken existingToken = findToken.get();
+            token = existingToken.getToken();
+            expireAt = existingToken.getExpireAt();
+
+            if (!isTokenExpired()) {
+                log.info("KisTokenManager.refresh() - Existing token is still valid, returning existing token");
+                return token;
+            }
+        }
         KisTokenResponse tokenResponse = kisTokenClient.fetchToken();
         KisToken newToken = KisToken.createToken(tokenResponse);
         kisTokenRepository.save(newToken);
+
         token = newToken.getToken();
+        expireAt = newToken.getExpireAt();
         return newToken.getToken();
     }
-
-    public String getToken() {
-        Optional<KisToken> latest = kisTokenRepository.findTopByOrderByIdDesc();
-
-        if (latest.isEmpty()) {
-            return refresh();
-        } else if (latest.get().isExpired()) {
-            log.info("KisTokenManager.getToken() - Token expired, refreshing token");
-            KisTokenResponse tokenResponse = kisTokenClient.fetchToken();
-            return latest.get().changeToken(tokenResponse);
+    // 토큰을 가져오는 메서드
+    public synchronized String getToken() {
+        if (token == null || isTokenExpired()) {
+            log.info("KisTokenManager.getToken() called - Token is null or expired, refreshing token");
+            refresh();
+        } else {
+            log.info("KisTokenManager.getToken() called - Returning existing token");
         }
-        else {
-            log.info("KisTokenManager.getToken() - Returning existing token");
-            if (token == null || token.isEmpty()) {
-                token = latest.get().getToken();
-            }
-            return token;
+        return token;
+    }
+    private boolean isTokenExpired() {
+        if (expireAt == null) {
+            return true;
         }
+        return LocalDateTime.now().isAfter(expireAt.minusSeconds(30)); // 30초 여유
     }
 }
 
