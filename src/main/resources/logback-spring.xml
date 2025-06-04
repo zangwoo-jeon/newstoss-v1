@@ -13,9 +13,9 @@
 
     <springProfile name="prod">
         <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-            <file>/home/ubuntu/newstoss/logs/app.log</file>
+            <file>/logs/app.log</file>
             <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-                <fileNamePattern>/home/ubuntu/newstoss/logs/app.%d{yyyy-MM-dd}.log</fileNamePattern>
+                <fileNamePattern>/logs/app.%d{yyyy-MM-dd}.log</fileNamePattern>
                 <maxHistory>30</maxHistory>
             </rollingPolicy>
             <encoder>
