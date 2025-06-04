@@ -113,7 +113,6 @@ jobs:
               --name ${CONTAINER_NAME} \
               --network ${DOCKER_NETWORK_NAME} \
               -v /home/ubuntu/newstoss/logs:/logs \
-              -e LOGGING_FILE_NAME="/logs/application.log" \
               -e SPRING_DATASOURCE_URL="${{ secrets.SPRING_DATASOURCE_URL }}" \
               -e SPRING_DATASOURCE_USERNAME="${{ secrets.SPRING_DATASOURCE_USERNAME }}" \
               -e SPRING_DATASOURCE_PASSWORD="${{ secrets.SPRING_DATASOURCE_PASSWORD }}" \
