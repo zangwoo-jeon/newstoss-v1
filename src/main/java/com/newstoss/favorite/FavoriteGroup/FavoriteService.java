@@ -1,4 +1,4 @@
-package com.newstoss.favorite;
+package com.newstoss.favorite.FavoriteGroup;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

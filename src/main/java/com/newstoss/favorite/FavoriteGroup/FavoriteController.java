@@ -1,4 +1,4 @@
-package com.newstoss.favorite;
+package com.newstoss.favorite.FavoriteGroup;
 
 import com.newstoss.global.response.SuccessResponse;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +22,7 @@ public class FavoriteController {
     @GetMapping("/{memberId}")
     public ResponseEntity<SuccessResponse<Object>> getFavoriteGroup(@PathVariable UUID memberId) {
         List<Favorite> result = favoriteService.getFavoritesByMemberId(memberId);
-        return ResponseEntity.ok(new SuccessResponse<>(true, "관심종목 조회 성공", result));
+        return ResponseEntity.ok(new SuccessResponse<>(true, "관심그룹 조회 성공", result));
     }
 
 
@@ -32,7 +32,7 @@ public class FavoriteController {
             @RequestBody Favorite favorite) {
         favorite.setMemberId(memberId);
         favoriteService.saveFavorite(favorite);
-        return ResponseEntity.ok(new SuccessResponse<>(true, "관심종목 추가 성공", null));
+        return ResponseEntity.ok(new SuccessResponse<>(true, "관심그룹 추가 성공", null));
     }
 
     @DeleteMapping("/{memberId}/{groupId}")
@@ -40,7 +40,7 @@ public class FavoriteController {
             @PathVariable UUID memberId,
             @PathVariable UUID groupId) {
         favoriteService.deleteFavoriteByMemberIdAndGroupId(memberId, groupId);
-        return ResponseEntity.ok(new SuccessResponse<>(true, "관심종목 제거 성공", null));
+        return ResponseEntity.ok(new SuccessResponse<>(true, "관심그룹 제거 성공", null));
     }
 
     @PutMapping("/{memberId}/{groupId}/main")
@@ -51,10 +51,10 @@ public class FavoriteController {
         if (updatedFavoriteOptional.isPresent()) {
             Favorite updatedFavorite = updatedFavoriteOptional.get();
             System.out.println("Successfully set main for groupId: " + updatedFavorite.getGroupId() + ", main: " + updatedFavorite.isMain()); // isMain() 사용
-            return ResponseEntity.ok(new SuccessResponse<>(true, "주요 관심종목 설정 성공", updatedFavorite)); // 변경된 객체 반환하거나 null
+            return ResponseEntity.ok(new SuccessResponse<>(true, "주요 관심그룹 설정 성공", updatedFavorite)); // 변경된 객체 반환하거나 null
         } else {
             System.out.println("Favorite group not found for memberId=" + memberId + ", groupId=" + groupId + ". Cannot set main.");
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new SuccessResponse<>(false, "해당 관심종목 그룹을 찾을 수 없습니다.", null));
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new SuccessResponse<>(false, "해당 관심그룹을 찾을 수 없습니다.", null));
         }
     }
 
