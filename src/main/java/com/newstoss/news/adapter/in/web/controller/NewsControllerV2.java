@@ -61,6 +61,6 @@ public class NewsControllerV2{
     @GetMapping("/all")
     public ResponseEntity<SuccessResponse<Object>> relatedReport(@ModelAttribute GetAllNewsDTO getAllNewsDTO){
         List<NewsDTOv2> news = newsServiceV2.getAllNews(getAllNewsDTO);
-        return ResponseEntity.ok(new SuccessResponse<>(true, "뉴스 관련 종목 조회 성공", news));
+        return ResponseEntity.ok(new SuccessResponse<>(true, "전체 뉴스 조회 성공", news));
     }
 }

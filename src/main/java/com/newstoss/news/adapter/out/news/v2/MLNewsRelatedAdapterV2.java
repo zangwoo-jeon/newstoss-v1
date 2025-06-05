@@ -44,7 +44,7 @@ public class MLNewsRelatedAdapterV2 implements MLNewsRelatedPortV2 {
     public List<MLNewsDTOv2> getAllNews(GetAllNewsDTO getAllNewsDTO) {
         Integer skip = getAllNewsDTO.getSkip();
         Integer limit = getAllNewsDTO.getLimit();
-        String url = BASE_URL + "v/2" + "?skip="+skip+"&limit="+limit;
+        String url = BASE_URL + "v2/" + "?skip="+skip+"&limit="+limit;
         return safeExchangeList(url, new ParameterizedTypeReference<>() {});
     }
 
@@ -81,14 +81,19 @@ public class MLNewsRelatedAdapterV2 implements MLNewsRelatedPortV2 {
             return Optional.ofNullable(response.getBody()).orElse(List.of());
 
         } catch (HttpClientErrorException.NotFound e) {
+            log.error("[ML ERROR] 요청 실패. URL: {}, 예외: ", url, e);
             throw new CustomException(NewsErrorCode.NEWS_NOT_FOUND);
         } catch (HttpClientErrorException.BadRequest e) {
+            log.error("[ML ERROR] 요청 실패. URL: {}, 예외: ", url, e);
             throw new CustomException(NewsErrorCode.ML_INVALID_RESPONSE);
         } catch (HttpClientErrorException.Unauthorized e) {
+            log.error("[ML ERROR] 요청 실패. URL: {}, 예외: ", url, e);
             throw new CustomException(NewsErrorCode.ML_UNAUTHORIZED);
         } catch (org.springframework.web.client.ResourceAccessException e) {
+            log.error("[ML ERROR] 요청 실패. URL: {}, 예외: ", url, e);
             throw new CustomException(NewsErrorCode.ML_TIMEOUT);
         } catch (Exception e) {
+            log.error("[ML ERROR] 요청 실패. URL: {}, 예외: ", url, e);
             throw new CustomException(NewsErrorCode.ML_UNKNOWN_ERROR);
         }
     }
