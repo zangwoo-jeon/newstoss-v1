@@ -1,14 +1,16 @@
-package com.newstoss.favorite;
+package com.newstoss.favorite.FavoriteGroup;
 
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.util.UUID;
 
 @Entity
 @Table(name = "favorites")
+@ToString
 @Getter
 @Setter
 @NoArgsConstructor
@@ -26,4 +28,7 @@ public class Favorite {
 
     @Column(nullable = false)
     private Integer groupSequence;
+
+    @Column(nullable = false)
+    private boolean main;
 }
