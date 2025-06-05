@@ -1,6 +1,6 @@
 package com.newstoss.stock.adapter.outbound.persistence.repository;
 
-import com.newstoss.stock.application.port.out.persistence.StockRepositoryCustom;
+import com.newstoss.stock.application.port.out.persistence.StockSearchRepository;
 import com.newstoss.stock.entity.Stock;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -11,7 +11,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 import java.util.Optional;
 
-public interface StockRepository extends JpaRepository<Stock, Long> , StockRepositoryCustom {
+public interface StockRepository extends JpaRepository<Stock, Long> , StockSearchRepository {
 
     @Query("SELECT DISTINCT s.category FROM Stock s order by s.category")
     List<String> findCategoryAll();
