@@ -119,7 +119,7 @@ jobs:
               -e SPRING_PROFILES_ACTIVE=prod \
               -e SPRING_DATA_REDIS_HOST=43.200.17.139 \
               -e SPRING_DATA_REDIS_PORT=6379 \
-              -e SPRING_DATA_REDIS_PASSWORD= "${{ secrets.REDIS_PASSWORD }}" \
+              -e SPRING_DATA_REDIS_PASSWORD="${{ secrets.REDIS_PASSWORD }}" \
               -e KIS_APPKEY="${{ secrets.KIS_APP_KEY }}" \
               -e KIS_APPSECRET="${{ secrets.KIS_APP_SECRET }}" \
               -e KIS_GRANT_TYPE=client_credentials \
