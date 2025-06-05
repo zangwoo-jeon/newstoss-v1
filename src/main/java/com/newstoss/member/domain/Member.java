@@ -31,9 +31,6 @@ public class Member {
     @Embedded
     private Address address;
 
-    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
-    private List<Portfolio> portfolios;
-
     public void changeFgOffset(UUID newOffset) {
         if (newOffset == null) {
             throw new IllegalArgumentException("FG offset cannot be null");
@@ -43,9 +40,4 @@ public class Member {
         }
     }
 
-    //== 연관관계 메서드 ==//
-    public void addPortfolio(Portfolio portfolio) {
-        this.portfolios.add(portfolio);
-        portfolio.setMember(this); // 포트폴리오와 회원 간의 양방향 관계 설정
-    }
 }
