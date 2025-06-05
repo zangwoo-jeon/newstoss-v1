@@ -112,9 +112,11 @@ jobs:
               -p ${HOST_APP_PORT}:${CONTAINER_APP_PORT} \
               --name ${CONTAINER_NAME} \
               --network ${DOCKER_NETWORK_NAME} \
+              -v /home/ubuntu/newstoss/logs:/logs \
               -e SPRING_DATASOURCE_URL="${{ secrets.SPRING_DATASOURCE_URL }}" \
               -e SPRING_DATASOURCE_USERNAME="${{ secrets.SPRING_DATASOURCE_USERNAME }}" \
               -e SPRING_DATASOURCE_PASSWORD="${{ secrets.SPRING_DATASOURCE_PASSWORD }}" \
+              -e SPRING_PROFILES_ACTIVE=prod \
               -e KIS_APPKEY="${{ secrets.KIS_APP_KEY }}" \
               -e KIS_APPSECRET="${{ secrets.KIS_APP_SECRET }}" \
               -e KIS_GRANT_TYPE=client_credentials \
