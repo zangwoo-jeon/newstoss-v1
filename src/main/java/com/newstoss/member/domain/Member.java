@@ -31,9 +31,6 @@ public class Member {
     @Embedded
     private Address address;
 
-    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
-    private List<Portfolio> portfolios;
-
     public void changeFgOffset(UUID newOffset) {
         if (newOffset == null) {
             throw new IllegalArgumentException("FG offset cannot be null");
@@ -42,4 +39,5 @@ public class Member {
             this.fgOffset = newOffset;
         }
     }
+
 }
