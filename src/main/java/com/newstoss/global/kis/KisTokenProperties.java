@@ -11,6 +11,6 @@ import org.springframework.context.annotation.Configuration;
 public class KisTokenProperties {
     private String appkey;
     private String appsecret;
-    private String grant_Type;
-    private String token_url;
+    private String grantType;
+    private String tokenUrl;
 }

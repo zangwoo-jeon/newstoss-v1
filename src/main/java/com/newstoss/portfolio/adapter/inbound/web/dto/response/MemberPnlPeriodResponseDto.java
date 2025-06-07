@@ -25,6 +25,11 @@ public class MemberPnlPeriodResponseDto {
     private List<MemberPnl> pnlHistory; // 손익 이력
 
     @Schema(description = "기간별 손익", example = "100000")
-    private Long PeriodPnl; // 월간 손익
-// 연간 손익
+    private Long PeriodPnl;
+
+    @Schema(description = "기간별 손익 변화량", example = "+25%")
+    private Double PnlPercent;
+
+
+
 }

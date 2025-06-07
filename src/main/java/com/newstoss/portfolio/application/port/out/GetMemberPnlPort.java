@@ -3,6 +3,7 @@ package com.newstoss.portfolio.application.port.out;
 import com.newstoss.portfolio.entity.MemberPnl;
 
 import java.time.LocalDate;
+import java.util.Optional;
 import java.util.UUID;
 
 public interface GetMemberPnlPort {
@@ -12,7 +13,7 @@ public interface GetMemberPnlPort {
      * @param date 조회할 날짜 (YYYY-MM-DD 형식)
      * @return 회원의 손익 정보
      */
-    MemberPnl getMemberPnl(UUID memberId, LocalDate date);
+    Optional<MemberPnl> getMemberPnl(UUID memberId, LocalDate date);
     /**
      * 특정 회원의 달별 PnL을 조회한다.
      * @param memberId 회원 ID

@@ -120,8 +120,10 @@ jobs:
               -e SPRING_DATA_REDIS_HOST=43.200.17.139 \
               -e SPRING_DATA_REDIS_PORT=6379 \
               -e SPRING_DATA_REDIS_PASSWORD="${{ secrets.REDIS_PASSWORD }}" \
-              -e KIS_APPKEY="${{ secrets.KIS_APP_KEY }}" \
-              -e KIS_APPSECRET="${{ secrets.KIS_APP_SECRET }}" \
+              -e SPRING_MAIN_ALLOW_BEAN_DEFINITION_OVERRIDING=true \
+              -e SPRING_TASK_SCHEDULING_POOL_SIZE=5 \
+              -e KIS_APPKEY="${{ secrets.KIS_APPKEY }}" \
+              -e KIS_APPSECRET="${{ secrets.KIS_APPSECRET }}" \
               -e KIS_GRANT_TYPE=client_credentials \
               -e KIS_TOKEN_URL=https://openapi.koreainvestment.com:9443/oauth2/token \
               -e MANAGEMENT_SERVER_PORT="${{ secrets.MANAGEMENT_SERVER_PORT }}" \

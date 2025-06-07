@@ -10,6 +10,7 @@ import com.newstoss.portfolio.application.port.in.AddPortfolioUseCase;
 import com.newstoss.portfolio.application.port.in.CreatePortfolioUseCase;
 import com.newstoss.portfolio.application.port.in.SellPortfolioUseCase;
 import com.newstoss.portfolio.application.port.out.CreatePortfolioPort;
+import com.newstoss.portfolio.application.port.out.UpdateMemberPnlPort;
 import com.newstoss.portfolio.application.port.out.UpdatePortfolioPort;
 import com.newstoss.portfolio.entity.Portfolio;
 import com.newstoss.stock.adapter.outbound.persistence.repository.StockRepository;
@@ -30,11 +31,14 @@ public class PortfolioCommandService implements CreatePortfolioUseCase , SellPor
 
     private final CreatePortfolioPort createPortfolioPort;
     private final UpdatePortfolioPort updatePortfolioPort;
+    private final UpdateMemberPnlPort updateMemberPnlPort;
+
     @Override
     public Long createPortfolio(UUID memberId, String stockCode, Integer stockCount, Integer entryPrice) {
         Stock stock = stockRepository.findByStockCode(stockCode).orElseThrow(
                 () -> new CustomException(StockErrorCode.STOCK_NOT_FOUND)
         );
+        updateMemberPnlPort.updateMemberAsset(memberId,(long) stockCount * entryPrice);
         return createPortfolioPort.savePortfolio(memberId, stock, stockCount, entryPrice);
     }
 

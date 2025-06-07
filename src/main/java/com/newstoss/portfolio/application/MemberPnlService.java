@@ -33,14 +33,19 @@ public class MemberPnlService implements GetMemberPnlPeriodUseCase , GetMemberPn
 
         List<MemberPnl> memberPnlList = getMemberPnlPeriodPort.getMemberPnlDaily(memberId, startDate, endDate);
 
-        MemberPnl today = getMemberPnlPort.getMemberPnl(memberId, endDate);
-        MemberPnl periodAgo = getMemberPnlPort.getMemberPnl(memberId, startDate);
+        MemberPnl today = getMemberPnlPort.getMemberPnl(memberId, endDate).orElseThrow(
+                () -> new CustomException(MemberPnlErrorCode.MEMBER_PNL_NOT_FOUND)
+        );
+        MemberPnl periodAgo = getMemberPnlPort.getMemberPnl(memberId, startDate).orElseThrow(
+                () -> new CustomException(MemberPnlErrorCode.MEMBER_PNL_NOT_FOUND)
+        );
 
         return new MemberPnlPeriodResponseDto(
                 today.getAsset(),
                 today.getPnl(),
                 memberPnlList,
-                today.getAsset()- periodAgo.getAsset()
+                today.getAsset()- periodAgo.getAsset(),
+                ((double)(today.getAsset()-periodAgo.getAsset())/periodAgo.getPnl() * 100)
         );
     }
 
@@ -64,5 +69,6 @@ public class MemberPnlService implements GetMemberPnlPeriodUseCase , GetMemberPn
             return getMemberPnlPort.getMemberPnlAcc(memberId);
         }
     }
+
 }
 

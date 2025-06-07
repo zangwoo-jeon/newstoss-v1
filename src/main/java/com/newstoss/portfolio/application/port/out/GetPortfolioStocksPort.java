@@ -7,7 +7,7 @@ import java.util.UUID;
 
 public interface GetPortfolioStocksPort {
     /**
-     * 포트폴리오에 포함된 주식 목록을 조회한다.
+     * 사용자의 포트폴리오에 포함된 주식 목록을 조회한다.
      * @param memberId 사용자 ID
      * @return 포트폴리오에 포함된 주식 목록
      */
