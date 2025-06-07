@@ -18,7 +18,7 @@ import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
-public class MemberPnlAdapter implements GetMemberPnlPeriodPort , GetMemberPnlPort , CreateMemberPnlPort , UpdateMemberPnlPort {
+public class MemberPnlQueryAdapter implements GetMemberPnlPeriodPort , GetMemberPnlPort {
 
     private final JPAMemberPnlRepository repository;
 
@@ -54,23 +54,9 @@ public class MemberPnlAdapter implements GetMemberPnlPeriodPort , GetMemberPnlPo
         return accByMemberId;
     }
 
-    @Override
-    public Long create(MemberPnl memberPnl) {
-        MemberPnl saved = repository.save(memberPnl);
-        return saved.getId();
-    }
 
-    @Override
-    public void updateMemberPnl(UUID memberId, Integer pnl, Long asset) {
-        MemberPnl memberPnl = repository.findByMemberIdAndDate(memberId, LocalDate.now())
-                .orElseThrow(() -> new CustomException(MemberPnlErrorCode.MEMBER_PNL_NOT_FOUND));
-        memberPnl.updatePnl(pnl, asset);
-    }
 
-    @Override
-    public void updateMemberAsset(UUID memberId, Long asset) {
-        MemberPnl memberPnl = repository.findByMemberIdAndDate(memberId, LocalDate.now())
-                .orElseThrow(() -> new CustomException(MemberPnlErrorCode.MEMBER_PNL_NOT_FOUND));
-        memberPnl.updateAsset(asset);
-    }
+
+
+
 }
