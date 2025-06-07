@@ -1,4 +1,4 @@
-package com.newstoss.stock.application.port.out.persistence;
+package com.newstoss.stock.adapter.outbound.persistence.repository;
 
 import com.newstoss.stock.entity.Stock;
 

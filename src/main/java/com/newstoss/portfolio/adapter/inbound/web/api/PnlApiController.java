@@ -58,7 +58,6 @@ public class PnlApiController {
         log.info("getMemberPnlPeriod called");
         MemberPnlPeriodResponseDto memberPnlPeriod = memberPnlPeriodUseCase.getMemberPnlPeriod(memberId, period);
         return ResponseEntity.ok(new SuccessResponse<>(true, "포트폴리오 손익 기간 조회 성공", memberPnlPeriod));
-
     }
     @Operation(
             summary = "포트폴리오 손익 기간 조회",

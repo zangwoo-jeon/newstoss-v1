@@ -1,6 +1,5 @@
 package com.newstoss.stock.adapter.outbound.persistence.repository;
 
-import com.newstoss.stock.application.port.out.persistence.StockSearchRepository;
 import com.newstoss.stock.entity.Stock;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

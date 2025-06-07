@@ -30,16 +30,14 @@ public class MemberPnl {
 
     private Long asset;
 
-    private Long changeAmount;
 
     //== 생성 메서드 ==//
-    public static MemberPnl createMemberPnl(UUID memberId, Integer pnl, LocalDate date, Long asset, Long changeAmount) {
+    public static MemberPnl createMemberPnl(UUID memberId, Integer pnl, LocalDate date, Long asset) {
         MemberPnl memberPnl = new MemberPnl();
         memberPnl.memberId = memberId;
         memberPnl.Pnl = pnl;
         memberPnl.date = date;
         memberPnl.asset = asset;
-        memberPnl.changeAmount = changeAmount;
         return memberPnl;
     }
     //== 비즈니스 로직 ==//
