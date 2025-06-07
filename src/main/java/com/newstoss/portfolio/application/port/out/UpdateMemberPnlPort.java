@@ -4,4 +4,5 @@ import java.util.UUID;
 
 public interface UpdateMemberPnlPort {
     void updateMemberPnl(UUID memberId , Integer pnl, Long asset);
+    void updateMemberAsset(UUID memberId , Long asset);
 }

@@ -45,4 +45,8 @@ public class MemberPnl {
         this.Pnl = pnl;
         this.asset = asset;
     }
+
+    public void updateAsset(Long asset) {
+        this.asset += asset;
+    }
 }

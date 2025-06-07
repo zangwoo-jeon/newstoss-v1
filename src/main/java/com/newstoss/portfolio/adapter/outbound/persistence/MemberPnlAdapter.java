@@ -66,4 +66,11 @@ public class MemberPnlAdapter implements GetMemberPnlPeriodPort , GetMemberPnlPo
                 .orElseThrow(() -> new CustomException(MemberPnlErrorCode.MEMBER_PNL_NOT_FOUND));
         memberPnl.updatePnl(pnl, asset);
     }
+
+    @Override
+    public void updateMemberAsset(UUID memberId, Long asset) {
+        MemberPnl memberPnl = repository.findByMemberIdAndDate(memberId, LocalDate.now())
+                .orElseThrow(() -> new CustomException(MemberPnlErrorCode.MEMBER_PNL_NOT_FOUND));
+        memberPnl.updateAsset(asset);
+    }
 }
