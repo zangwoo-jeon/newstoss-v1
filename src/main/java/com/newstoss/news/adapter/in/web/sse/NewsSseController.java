@@ -2,6 +2,7 @@ package com.newstoss.news.adapter.in.web.sse;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -9,6 +10,7 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.io.IOException;
 
+@CrossOrigin(origins = "https://news-toss.vercel.app")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/news/stream")
