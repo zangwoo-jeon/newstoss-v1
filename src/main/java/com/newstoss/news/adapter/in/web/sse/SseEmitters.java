@@ -19,19 +19,25 @@ public class SseEmitters {
         SseEmitter emitter = new SseEmitter(Long.MAX_VALUE);
         emitters.add(emitter);
 
-        emitter.onCompletion(() -> emitters.remove(emitter));
-        emitter.onTimeout(() -> emitters.remove(emitter));
+        emitter.onCompletion(() -> {
+            emitters.remove(emitter);
+            System.out.println("❌ Emitter 연결 종료됨 → 현재 수: " + emitters.size());
+        });
 
+        emitter.onTimeout(() -> {
+            emitters.remove(emitter);
+            System.out.println("⏱️ Emitter 타임아웃 → 현재 수: " + emitters.size());
+        });
+
+        emitter.onError((e) -> {
+            emitters.remove(emitter);
+            System.out.println("💥 Emitter 에러 발생 → " + e.getMessage());
+        });
         return emitter;
     }
 
     public void send(Object data) {
-        try {
-            System.out.println("직렬화된 결과: " + objectMapper.writeValueAsString(data));
-        } catch (Exception e) {
-            System.out.println("직렬화 실패: " + e.getMessage());
-        }
-
+        System.out.println("현재 등록된 emitter 수: " + emitters.size());
         emitters.forEach(emitter -> {
             try {
                 emitter.send(SseEmitter.event().name("news").data(data));
