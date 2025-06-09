@@ -60,16 +60,18 @@ public class GetPopularStockService implements KisPopularStockPort {
                 .queryParam("FID_INPUT_PRICE_2", "") // 가격 상한
                 .queryParam("FID_VOL_CNT", "")
                 .queryParam("FID_INPUT_DATE_1", ""); // 시작 날짜
-        ResponseEntity<KisListOutputDto<KisPopularDto>> response = restTemplate.exchange(
-                builder.toUriString(),
-                GET,
-                entity,
-                new ParameterizedTypeReference<>() {}
-        );
-        if (!response.getBody().getRt_cd().equals("0")) {
-            log.error("kis 응답 코드가 0이 아닙니다.{}" , response.getBody().getMsg1());
+        try{
+            ResponseEntity<KisListOutputDto<KisPopularDto>> response = restTemplate.exchange(
+                    builder.toUriString(),
+                    GET,
+                    entity,
+                    new ParameterizedTypeReference<>() {}
+            );
+            return response.getBody().getOutput();
+        } catch (HttpServerErrorException e) {
+            String body = e.getResponseBodyAsString();
+            log.error("서버 에러 입니다: body: {} , e.message : {}", body, e.getMessage());
             throw new CustomException(StockErrorCode.KIS_NULL_CODE);
         }
-        return response.getBody().getOutput();
     }
 }

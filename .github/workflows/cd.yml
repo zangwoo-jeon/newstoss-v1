@@ -125,7 +125,7 @@ jobs:
               -e KIS_APPKEY="${{ secrets.KIS_APPKEY }}" \
               -e KIS_APPSECRET="${{ secrets.KIS_APPSECRET }}" \
               -e KIS_GRANT_TYPE=client_credentials \
-              -e KIS_TOKEN_URL=https://openapi.koreainvestment.com:9443/oauth2/token \
+              -e KIS_TOKEN_URL=https://openapi.koreainvestment.com:9443/oauth2/tokenP \
               -e MANAGEMENT_SERVER_PORT="${{ secrets.MANAGEMENT_SERVER_PORT }}" \
               -e MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE="${{ secrets.MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE }}" \
               -e MANAGEMENT_ENDPOINT_HEALTH_SHOWDETAILS="${{ secrets.MANAGEMENT_ENDPOINT_HEALTH_SHOWDETAILS }}" \
