@@ -27,17 +27,17 @@ public class ScrapNewsAdapter implements ScrapNewsPort {
 
     @Override
     public List<String> getAll(UUID memberId) {
-        return jpaNewsScrapRepository.findByMemberId(memberId).stream()
-                .map(NewsScrap::getNewsId)
+        return jpaNewsScrapRepository.findByMember_MemberId(memberId).stream()
+                .map(scrap -> scrap.getNews().getNewsId())
                 .toList();
     }
     @Override
     public boolean existsByMemberIdAndNewsId(UUID memberId, String newsId) {
-        return jpaNewsScrapRepository.existsByMemberIdAndNewsId(memberId, newsId);
+        return jpaNewsScrapRepository.existsByMember_MemberIdAndNews_NewsId(memberId, newsId);
     }
 
     @Override
     public UUID findNewsScrapId(UUID memberId, String newsId) {
-        return jpaNewsScrapRepository.findByMemberIdAndNewsId(memberId, newsId).getScrapNewsId();
+        return jpaNewsScrapRepository. findByMember_MemberIdAndNews_NewsId(memberId, newsId).getScrapNewsId();
     }
 }
