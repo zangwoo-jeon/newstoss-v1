@@ -21,7 +21,7 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class MemberPnlSchedularService {
+public class MemberPnlSchedulerService {
 
     private final MemberQueryPort memberQueryPort;
     private final GetMemberPnlPort getMemberPnlPort;
