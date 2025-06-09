@@ -1,4 +1,4 @@
-package com.newstoss.news2.domain;
+package com.newstoss.news.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

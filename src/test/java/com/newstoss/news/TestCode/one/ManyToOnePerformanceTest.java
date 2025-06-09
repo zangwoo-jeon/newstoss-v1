@@ -1,14 +1,10 @@
 package com.newstoss.news.TestCode.one;
 
-import com.newstoss.member.adapter.out.persistence.JpaMemberRepository;
 import com.newstoss.news.TestCode.PerformanceTestHelper;
-import com.newstoss.news.adapter.out.scrap.JpaNewsScrapRepository;
 import com.newstoss.news.domain.NewsScrap;
-import com.newstoss.news2.adapter.out.NewsRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

@@ -1,10 +1,9 @@
 package com.newstoss.news.domain.many;
 
-import com.newstoss.news2.domain.NewsEntity;
+import com.newstoss.news.domain.NewsEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 

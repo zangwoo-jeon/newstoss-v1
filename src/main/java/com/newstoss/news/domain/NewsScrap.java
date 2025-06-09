@@ -1,7 +1,6 @@
 package com.newstoss.news.domain;
 
 import com.newstoss.member.domain.Member;
-import com.newstoss.news2.domain.NewsEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.BatchSize;
@@ -13,6 +12,12 @@ import java.util.UUID;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(
+        indexes = {
+                @Index(name = "idx_news_scrap_member_id", columnList = "member_id"),
+                @Index(name = "idx_news_scrap_news_id", columnList = "news_id")
+        }
+)
 public class NewsScrap {
     @Id
     private UUID scrapNewsId;

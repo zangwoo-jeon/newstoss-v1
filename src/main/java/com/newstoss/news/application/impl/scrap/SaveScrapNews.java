@@ -7,6 +7,7 @@ import com.newstoss.member.domain.Member;
 import com.newstoss.news.adapter.in.web.dto.scrap.ScrapDTO;
 import com.newstoss.news.application.port.in.scrap.SaveScrapNewsUseCase;
 import com.newstoss.news.application.port.out.scrap.ScrapNewsPort;
+import com.newstoss.news.domain.NewsEntity;
 import com.newstoss.news.domain.NewsScrap;
 import com.newstoss.news2.adapter.out.NewsRepository;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +34,7 @@ public class SaveScrapNews implements SaveScrapNewsUseCase {
 
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new CustomException(ScrapErrorCode.MEMBER_NOT_FOUND));
-        com.newstoss.news2.domain.NewsEntity news = newsRepository.findById(newsId)
+        NewsEntity news = newsRepository.findById(newsId)
                 .orElseThrow(() -> new CustomException(ScrapErrorCode.NEWS_NOT_FOUND));
 
         NewsScrap newsScrap = NewsScrap.builder()
