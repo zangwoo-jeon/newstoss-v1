@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.newstoss.news.adapter.in.web.sse.SseEmitters;
 import com.newstoss.news2.adapter.in.NewsDTO;
 import com.newstoss.news2.adapter.out.NewsRepository;
-import com.newstoss.news2.domain.NewsEntity;
+import com.newstoss.news.domain.NewsEntity;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.connection.Message;
