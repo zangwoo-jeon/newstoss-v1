@@ -31,6 +31,11 @@ public class KisTokenManager {
                 log.info("KisTokenManager.refresh() - Existing token is still valid, returning existing token");
                 return token;
             }
+            KisTokenResponse tokenResponse = kisTokenClient.fetchToken();
+            existingToken.changeToken(tokenResponse);
+            token = existingToken.getToken();
+            expireAt = existingToken.getExpireAt();
+            return token;
         }
         KisTokenResponse tokenResponse = kisTokenClient.fetchToken();
         KisToken newToken = KisToken.createToken(tokenResponse);

@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 @Getter
-public class TokenSchedular {
+public class TokenScheduler {
     private final KisTokenManager kisTokenManager;
 
     @PostConstruct
