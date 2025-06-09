@@ -1,7 +1,5 @@
 package com.newstoss.portfolio.application;
 
-import com.newstoss.global.errorcode.PortfolioErrorCode;
-import com.newstoss.global.handler.CustomException;
 import com.newstoss.member.application.out.MemberQueryPort;
 import com.newstoss.member.domain.Member;
 import com.newstoss.portfolio.application.port.out.CreateMemberPnlPort;

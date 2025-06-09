@@ -1,20 +1,14 @@
 package com.newstoss.portfolio.application;
 
-import com.newstoss.global.errorcode.PortfolioErrorCode;
 import com.newstoss.global.errorcode.StockErrorCode;
-import com.newstoss.global.errorcode.UserErrorCode;
 import com.newstoss.global.handler.CustomException;
-import com.newstoss.member.adapter.out.persistence.JpaMemberRepository;
-import com.newstoss.member.domain.Member;
 import com.newstoss.portfolio.application.port.in.AddPortfolioUseCase;
 import com.newstoss.portfolio.application.port.in.CreatePortfolioUseCase;
 import com.newstoss.portfolio.application.port.in.SellPortfolioUseCase;
 import com.newstoss.portfolio.application.port.out.CreatePortfolioPort;
 import com.newstoss.portfolio.application.port.out.UpdateMemberPnlPort;
 import com.newstoss.portfolio.application.port.out.UpdatePortfolioPort;
-import com.newstoss.portfolio.entity.Portfolio;
 import com.newstoss.stock.adapter.outbound.persistence.repository.StockRepository;
-import com.newstoss.stock.application.port.in.GetStockInfoUseCase;
 import com.newstoss.stock.entity.Stock;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
