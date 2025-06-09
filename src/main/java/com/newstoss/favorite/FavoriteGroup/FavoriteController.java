@@ -1,6 +1,7 @@
 package com.newstoss.favorite.FavoriteGroup;
 
 import com.newstoss.global.response.SuccessResponse;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,7 @@ public class FavoriteController {
     private final FavoriteRepository favoriteRepository;
 
     @GetMapping("/{memberId}")
+    @Operation(summary = "관심 그룹 조회", description = "회원 ID로 관심 그룹 목록을 조회합니다.")
     public ResponseEntity<SuccessResponse<Object>> getFavoriteGroup(@PathVariable UUID memberId) {
         List<Favorite> result = favoriteService.getFavoritesByMemberId(memberId);
         return ResponseEntity.ok(new SuccessResponse<>(true, "관심그룹 조회 성공", result));
@@ -27,6 +29,7 @@ public class FavoriteController {
 
 
     @PostMapping("/{memberId}")
+    @Operation(summary = "관심 그룹 추가", description = "회원 ID로 관심 그룹을 추가합니다.")
     public ResponseEntity<SuccessResponse<Object>> addFavoriteGroup(
             @PathVariable UUID memberId,
             @RequestBody Favorite favorite) {
@@ -36,6 +39,7 @@ public class FavoriteController {
     }
 
     @DeleteMapping("/{memberId}/{groupId}")
+    @Operation(summary = "관심 그룹 삭제", description = "회원 ID와 그룹 ID로 관심 그룹을 삭제합니다.")
     public ResponseEntity<SuccessResponse<Object>> deleteFavoriteGroup(
             @PathVariable UUID memberId,
             @PathVariable UUID groupId) {
@@ -44,6 +48,7 @@ public class FavoriteController {
     }
 
     @PutMapping("/{memberId}/{groupId}/main")
+    @Operation(summary = "관심 그룹 메인 변경", description = "회원 ID와 그룹 ID로 메인 관심 그룹을 변경합니다.")
     public ResponseEntity<SuccessResponse<Object>> setMainFavorite(
             @PathVariable UUID memberId,
             @PathVariable UUID groupId) {

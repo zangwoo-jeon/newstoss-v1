@@ -13,6 +13,11 @@ WORKDIR /app
 
 # 보안을 위한 non-root 사용자 생성
 RUN addgroup -S spring && adduser -S spring -G spring
+
+# Logback이 사용할 로그 디렉토리 생성 및 권한 설정
+# WORKDIR 이후, USER spring:spring 이전에 추가
+RUN mkdir /logs && chown spring:spring /logs
+
 USER spring:spring
 
 # 빌드 스테이지에서 생성된 JAR 파일 복사

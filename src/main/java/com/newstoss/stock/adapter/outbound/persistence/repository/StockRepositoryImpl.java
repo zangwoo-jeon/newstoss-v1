@@ -1,6 +1,5 @@
 package com.newstoss.stock.adapter.outbound.persistence.repository;
 
-import com.newstoss.stock.application.port.out.persistence.StockRepositoryCustom;
 import com.newstoss.stock.entity.Stock;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -15,7 +14,7 @@ import static com.newstoss.stock.entity.QStock.*;
 @Repository
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
-public class StockRepositoryImpl implements StockRepositoryCustom {
+public class StockRepositoryImpl implements StockSearchRepository {
 
     private final JPAQueryFactory queryFactory;
     /**
