@@ -59,7 +59,10 @@ public class GetPopularStockService implements KisPopularStockPort {
                 .queryParam("FID_INPUT_PRICE_1", "") // 가격 하한
                 .queryParam("FID_INPUT_PRICE_2", "") // 가격 상한
                 .queryParam("FID_VOL_CNT", "")
-                .queryParam("FID_INPUT_DATE_1", ""); // 시작 날짜
+                .queryParam("FID_INPUT_DATE_1", ""); // 시작
+        log.info("Authorization Header: {}", headers.get("authorization"));
+        log.info("AppSecret: {}", headers.get("appsecret"));
+        log.info("AppKey: {}", headers.get("appkey"));
         try{
             ResponseEntity<KisListOutputDto<KisPopularDto>> response = restTemplate.exchange(
                     builder.toUriString(),
