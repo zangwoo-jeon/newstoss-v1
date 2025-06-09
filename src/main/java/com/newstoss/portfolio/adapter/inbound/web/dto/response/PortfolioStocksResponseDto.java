@@ -2,7 +2,6 @@ package com.newstoss.portfolio.adapter.inbound.web.dto.response;
 
 import com.newstoss.portfolio.entity.Portfolio;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

@@ -20,8 +20,7 @@ import java.util.UUID;
 @Slf4j
 public class MemberPnlCommandAdapter implements UpdateMemberPnlPort, DeleteMemberPnlPort, CreateMemberPnlPort {
 
-
-    private JPAMemberPnlRepository repository;
+    private final JPAMemberPnlRepository repository;
 
     @Override
     public Long create(MemberPnl memberPnl) {
