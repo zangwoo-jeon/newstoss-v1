@@ -73,7 +73,7 @@ public class GetPopularStockService implements KisPopularStockPort {
             try {
                 JsonNode json = new ObjectMapper().readTree(body);
                 String msg1 = json.get("msg1").asText();
-                log.error("서버 에러 발생 - msg1: {}", msg1);
+                log.error("서버 에러 발생 - msg1: {} message: {}", msg1, e.getMessage());
             } catch (JsonProcessingException ex) {
                 log.error("JSON 파싱 에러: {}", ex.getMessage());
                 log.error("응답 바디: {}", body);  // 원본 그대로 찍어둠
