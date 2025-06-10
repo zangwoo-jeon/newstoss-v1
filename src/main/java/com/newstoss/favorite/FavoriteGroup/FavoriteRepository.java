@@ -21,4 +21,7 @@ public interface FavoriteRepository extends JpaRepository<Favorite, UUID> {
     void resetMainStatusByMemberId(UUID memberId);
 
     Optional<Favorite> findByMemberIdAndGroupId(UUID memberId, UUID groupId);
+
+    @Query("SELECT MAX(f.groupSequence) FROM Favorite f WHERE f.memberId = :memberId")
+    Integer findMaxGroupSequenceByMemberId(UUID memberId);
 }

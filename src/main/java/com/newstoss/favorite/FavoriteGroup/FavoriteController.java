@@ -32,8 +32,10 @@ public class FavoriteController {
     @Operation(summary = "관심 그룹 추가", description = "회원 ID로 관심 그룹을 추가합니다.")
     public ResponseEntity<SuccessResponse<Object>> addFavoriteGroup(
             @PathVariable UUID memberId,
-            @RequestBody Favorite favorite) {
+            @RequestBody FavoriteRequest request) {
+        Favorite favorite = new Favorite();
         favorite.setMemberId(memberId);
+        favorite.setGroupName(request.getGroupName());
         favoriteService.saveFavorite(favorite);
         return ResponseEntity.ok(new SuccessResponse<>(true, "관심그룹 추가 성공", null));
     }
