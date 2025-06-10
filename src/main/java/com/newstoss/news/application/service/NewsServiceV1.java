@@ -1,12 +1,12 @@
 package com.newstoss.news.application.service;
 
 import com.newstoss.news.adapter.in.web.dto.news.v1.NewsDTOv1;
-import com.newstoss.news.adapter.in.web.dto.news.common.RelatedNewsDTO;
-import com.newstoss.news.adapter.in.web.dto.news.common.RelatedReportDTO;
-import com.newstoss.news.adapter.in.web.dto.news.common.RelatedStockDTO;
-import com.newstoss.news.application.port.in.ml.GetRelatedNewsUseCase;
-import com.newstoss.news.application.port.in.ml.GetRelatedReportUseCase;
-import com.newstoss.news.application.port.in.ml.GetRelatedStocksUseCase;
+import com.newstoss.news.adapter.in.web.dto.news.v1.RelatedNewsDTO;
+import com.newstoss.news.adapter.in.web.dto.news.v1.RelatedReportDTO;
+import com.newstoss.news.adapter.in.web.dto.news.v1.RelatedStockDTO;
+import com.newstoss.news.application.port.in.ml.v1.GetRelatedNewsUseCase;
+import com.newstoss.news.application.port.in.ml.v1.GetRelatedReportUseCase;
+import com.newstoss.news.application.port.in.ml.v1.GetRelatedStocksUseCase;
 import com.newstoss.news.application.port.in.ml.v1.GetNewsDetailUseCaseV1;
 import com.newstoss.news.application.port.in.ml.v1.GetRealTimeNewsUseCaseV1;
 import lombok.RequiredArgsConstructor;

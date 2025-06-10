@@ -2,7 +2,7 @@ package com.newstoss.news.application.impl.scrap;
 
 import com.newstoss.news.adapter.in.web.dto.news.v2.NewsDTOv2;
 import com.newstoss.news.application.impl.news.v2.NewsDTOv2Mapper;
-import com.newstoss.news.application.port.out.ml.MLNewsRelatedPortV2;
+import com.newstoss.news.application.port.out.ml.v2.MLNewsPortV2;
 import com.newstoss.news.application.port.in.scrap.GetScrapNewsListUseCase;
 import com.newstoss.news.application.port.out.scrap.ScrapNewsPort;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +16,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class GetScrapNewsList implements GetScrapNewsListUseCase {
     private final ScrapNewsPort scrapNewsPort;
-    private final MLNewsRelatedPortV2 mlPort;
+    private final MLNewsPortV2 mlPort;
 
     @Override
     public List<NewsDTOv2> exec(UUID memberId) {

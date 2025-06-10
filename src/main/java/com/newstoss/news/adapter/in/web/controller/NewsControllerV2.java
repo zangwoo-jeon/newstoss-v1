@@ -2,10 +2,9 @@ package com.newstoss.news.adapter.in.web.controller;
 
 import com.newstoss.global.response.SuccessResponse;
 import com.newstoss.news.adapter.in.web.dto.news.common.GetAllNewsDTO;
-import com.newstoss.news.adapter.in.web.dto.news.common.RelatedNewsDTO;
-import com.newstoss.news.adapter.in.web.dto.news.common.RelatedReportDTO;
-import com.newstoss.news.adapter.in.web.dto.news.common.RelatedStockDTO;
 import com.newstoss.news.adapter.in.web.dto.news.v2.NewsDTOv2;
+import com.newstoss.news.adapter.in.web.dto.news.v2.RelatedNewsDTOv2;
+import com.newstoss.news.adapter.in.web.dto.news.v2.RelatedStockDTOv2;
 import com.newstoss.news.application.service.NewsServiceV2;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -39,28 +38,29 @@ public class NewsControllerV2{
     @Operation(summary = "유사 뉴스 조회", description = "특정 뉴스와 유사한 과거 뉴스를 조회합니다.")
     @GetMapping("/related/news")
     public ResponseEntity<SuccessResponse<Object>> relatedNews(@RequestParam String newsId){
-        List<RelatedNewsDTO> news = newsServiceV2.getRelatedNews(newsId);
+        List<RelatedNewsDTOv2> news = newsServiceV2.getRelatedNews(newsId);
         return ResponseEntity.ok(new SuccessResponse<>(true, "과거 유사 뉴스 조회 성공", news));
     }
 
     @Operation(summary = "뉴스 관련 종목 조회", description = "특정 뉴스와 연관된 주식 종목 리스트를 조회합니다.")
     @GetMapping("/related/stocks")
     public ResponseEntity<SuccessResponse<Object>> relatedStocks(@RequestParam String newsId){
-        List<RelatedStockDTO> stocks = newsServiceV2.getRelatedStock(newsId);
+        List<RelatedStockDTOv2> stocks = newsServiceV2.getRelatedStock(newsId);
         return ResponseEntity.ok(new SuccessResponse<>(true, "뉴스 관련 종목 조회 성공", stocks));
     }
 
-    @Operation(summary = "뉴스 관련 리포트 조회", description = "특정 뉴스와 연관된 리포트 리스트를 조회합니다.(5개)")
-    @GetMapping("/related/report")
-    public ResponseEntity<SuccessResponse<Object>> relatedReport(@RequestParam String newsId){
-        List<RelatedReportDTO> report = newsServiceV2.getRelatedReport(newsId);
-        return ResponseEntity.ok(new SuccessResponse<>(true, "뉴스 관련 종목 조회 성공", report));
-    }
 
     @Operation(summary = "전체 뉴스 조회", description = "입력 받은 파라미터 값에 따라 뉴스를 조회합니다.")
     @GetMapping("/all")
     public ResponseEntity<SuccessResponse<Object>> relatedReport(@ModelAttribute GetAllNewsDTO getAllNewsDTO){
         List<NewsDTOv2> news = newsServiceV2.getAllNews(getAllNewsDTO);
         return ResponseEntity.ok(new SuccessResponse<>(true, "전체 뉴스 조회 성공", news));
+    }
+
+    @Operation(summary = "하이라이트 뉴스 조회", description = "하이라이트 뉴스를 조회합니다(ml api 미완성)")
+    @GetMapping("/highlight")
+    public ResponseEntity<SuccessResponse<Object>> highlight(){
+        List<NewsDTOv2> news = newsServiceV2.getHighlightNews();
+        return ResponseEntity.ok(new SuccessResponse<>(true, "하이라이트 뉴스 조회 성공", news));
     }
 }

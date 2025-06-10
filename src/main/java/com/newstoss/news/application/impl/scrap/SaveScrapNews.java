@@ -9,7 +9,7 @@ import com.newstoss.news.application.port.in.scrap.SaveScrapNewsUseCase;
 import com.newstoss.news.application.port.out.scrap.ScrapNewsPort;
 import com.newstoss.news.domain.NewsEntity;
 import com.newstoss.news.domain.NewsScrap;
-import com.newstoss.news2.adapter.out.NewsRepository;
+import com.newstoss.savenews.adapter.out.NewsRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
