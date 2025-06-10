@@ -62,6 +62,9 @@ public class StockQueryService implements GetCategoryUseCase , SearchStockUseCas
 
     @Override
     public List<SearchResponseDto> searchStock(String keyword) {
+        if (keyword != null) {
+            keyword = keyword.toUpperCase();
+        }
         List<Stock> stocks = searchStockPort.searchStock(keyword);
         if (keyword == null || keyword.isEmpty() || stocks.isEmpty()) {
             List<Stock> popularStocks = searchPopular();
