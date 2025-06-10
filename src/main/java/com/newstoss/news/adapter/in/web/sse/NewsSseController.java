@@ -10,7 +10,10 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.io.IOException;
 
-@CrossOrigin(origins = "https://news-toss.vercel.app")
+@CrossOrigin(origins = {
+        "http://localhost:3000",
+        "https://news-toss.vercel.app"
+})
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/news/stream")

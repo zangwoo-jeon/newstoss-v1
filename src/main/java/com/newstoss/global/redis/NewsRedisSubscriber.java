@@ -2,8 +2,8 @@ package com.newstoss.global.redis;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.newstoss.news.adapter.in.web.sse.SseEmitters;
-import com.newstoss.news2.adapter.in.NewsDTO;
-import com.newstoss.news2.adapter.out.NewsRepository;
+import com.newstoss.savenews.adapter.in.NewsDTO;
+import com.newstoss.savenews.adapter.out.NewsRepository;
 import com.newstoss.news.domain.NewsEntity;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

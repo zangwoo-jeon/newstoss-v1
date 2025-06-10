@@ -2,9 +2,9 @@ package com.newstoss.news.adapter.in.web.controller;
 
 import com.newstoss.global.response.SuccessResponse;
 import com.newstoss.news.adapter.in.web.dto.news.v1.NewsDTOv1;
-import com.newstoss.news.adapter.in.web.dto.news.common.RelatedNewsDTO;
-import com.newstoss.news.adapter.in.web.dto.news.common.RelatedReportDTO;
-import com.newstoss.news.adapter.in.web.dto.news.common.RelatedStockDTO;
+import com.newstoss.news.adapter.in.web.dto.news.v1.RelatedNewsDTO;
+import com.newstoss.news.adapter.in.web.dto.news.v1.RelatedReportDTO;
+import com.newstoss.news.adapter.in.web.dto.news.v1.RelatedStockDTO;
 import com.newstoss.news.application.service.NewsServiceV1;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
