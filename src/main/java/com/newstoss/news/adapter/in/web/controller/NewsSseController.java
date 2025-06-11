@@ -1,5 +1,6 @@
-package com.newstoss.news.adapter.in.web.sse;
+package com.newstoss.news.adapter.in.web.controller;
 
+import com.newstoss.news.adapter.in.web.sse.SseEmitters;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.CrossOrigin;

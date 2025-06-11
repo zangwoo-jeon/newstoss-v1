@@ -7,8 +7,9 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-public class RelatedStockDTOv2 {
-    private List<String> stockName;
+@AllArgsConstructor
+public class NewsMathRelatedDTO {
+    private NewsDTOv2 news;
+    private List<RelatedNewsDTOv2> related;
 }
