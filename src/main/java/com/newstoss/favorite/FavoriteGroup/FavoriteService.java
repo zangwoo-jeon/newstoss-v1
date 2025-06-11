@@ -24,6 +24,12 @@ public class FavoriteService {
         if (favorite.isMain()) {
             favoriteRepository.resetMainStatusByMemberId(favorite.getMemberId());
         }
+        
+        // 현재 회원의 최대 sequence 값 조회
+        Integer maxSequence = favoriteRepository.findMaxGroupSequenceByMemberId(favorite.getMemberId());
+        int nextSequence = (maxSequence == null) ? 1 : maxSequence + 1;
+        favorite.setGroupSequence(nextSequence);
+        
         favoriteRepository.save(favorite);
     }
 
