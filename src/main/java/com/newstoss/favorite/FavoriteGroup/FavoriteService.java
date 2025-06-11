@@ -20,7 +20,7 @@ public class FavoriteService {
     }
 
     @Transactional
-    public void saveFavorite(Favorite favorite) {
+    public Favorite saveFavorite(Favorite favorite) {
         if (favorite.isMain()) {
             favoriteRepository.resetMainStatusByMemberId(favorite.getMemberId());
         }
@@ -30,7 +30,7 @@ public class FavoriteService {
         int nextSequence = (maxSequence == null) ? 1 : maxSequence + 1;
         favorite.setGroupSequence(nextSequence);
         
-        favoriteRepository.save(favorite);
+        return favoriteRepository.save(favorite);
     }
 
     @Transactional
@@ -52,5 +52,14 @@ public class FavoriteService {
         } else {
             return Optional.empty();
         }
+    }
+
+    @Transactional
+    public Favorite updateFavoriteGroupName(UUID memberId, UUID groupId, String newGroupName) {
+        Favorite favorite = favoriteRepository.findByMemberIdAndGroupId(memberId, groupId)
+                .orElseThrow(() -> new RuntimeException("해당 관심그룹을 찾을 수 없습니다."));
+        
+        favorite.setGroupName(newGroupName);
+        return favoriteRepository.save(favorite);
     }
 } 

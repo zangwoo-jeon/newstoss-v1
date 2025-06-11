@@ -36,8 +36,24 @@ public class FavoriteController {
         Favorite favorite = new Favorite();
         favorite.setMemberId(memberId);
         favorite.setGroupName(request.getGroupName());
-        favoriteService.saveFavorite(favorite);
-        return ResponseEntity.ok(new SuccessResponse<>(true, "관심그룹 추가 성공", null));
+        Favorite savedFavorite = favoriteService.saveFavorite(favorite);
+        return ResponseEntity.ok(new SuccessResponse<>(true, "관심그룹 추가 성공", savedFavorite));
+    }
+
+    @PutMapping("/{memberId}/{groupId}")
+    @Operation(summary = "관심 그룹 이름 수정", description = "회원 ID와 그룹 ID로 관심 그룹 이름을 변경합니다.")
+    public ResponseEntity<SuccessResponse<Object>> changeFavoriteGroupName(
+            @PathVariable UUID memberId,
+            @PathVariable UUID groupId,
+            @RequestBody FavoriteRequest request
+    ) {
+        try {
+            Favorite updatedFavorite = favoriteService.updateFavoriteGroupName(memberId, groupId, request.getGroupName());
+            return ResponseEntity.ok(new SuccessResponse<>(true, "관심그룹 이름 변경 성공", updatedFavorite));
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new SuccessResponse<>(false, e.getMessage(), null));
+        }
     }
 
     @DeleteMapping("/{memberId}/{groupId}")
