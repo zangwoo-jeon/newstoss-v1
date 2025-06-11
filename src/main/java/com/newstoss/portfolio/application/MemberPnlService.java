@@ -36,16 +36,16 @@ public class MemberPnlService implements GetMemberPnlPeriodUseCase , GetMemberPn
         MemberPnl today = getMemberPnlPort.getMemberPnl(memberId, endDate).orElseThrow(
                 () -> new CustomException(MemberPnlErrorCode.MEMBER_PNL_NOT_FOUND)
         );
-        MemberPnl periodAgo = getMemberPnlPort.getMemberPnl(memberId, startDate).orElseThrow(
-                () -> new CustomException(MemberPnlErrorCode.MEMBER_PNL_NOT_FOUND)
-        );
+        Long prevAsset = getMemberPnlPort.getMemberPnl(memberId, startDate)
+                .map(MemberPnl::getAsset)
+                .orElse(1L);
 
         return new MemberPnlPeriodResponseDto(
                 today.getAsset(),
                 today.getPnl(),
                 memberPnlList,
-                today.getAsset()- periodAgo.getAsset(),
-                ((double)(today.getAsset()-periodAgo.getAsset())/periodAgo.getPnl() * 100)
+                today.getAsset()- prevAsset,
+                ((double)(today.getAsset()-prevAsset)/prevAsset * 100)
         );
     }
 
