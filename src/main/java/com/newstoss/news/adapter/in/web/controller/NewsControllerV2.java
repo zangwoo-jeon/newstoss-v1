@@ -2,9 +2,7 @@ package com.newstoss.news.adapter.in.web.controller;
 
 import com.newstoss.global.response.SuccessResponse;
 import com.newstoss.news.adapter.in.web.dto.news.common.GetAllNewsDTO;
-import com.newstoss.news.adapter.in.web.dto.news.v2.NewsDTOv2;
-import com.newstoss.news.adapter.in.web.dto.news.v2.RelatedNewsDTOv2;
-import com.newstoss.news.adapter.in.web.dto.news.v2.RelatedStockDTOv2;
+import com.newstoss.news.adapter.in.web.dto.news.v2.*;
 import com.newstoss.news.application.service.NewsServiceV2;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -42,12 +40,6 @@ public class NewsControllerV2{
         return ResponseEntity.ok(new SuccessResponse<>(true, "과거 유사 뉴스 조회 성공", news));
     }
 
-    @Operation(summary = "뉴스 관련 종목 조회", description = "특정 뉴스와 연관된 주식 종목 리스트를 조회합니다.")
-    @GetMapping("/related/stocks")
-    public ResponseEntity<SuccessResponse<Object>> relatedStocks(@RequestParam String newsId){
-        List<RelatedStockDTOv2> stocks = newsServiceV2.getRelatedStock(newsId);
-        return ResponseEntity.ok(new SuccessResponse<>(true, "뉴스 관련 종목 조회 성공", stocks));
-    }
 
 
     @Operation(summary = "전체 뉴스 조회", description = "입력 받은 파라미터 값에 따라 뉴스를 조회합니다.")
@@ -62,5 +54,19 @@ public class NewsControllerV2{
     public ResponseEntity<SuccessResponse<Object>> highlight(){
         List<NewsDTOv2> news = newsServiceV2.getHighlightNews();
         return ResponseEntity.ok(new SuccessResponse<>(true, "하이라이트 뉴스 조회 성공", news));
+    }
+
+    @Operation(summary = "하이라이트 뉴스 with redis 캐시", description = "하이라이트 뉴스를 조회합니다(ml api 미완성)")
+    @GetMapping("/highlight/reids")
+    public ResponseEntity<SuccessResponse<Object>> highlight2(){
+        List<NewsMathRelatedDTO> news = newsServiceV2.highlightWithRedis();
+        return ResponseEntity.ok(new SuccessResponse<>(true, "하이라이트 뉴스 조회 성공", news));
+    }
+
+    @Operation(summary = "뉴스 메타데이터를 조회", description = "뉴스 아이디, 요약본, 관련 종목, 관련종목 리스트를 보여줍니다")
+    @GetMapping("/meta")
+    public ResponseEntity<SuccessResponse<Object>> meta(@RequestParam String newsId){
+        NewsMetaDataDTO news = newsServiceV2.getNewsMeta(newsId);
+        return ResponseEntity.ok(new SuccessResponse<>(true, "메타데이터 조회 성공", news));
     }
 }

@@ -2,11 +2,11 @@ package com.newstoss.news.application.impl.news.v2;
 
 
 import com.newstoss.news.adapter.in.web.dto.news.v2.NewsDTOv2;
+import com.newstoss.news.adapter.in.web.dto.news.v2.NewsMetaDataDTO;
 import com.newstoss.news.adapter.in.web.dto.news.v2.RelatedNewsDTOv2;
-import com.newstoss.news.adapter.in.web.dto.news.v2.RelatedStockDTOv2;
 import com.newstoss.news.adapter.out.dto.v2.MLNewsDTOv2;
+import com.newstoss.news.adapter.out.dto.v2.MLNewsMataDataDTOv2;
 import com.newstoss.news.adapter.out.dto.v2.MLRelatedNewsDTOv2;
-import com.newstoss.news.adapter.out.dto.v2.MLRelatedStockDTOv2;
 
 import java.time.LocalDateTime;
 
@@ -28,7 +28,8 @@ public class NewsDTOv2Mapper {
         );
     }
 
-    public static RelatedStockDTOv2 from(MLRelatedStockDTOv2 ml) {
-        return new RelatedStockDTOv2(ml.getStocks());
+
+    public static NewsMetaDataDTO from(MLNewsMataDataDTOv2 ml) {
+        return new NewsMetaDataDTO(ml.getNewsId(), ml.getSummary(), ml.getStockList(), ml.getIndustryList(), ml.getStockViewList());
     }
 }

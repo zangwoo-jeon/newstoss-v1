@@ -1,6 +1,6 @@
 package com.newstoss.global.config;
 
-import com.newstoss.global.redis.NewsRedisSubscriber;
+import com.newstoss.news.adapter.out.redis.NewsRedisSubscriber;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
