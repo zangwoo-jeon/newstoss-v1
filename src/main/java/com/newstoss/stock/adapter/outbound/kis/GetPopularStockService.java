@@ -59,8 +59,11 @@ public class GetPopularStockService implements KisPopularStockPort {
                 .queryParam("FID_INPUT_PRICE_1", "") // 가격 하한
                 .queryParam("FID_INPUT_PRICE_2", "") // 가격 상한
                 .queryParam("FID_VOL_CNT", "")
-                .queryParam("FID_INPUT_DATE_1", ""); // 시작 날짜
-        try {
+                .queryParam("FID_INPUT_DATE_1", ""); // 시작
+        log.info("Authorization Header: {}", headers.get("authorization"));
+        log.info("AppSecret: {}", headers.get("appsecret"));
+        log.info("AppKey: {}", headers.get("appkey"));
+        try{
             ResponseEntity<KisListOutputDto<KisPopularDto>> response = restTemplate.exchange(
                     builder.toUriString(),
                     GET,
@@ -70,16 +73,8 @@ public class GetPopularStockService implements KisPopularStockPort {
             return response.getBody().getOutput();
         } catch (HttpServerErrorException e) {
             String body = e.getResponseBodyAsString();
-            try {
-                JsonNode json = new ObjectMapper().readTree(body);
-                String msg1 = json.get("msg1").asText();
-                log.error("서버 에러 발생 - msg1: {} message: {}", msg1, e.getMessage());
-            } catch (JsonProcessingException ex) {
-                log.error("JSON 파싱 에러: {}", ex.getMessage());
-                log.error("응답 바디: {}", body);  // 원본 그대로 찍어둠
-            }
+            log.error("서버 에러 입니다: body: {} , e.message : {}", body, e.getMessage());
             throw new CustomException(StockErrorCode.KIS_NULL_CODE);
         }
-
     }
 }
