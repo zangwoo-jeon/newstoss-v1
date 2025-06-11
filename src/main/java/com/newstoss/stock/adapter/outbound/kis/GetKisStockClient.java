@@ -5,6 +5,7 @@ import com.newstoss.global.handler.CustomException;
 import com.newstoss.global.kis.KisTokenManager;
 import com.newstoss.global.kis.KisTokenProperties;
 import com.newstoss.stock.adapter.outbound.kis.dto.KisPeriodStockDto;
+import com.newstoss.stock.adapter.outbound.kis.dto.KisStockNameDto;
 import com.newstoss.stock.adapter.outbound.kis.dto.response.KisApiResponseDto;
 import com.newstoss.stock.adapter.outbound.kis.dto.response.KisOutputDto;
 import com.newstoss.stock.adapter.outbound.kis.dto.KisStockDto;
@@ -113,5 +114,36 @@ public class GetKisStockClient implements KisStockInfoPort {
         } catch (NullPointerException e) {
             throw new CustomException(StockErrorCode.KIS_NULL_CODE);
         }
+    }
+
+    @Override
+    public String getStockName(String stockCode) {
+        String token = kisTokenManager.getToken();
+        String url = "https://openapi.koreainvestment.com:9443/uapi/domestic-stock/v1/quotations/search-info";
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.set("authorization", "Bearer " + token);
+        headers.set("appkey", kisProperties.getAppkey());
+        headers.set("appsecret", kisProperties.getAppsecret());
+        headers.set("tr_id", "CTPF1604R");
+        headers.set("custtype", "P");
+
+        HttpEntity<String> entity = new HttpEntity<>(headers);
+
+        UriComponentsBuilder uri = UriComponentsBuilder.fromHttpUrl(url)
+                .queryParam("PDNO", stockCode)
+                .queryParam("PRDT_TYPE_CD", "300");
+
+        ResponseEntity<KisOutputDto<KisStockNameDto>> response = restTemplate.exchange(
+                uri.toUriString(),
+                HttpMethod.GET,
+                entity,
+                new ParameterizedTypeReference<>() {}
+        );
+
+        System.out.println("Stock Name response = " + response);
+        return response.getBody().getOutput().getStockNameAbrvName();
+
     }
 }
