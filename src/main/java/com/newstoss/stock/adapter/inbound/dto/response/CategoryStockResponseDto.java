@@ -28,4 +28,6 @@ public class CategoryStockResponseDto {
 
     @Schema(description = "주식 전일 대비 가격")
     private String ChangeAmount;
+
+    private String stockImage;
 }

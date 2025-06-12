@@ -9,6 +9,7 @@ import com.newstoss.global.kis.KisTokenManager;
 import com.newstoss.global.kis.KisTokenProperties;
 import com.newstoss.stock.adapter.outbound.kis.dto.response.KisListOutputDto;
 import com.newstoss.stock.adapter.outbound.kis.dto.KisPopularDto;
+import com.newstoss.stock.adapter.outbound.persistence.repository.StockRepository;
 import com.newstoss.stock.application.port.out.kis.KisPopularStockPort;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,6 +34,7 @@ public class GetPopularStockService implements KisPopularStockPort {
     private final KisTokenProperties kisProperties;
     private final KisTokenManager kisTokenManager;
     private final RestTemplate restTemplate;
+    private final StockRepository stockRepository;
 
     @Override
     public List<KisPopularDto> getPopularStock() {
@@ -70,7 +72,16 @@ public class GetPopularStockService implements KisPopularStockPort {
                     entity,
                     new ParameterizedTypeReference<>() {}
             );
-            return response.getBody().getOutput();
+            
+            List<KisPopularDto> popularStocks = response.getBody().getOutput();
+            
+            // 각 인기 종목에 대해 DB의 Stock 엔티티에서 이미지 정보를 가져와 설정
+            popularStocks.forEach(stock -> {
+                stockRepository.findByStockCode(stock.getMarketCode())
+                        .ifPresent(s -> stock.setStockImage(s.getStockImage()));
+            });
+            
+            return popularStocks;
         } catch (HttpServerErrorException e) {
             String body = e.getResponseBodyAsString();
             log.error("서버 에러 입니다: body: {} , e.message : {}", body, e.getMessage());

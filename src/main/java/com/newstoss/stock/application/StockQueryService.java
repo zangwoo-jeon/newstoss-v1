@@ -51,7 +51,8 @@ public class StockQueryService implements GetCategoryUseCase , SearchStockUseCas
                             stockInfo.getPrice(),
                             stockInfo.getChangeRate(),
                             stockInfo.getSign(),
-                            stockInfo.getChangeAmount()
+                            stockInfo.getChangeAmount(),
+                            stock.getStockImage()
                     );
                 }).toList();
         return new CategoryPageResponseDto(
@@ -77,7 +78,8 @@ public class StockQueryService implements GetCategoryUseCase , SearchStockUseCas
                                 stockInfo.getPrice(),
                                 stockInfo.getSign(),
                                 stockInfo.getChangeAmount(),
-                                stockInfo.getChangeRate()
+                                stockInfo.getChangeRate(),
+                                stock.getStockImage()
                         );
                     }).toList();
         } else {
@@ -90,7 +92,8 @@ public class StockQueryService implements GetCategoryUseCase , SearchStockUseCas
                                 stockInfo.getPrice(),
                                 stockInfo.getSign(),
                                 stockInfo.getChangeAmount(),
-                                stockInfo.getChangeRate()
+                                stockInfo.getChangeRate(),
+                                stock.getStockImage()
                         );
                     }).toList();
         }
