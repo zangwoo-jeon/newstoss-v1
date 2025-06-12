@@ -1,11 +1,13 @@
 package com.newstoss.news.application.ml.service;
 
 import com.newstoss.news.adapter.in.web.news.dto.common.GetAllNewsDTO;
+import com.newstoss.news.adapter.in.web.news.dto.v1.NewsMathRelatedDTOTest;
 import com.newstoss.news.adapter.in.web.news.dto.v2.NewsDTOv2;
 import com.newstoss.news.adapter.in.web.news.dto.v2.NewsMathRelatedDTO;
 import com.newstoss.news.adapter.in.web.news.dto.v2.NewsMetaDataDTO;
 import com.newstoss.news.adapter.in.web.news.dto.v2.RelatedNewsDTOv2;
 import com.newstoss.news.application.ml.v2.port.in.*;
+import com.newstoss.news.application.redis.port.in.HighlightNewsCacheUseCase;
 import com.newstoss.news.application.redis.port.out.HighlightNewsCachePort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,6 +25,7 @@ public class NewsServiceV2 {
     private final GetHighlightNewsUseCase getHighlight;
     private final HighlightNewsCachePort highlightNews;
     private final GetNewsMataDataUseCaseV2 mataDataUseCaseV2;
+    private final HighlightNewsCacheUseCase highlightNewsCacheUseCase;
 
     public List<NewsDTOv2> getRealTimeNews(){
         return getRealTimeNews.exec();
@@ -44,7 +47,7 @@ public class NewsServiceV2 {
 
     public List<NewsMathRelatedDTO> highlightWithRedis(){return highlightNews.loadHighlightsWithRelated();}
 
-    public List<NewsMathRelatedDTO> highlightWithRedisTest(){return highlightNews.loadHighlightsWithRelated();}
+    public List<NewsMathRelatedDTOTest> highlightWithRedisTest(){return highlightNewsCacheUseCase.cacheHighlightWithRelatedNewsTest();}
 
     public NewsMetaDataDTO getNewsMeta(String newsId){
         return mataDataUseCaseV2.exec(newsId);

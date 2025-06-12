@@ -34,16 +34,6 @@ public class HighlightNewsCacheImpl implements HighlightNewsCachePort {
     }
 
     @Override
-    public void saveHighlightsWithRelatedTest(List<NewsMathRelatedDTOTest> highlightData) {
-        try {
-            String json = objectMapper.writeValueAsString(highlightData);
-            redisTemplate.opsForValue().set(KEY, json, TTL);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException("하이라이트+관련뉴스 캐시 저장 실패", e);
-        }
-    }
-
-    @Override
     public List<NewsMathRelatedDTO> loadHighlightsWithRelated() {
         String json = redisTemplate.opsForValue().get(KEY);
 
@@ -56,6 +46,35 @@ public class HighlightNewsCacheImpl implements HighlightNewsCachePort {
             return objectMapper.readValue(
                     json,
                     objectMapper.getTypeFactory().constructCollectionType(List.class, NewsMathRelatedDTO.class)
+            );
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException("하이라이트+관련뉴스 캐시 역직렬화 실패", e);
+        }
+    }
+
+    @Override
+    public void saveHighlightsWithRelatedTest(List<NewsMathRelatedDTOTest> highlightData) {
+        try {
+            String json = objectMapper.writeValueAsString(highlightData);
+            redisTemplate.opsForValue().set(KEY, json, TTL);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException("하이라이트+관련뉴스 캐시 저장 실패", e);
+        }
+    }
+
+    @Override
+    public List<NewsMathRelatedDTOTest> loadHighlightsWithRelatedTest() {
+        String json = redisTemplate.opsForValue().get(KEY);
+
+        if (json == null) {
+            System.out.println("⚠️ Redis에 저장된 highlight-with-related 캐시 없음");
+            return List.of();
+        }
+
+        try {
+            return objectMapper.readValue(
+                    json,
+                    objectMapper.getTypeFactory().constructCollectionType(List.class, NewsMathRelatedDTOTest.class)
             );
         } catch (JsonProcessingException e) {
             throw new RuntimeException("하이라이트+관련뉴스 캐시 역직렬화 실패", e);
