@@ -1,6 +1,7 @@
 package com.newstoss.news.adapter.out.scrap;
 
-import com.newstoss.news.application.port.out.scrap.ScrapNewsPort;
+import com.newstoss.news.adapter.out.scrap.repository.JpaNewsScrapRepository;
+import com.newstoss.news.application.scrap.port.out.ScrapNewsPort;
 import com.newstoss.news.domain.NewsScrap;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
