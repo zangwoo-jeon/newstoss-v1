@@ -2,6 +2,7 @@ package com.newstoss.news.adapter.in.web.news.controller;
 
 import com.newstoss.global.response.SuccessResponse;
 import com.newstoss.news.adapter.in.web.news.dto.common.GetAllNewsDTO;
+import com.newstoss.news.adapter.in.web.news.dto.v1.NewsMathRelatedDTOTest;
 import com.newstoss.news.adapter.in.web.news.dto.v2.NewsDTOv2;
 import com.newstoss.news.adapter.in.web.news.dto.v2.NewsMathRelatedDTO;
 import com.newstoss.news.adapter.in.web.news.dto.v2.NewsMetaDataDTO;
@@ -69,7 +70,7 @@ public class NewsControllerV2{
     @Operation(summary = "하이라이트 뉴스 with redis 캐시 test", description = "하이라이트 뉴스를 조회합니다(ml api 미완성)")
     @GetMapping("/highlight/reidstest")
     public ResponseEntity<SuccessResponse<Object>> highlighttest(){
-        List<NewsMathRelatedDTO> news = newsServiceV2.highlightWithRedisTest();
+        List<NewsMathRelatedDTOTest> news = newsServiceV2.highlightWithRedisTest();
         return ResponseEntity.ok(new SuccessResponse<>(true, "하이라이트 뉴스 조회 성공", news));
     }
 

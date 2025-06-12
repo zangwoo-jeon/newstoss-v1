@@ -42,6 +42,7 @@ public class MatchNewsWithRelatedNews implements MatchNewsWithRelatedUseCase {
                 })
                 .toList();
     }
+
     @Override
     public List<NewsMathRelatedDTOTest> test(List<NewsDTOv1> newsList) {
         return newsList.parallelStream()
