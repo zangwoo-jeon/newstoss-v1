@@ -3,6 +3,7 @@ package com.newstoss.member.application;
 import com.newstoss.auth.adapter.in.web.dto.requestDTO.LoginDTO;
 import com.newstoss.member.adapter.in.web.dto.requestDTO.SignupRequestDTO;
 import com.newstoss.member.application.in.command.FgOffsetService;
+import com.newstoss.member.application.in.command.InvestScoreService;
 import com.newstoss.member.application.in.command.SignupService;
 import com.newstoss.member.application.in.command.WithdrawService;
 import com.newstoss.member.application.in.query.DuplicateCheck;
@@ -23,6 +24,7 @@ public class MemberService {
     private final GetMemberService getMemberService;
     private final DuplicateCheck duplicateCheck;
     private final FgOffsetService fgOffsetService;
+    private final InvestScoreService investScoreService;
 
     public Member signup(SignupRequestDTO signupRequestDTO){
         return signupService.exec(signupRequestDTO);
@@ -42,5 +44,9 @@ public class MemberService {
 
     public void fgOffset(UUID memberId, UUID fgOffset){
         fgOffsetService.exec(memberId,fgOffset);
+    }
+
+    public void invest(UUID memberId, Long invest_score){
+        investScoreService.exec(memberId,invest_score);
     }
 }

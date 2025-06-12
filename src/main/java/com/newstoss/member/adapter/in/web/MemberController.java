@@ -43,4 +43,10 @@ public class MemberController {
         memberService.fgOffset(memberId,fgOffset);
         return ResponseEntity.ok(new SuccessResponse<>(true, "현재 보고 있는 관심 그룹 변경 완료", null));
     }
+
+    @GetMapping("/invest")
+    public ResponseEntity<SuccessResponse<Object>> invest(@RequestParam UUID memberId, @RequestParam Long invest_score){
+        memberService.invest(memberId,invest_score);
+        return ResponseEntity.ok(new SuccessResponse<>(true, "멤버 투자 성향 수정 완료", null));
+    }
 }

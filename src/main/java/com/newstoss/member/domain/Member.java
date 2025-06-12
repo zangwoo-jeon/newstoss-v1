@@ -42,4 +42,13 @@ public class Member {
         }
     }
 
+    public void changeInvestScore(long newScore) {
+        if (newScore < 0) {
+            throw new IllegalArgumentException("투자 점수는 0 이상이어야 합니다.");
+        }
+        if (this.investScore != newScore) {
+            this.investScore = newScore;
+        }
+    }
+
 }
