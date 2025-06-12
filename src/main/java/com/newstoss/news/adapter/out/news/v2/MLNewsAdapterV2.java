@@ -4,6 +4,7 @@ import com.newstoss.global.errorcode.NewsErrorCode;
 import com.newstoss.global.handler.CustomException;
 import com.newstoss.news.adapter.in.web.dto.news.common.GetAllNewsDTO;
 import com.newstoss.news.adapter.out.dto.v2.MLNewsDTOv2;
+import com.newstoss.news.adapter.out.dto.v2.MLNewsMataDataDTOv2;
 import com.newstoss.news.adapter.out.dto.v2.MLRelatedNewsDTOv2;
 import com.newstoss.news.adapter.out.dto.v2.MLRelatedStockDTOv2;
 import com.newstoss.news.application.port.out.ml.v2.MLNewsPortV2;
@@ -53,17 +54,16 @@ public class MLNewsAdapterV2 implements MLNewsPortV2 {
         return safeExchangeList(url, new ParameterizedTypeReference<>() {});
     }
 
-    // stock_name만 줄 때 코드
-    @Override
-    public List<MLRelatedStockDTOv2> getRelatedStock(String newsId) {
-        String url = BASE_URL + newsId + "/related/stocks";
-        return safeExchangeList(url, new ParameterizedTypeReference<>() {});
-    }
-
     @Override
     public List<MLNewsDTOv2> getHighLightNews() {
         String url = BASE_URL  + "/highlights";
         return safeExchangeList(url, new ParameterizedTypeReference<>() {});
+    }
+
+    @Override
+    public MLNewsMataDataDTOv2 getNewsMeta(String newsId) {
+        String url = BASE_URL  + "v2/" + newsId + "/metadata" ;
+        return safeGetObject(url, MLNewsMataDataDTOv2.class);
     }
 
     // 반환 값이 리스트고 응답 DTO랑 같을 경우

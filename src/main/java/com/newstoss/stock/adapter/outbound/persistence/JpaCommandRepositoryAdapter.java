@@ -16,6 +16,7 @@ public class JpaCommandRepositoryAdapter implements CreateStockPort, StockSearch
 
     @Override
     public Long create(Stock stock) {
+
         Stock save = repository.save(stock);
         return save.getId();
     }

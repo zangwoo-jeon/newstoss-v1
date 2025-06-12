@@ -1,10 +1,9 @@
 package com.newstoss.news.application.service;
 
 import com.newstoss.news.adapter.in.web.dto.news.common.GetAllNewsDTO;
-import com.newstoss.news.adapter.in.web.dto.news.v2.NewsDTOv2;
-import com.newstoss.news.adapter.in.web.dto.news.v2.RelatedNewsDTOv2;
-import com.newstoss.news.adapter.in.web.dto.news.v2.RelatedStockDTOv2;
+import com.newstoss.news.adapter.in.web.dto.news.v2.*;
 import com.newstoss.news.application.port.in.ml.v2.*;
+import com.newstoss.news.application.port.out.redis.HighlightNewsCachePort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -17,9 +16,10 @@ public class NewsServiceV2 {
     private final GetRealTimeNewsUseCaseV2 getRealTimeNews;
     private final GetNewsDetailUseCaseV2 getDetailNews;
     private final GetRelatedNewsUseCaseV2 getRelatedNews;
-    private final GetRelatedStockUseCaseV2 getRelatedStocks;
     private final GetAllNewsUseCaseV2 getAllNews;
     private final GetHighlightNewsUseCase getHighlight;
+    private final HighlightNewsCachePort highlightNews;
+    private final GetNewsMataDataUseCaseV2 mataDataUseCaseV2;
 
     public List<NewsDTOv2> getRealTimeNews(){
         return getRealTimeNews.exec();
@@ -33,13 +33,15 @@ public class NewsServiceV2 {
         return getRelatedNews.exec(newsId);
     }
 
-    public List<RelatedStockDTOv2> getRelatedStock(String newsId){
-        return getRelatedStocks.exec(newsId);
-    }
-
     public List<NewsDTOv2> getAllNews(GetAllNewsDTO getAllNewsDTO) { return getAllNews.exec(getAllNewsDTO); }
 
     public List<NewsDTOv2> getHighlightNews() {
         return getHighlight.exec();
     }
+
+    public List<NewsMathRelatedDTO> highlightWithRedis(){return highlightNews.loadHighlightsWithRelated();}
+
+    public NewsMetaDataDTO getNewsMeta(String newsId){
+        return mataDataUseCaseV2.exec(newsId);
+    };
 }

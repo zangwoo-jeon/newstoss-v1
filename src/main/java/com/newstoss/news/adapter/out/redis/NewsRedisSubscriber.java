@@ -1,4 +1,4 @@
-package com.newstoss.global.redis;
+package com.newstoss.news.adapter.out.redis;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.newstoss.news.adapter.in.web.sse.SseEmitters;
