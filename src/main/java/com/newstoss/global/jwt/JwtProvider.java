@@ -33,6 +33,7 @@ public class JwtProvider {
                 .claim("memberName", member.getName())
                 .claim("phoneNumber", member.getPhoneNumber())
                 .claim("email", member.getEmail())
+                .claim("invest", member.getInvestScore())
                 .claim("zipCode", member.getAddress().getZipcode())
                 .claim("Address", member.getAddress().getAddress())
                 .claim("AddressDetail", member.getAddress().getAddressDetail())

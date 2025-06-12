@@ -24,6 +24,8 @@ public class Member {
     private String phoneNumber;
     @Column(length = 40)
     private String email;
+    @Column(name = "invest_score")
+    private long investScore;
     @Column(name = "fg_offset")
     private UUID fgOffset;
     @Embedded
