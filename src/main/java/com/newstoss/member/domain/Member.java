@@ -1,8 +1,10 @@
 package com.newstoss.member.domain;
 
+import com.newstoss.portfolio.entity.Portfolio;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -39,4 +41,5 @@ public class Member {
             this.fgOffset = newOffset;
         }
     }
+
 }

@@ -1,5 +1,6 @@
 package com.newstoss.calender;
 
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,12 +11,13 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/calen")
 @RequiredArgsConstructor
 public class CalendarController {
-    private final CalendarRepository calendarRepository;
+   private final CalendarRepository calendarRepository;
 
-   @GetMapping("/calen")
+   @GetMapping("")
+   @Operation(summary = "캘린더 조회", description = "연도와 달로 IR을 조회합니다. 뒤에 day를 붙히면 해당 날짜의 IR을 조회합니다.")
    public ResponseEntity<List<Calendar>> getMonthCalen(
            @RequestParam Integer year,
            @RequestParam Integer month,

@@ -1,6 +1,6 @@
 package com.newstoss.global.jwt;
 
-import com.newstoss.member.application.query.GetMemberService;
+import com.newstoss.member.application.in.query.GetMemberService;
 import com.newstoss.member.domain.Member;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

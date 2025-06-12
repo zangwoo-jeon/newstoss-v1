@@ -4,7 +4,7 @@ import com.newstoss.auth.adapter.in.web.dto.requestDTO.LoginDTO;
 import com.newstoss.global.jwt.JwtProvider;
 import com.newstoss.global.errorcode.UserErrorCode;
 import com.newstoss.global.handler.CustomException;
-import com.newstoss.member.application.query.GetMemberService;
+import com.newstoss.member.application.in.query.GetMemberService;
 import com.newstoss.member.domain.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;

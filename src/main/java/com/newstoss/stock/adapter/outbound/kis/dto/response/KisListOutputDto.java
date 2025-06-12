@@ -11,7 +11,9 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class KisListOutputDto<T> {
-
+    private String rt_cd;
+    private String msg_cd;
+    private String msg1;
     @JsonProperty("output")
     private List<T> output;
 }

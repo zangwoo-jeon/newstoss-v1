@@ -1,10 +1,13 @@
 package com.newstoss.stock.entity;
 
 import com.newstoss.global.auditing.BaseTimeEntity;
+import com.newstoss.portfolio.entity.Portfolio;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Entity
 @Getter
@@ -12,6 +15,7 @@ import lombok.NoArgsConstructor;
 public class Stock extends BaseTimeEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "stock_id")
     private Long id;
 
     @Column(name = "stock_code")
@@ -39,6 +43,7 @@ public class Stock extends BaseTimeEntity {
         stock.stockSearchCount = 0; // 초기 검색 횟수는 0으로 설정
         return stock;
     }
+
 
     //== 비즈니스 로직 ==//
     public void incrementStockSearchCount() {

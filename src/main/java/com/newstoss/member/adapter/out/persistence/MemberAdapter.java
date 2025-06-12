@@ -1,11 +1,12 @@
 package com.newstoss.member.adapter.out.persistence;
 
 import com.newstoss.member.domain.Member;
-import com.newstoss.member.domain.MemberCommandPort;
-import com.newstoss.member.domain.MemberQueryPort;
+import com.newstoss.member.application.out.MemberCommandPort;
+import com.newstoss.member.application.out.MemberQueryPort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 @Component
@@ -37,6 +38,11 @@ public class MemberAdapter implements MemberCommandPort, MemberQueryPort {
     @Override
     public Optional<Member> findByAccount(String account) {
         return jpaMemberRepository.findByAccount(account);
+    }
+
+    @Override
+    public List<Member> findAll() {
+        return jpaMemberRepository.findAll();
     }
 
 }

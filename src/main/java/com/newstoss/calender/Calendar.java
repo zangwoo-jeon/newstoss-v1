@@ -18,8 +18,8 @@ import java.time.LocalTime;
 public class Calendar {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long ir_id;
-    private String company_name;
+    private Long irId;
+    private String companyName;
     private String title;
     private String place;
     private LocalDate date;

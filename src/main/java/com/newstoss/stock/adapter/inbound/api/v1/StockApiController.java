@@ -23,7 +23,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -78,20 +77,7 @@ public class StockApiController {
                                                @RequestParam(defaultValue = "1") int page
     ) {
         log.info("getCategoryByName called with categoryName: {} , {}", categoryName, page);
-        Page<Stock> stockByCategory = getCategoryUseCase.getStockByCategory(categoryName, page-1);
-        List<CategoryStockResponseDto> categoryStockResponseDtos = stockByCategory.stream()
-                .map(stock -> {
-                    CategoryStockResponseDto categoryStockResponseDto = new CategoryStockResponseDto();
-                    KisStockDto stockInfo = getStockInfoUseCase.getStockInfo(stock.getStockCode());
-                    categoryStockResponseDto.setStockName(stock.getName());
-                    categoryStockResponseDto.setStockCode(stock.getStockCode());
-                    categoryStockResponseDto.setCurrentPrice(stockInfo.getPrice());
-                    categoryStockResponseDto.setChangeRate(stockInfo.getChangeRate());
-                    categoryStockResponseDto.setSign(stockInfo.getSign());
-                    categoryStockResponseDto.setChangeAmount(stockInfo.getChangeAmount());
-                    return categoryStockResponseDto;
-                }).toList();
-        CategoryPageResponseDto categoryPageResponseDto = new CategoryPageResponseDto(stockByCategory.getTotalPages(), categoryStockResponseDtos);
+        CategoryPageResponseDto categoryPageResponseDto = getCategoryUseCase.getStockByCategory(categoryName, page-1);
         return ResponseEntity.ok(new SuccessResponse<>(true, "카테고리별 종목 조회 성공", categoryPageResponseDto));
     }
 
@@ -113,44 +99,13 @@ public class StockApiController {
     @GetMapping("/search")
     public ResponseEntity<?> searchStocks(@RequestParam(required = false) String keyword) {
         log.info("searchStocks called with keyword: {}", keyword);
+        List<SearchResponseDto> searchResponseDtos = searchStockUseCase.searchStock(keyword);
         if (keyword == null || keyword.isEmpty()) {
-            log.info("searchStocks called without keyword");
-            List<Stock> stocks = searchStockUseCase.searchPopular();
-            List<SearchResponseDto> searchResponseDtos = stocks.stream()
-                    .map(stock -> {
-                        KisStockDto stockInfo = getStockInfoUseCase.getStockInfo(stock.getStockCode());
-                        return new SearchResponseDto(
-                                stock.getName(),
-                                stock.getStockCode(),
-                                stockInfo.getPrice(),
-                                stockInfo.getSign(),
-                                stockInfo.getChangeAmount(),
-                                stockInfo.getChangeRate()
-                            );
-                        }).toList();
-            return ResponseEntity.ok(new SuccessResponse<>(true, "검색 인기 순위 조회에 성공하였습니다.", searchResponseDtos));
-            }
-        else {
-            List<Stock> stocks = searchStockUseCase.searchStock(keyword);
-            if (stocks.isEmpty()) {
-                return ResponseEntity.ok(new SuccessResponse<>(true, "검색 결과가 없습니다.", new ArrayList<>()));
-            }
-            List<SearchResponseDto> searchResponseDtos = stocks.stream()
-                    .map(stock -> {
-                        KisStockDto stockInfo = getStockInfoUseCase.getStockInfo(stock.getStockCode());
-                        return new SearchResponseDto(
-                                stock.getName(),
-                                stock.getStockCode(),
-                                stockInfo.getPrice(),
-                                stockInfo.getSign(),
-                                stockInfo.getChangeAmount(),
-                                stockInfo.getChangeRate()
-                            );
-                        }).toList();
-            return ResponseEntity.ok(new SuccessResponse<>(true, "검색 결과 조회에 성공하였습니다.", searchResponseDtos));
-
+            return ResponseEntity.ok(new SuccessResponse<>(false, "검색어가 비어있습니다.", searchResponseDtos));
         }
+        return ResponseEntity.ok(new SuccessResponse<>(true, "검색 결과 조회에 성공하였습니다.", searchResponseDtos));
     }
+
 
     @Operation(
             summary = "주식 검색 Count 증가",
@@ -173,3 +128,4 @@ public class StockApiController {
         return ResponseEntity.ok(new SuccessResponse<>(true, "주식 검색 Count + 1 성공", null));
     }
 }
+
