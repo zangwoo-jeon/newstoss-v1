@@ -2,12 +2,11 @@ package com.newstoss.news.adapter.out.news.v2;
 
 import com.newstoss.global.errorcode.NewsErrorCode;
 import com.newstoss.global.handler.CustomException;
-import com.newstoss.news.adapter.in.web.dto.news.common.GetAllNewsDTO;
-import com.newstoss.news.adapter.out.dto.v2.MLNewsDTOv2;
-import com.newstoss.news.adapter.out.dto.v2.MLNewsMataDataDTOv2;
-import com.newstoss.news.adapter.out.dto.v2.MLRelatedNewsDTOv2;
-import com.newstoss.news.adapter.out.dto.v2.MLRelatedStockDTOv2;
-import com.newstoss.news.application.port.out.ml.v2.MLNewsPortV2;
+import com.newstoss.news.adapter.in.web.news.dto.common.GetAllNewsDTO;
+import com.newstoss.news.adapter.out.news.dto.v2.MLNewsDTOv2;
+import com.newstoss.news.adapter.out.news.dto.v2.MLNewsMataDataDTOv2;
+import com.newstoss.news.adapter.out.news.dto.v2.MLRelatedNewsDTOv2;
+import com.newstoss.news.application.ml.v2.port.out.MLNewsPortV2;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.ParameterizedTypeReference;
