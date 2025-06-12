@@ -55,7 +55,12 @@ public class SseEmitters {
                         .name("news")
                         .data(data));
             } catch (IOException e) {
-                log.info("전송 에러 : {} + {}", RedisAndSseErrorCode.SSE_SEND_FAILURE.getMessage(),e.getMessage());
+                // Broken pipe만 로그 레벨 낮춤
+                if (e.getMessage() != null && e.getMessage().contains("Broken pipe")) {
+                    log.debug("❗ Broken pipe: 클라이언트가 연결을 끊어서 SSE 전송 실패 (무시 가능)");
+                } else {
+                    log.error("❗ SSE 전송 실패: {}", e.getMessage());
+                }
                 emitter.complete();
                 emitters.remove(emitter);
             }

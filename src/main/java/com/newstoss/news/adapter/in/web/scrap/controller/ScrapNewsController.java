@@ -1,4 +1,4 @@
-package com.newstoss.news.adapter.in.web.sse;
+package com.newstoss.news.adapter.in.web.scrap.controller;
 
 import com.newstoss.global.response.SuccessResponse;
 import com.newstoss.news.adapter.in.web.news.dto.v2.NewsDTOv2;
