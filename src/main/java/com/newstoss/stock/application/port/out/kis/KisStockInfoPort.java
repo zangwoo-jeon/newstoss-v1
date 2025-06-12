@@ -22,4 +22,11 @@ public interface KisStockInfoPort {
      * @return 기간별 주식 목록 (최대 100개)
      */
     List<KisPeriodStockDto> getStockInfoByPeriod(String stockCode, String period, String startDate, String endDate);
+
+    /**
+     * 주식의 이름 정보를 가져온다.
+     * @param stockCode 주식 코드
+     * @return 주식 이름
+     */
+    String getStockName(String stockCode);
 }

@@ -33,9 +33,6 @@ public class Stock extends BaseTimeEntity {
     private Integer stockSearchCount;
     private String category;
 
-    @OneToMany(mappedBy = "stock", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<Portfolio> portfolios;
-
     //== 생성 메서드 ==//
     public static Stock createStock(String stockCode, String name, Integer price, String marketName, String category) {
         Stock stock = new Stock();
@@ -47,11 +44,6 @@ public class Stock extends BaseTimeEntity {
         return stock;
     }
 
-    //== 연관관계 메서드 ==//
-    public void addPortfolio(Portfolio portfolio) {
-        this.portfolios.add(portfolio);
-        portfolio.setStock(this); // 포트폴리오와 주식 간의 양방향 관계 설정
-    }
 
     //== 비즈니스 로직 ==//
     public void incrementStockSearchCount() {

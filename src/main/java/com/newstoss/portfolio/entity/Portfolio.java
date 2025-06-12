@@ -14,6 +14,7 @@ import java.util.UUID;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(name = "portfolio", schema = "test_schema")
 public class Portfolio extends BaseTimeEntity {
     @Id
     @GeneratedValue
@@ -35,7 +36,7 @@ public class Portfolio extends BaseTimeEntity {
     public static Portfolio createPortfolio(UUID memberId, Stock stock, Integer stockCount, Integer entryPrice) {
         Portfolio portfolio = new Portfolio();
         portfolio.memberId = memberId;
-        portfolio.setStock(stock);
+        portfolio.setPortfolioStock(stock);
         portfolio.stockCount = stockCount;
         portfolio.entryPrice = entryPrice;
         return portfolio;
@@ -57,10 +58,7 @@ public class Portfolio extends BaseTimeEntity {
 
     //== 연관관계 메서드==//
 
-    public void setStock(Stock stock) {
+    public void setPortfolioStock(Stock stock) {
         this.stock = stock;
-        if (!stock.getPortfolios().contains(this)) {
-            stock.getPortfolios().add(this);
-        }
     }
 }

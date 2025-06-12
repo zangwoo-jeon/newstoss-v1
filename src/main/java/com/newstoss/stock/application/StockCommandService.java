@@ -1,8 +1,10 @@
 package com.newstoss.stock.application;
 
+import com.newstoss.stock.adapter.outbound.kis.dto.KisStockDto;
 import com.newstoss.stock.adapter.outbound.persistence.repository.StockRepository;
 import com.newstoss.stock.application.port.in.CreateStockUseCase;
 import com.newstoss.stock.application.port.in.UpdateStockSearchCount;
+import com.newstoss.stock.application.port.out.kis.KisStockInfoPort;
 import com.newstoss.stock.application.port.out.persistence.CreateStockPort;
 import com.newstoss.stock.application.port.out.persistence.StockSearchCounterPort;
 import com.newstoss.stock.entity.Stock;
@@ -17,13 +19,17 @@ public class StockCommandService implements CreateStockUseCase , UpdateStockSear
 
     private final CreateStockPort createStockPort;
     private final StockSearchCounterPort stockSearchCounterPort;
+    private final KisStockInfoPort kisStockInfoPort;
     /**
      * 주식 저장
-     * @param stock
+     * @param stockCode 주식 코드
      * @return stockId
      */
     @Override
-    public Long save(Stock stock) {
+    public Long save(String stockCode) {
+        KisStockDto stockInfo = kisStockInfoPort.getStockInfo(stockCode);
+        String name = kisStockInfoPort.getStockName(stockCode);
+        Stock stock = Stock.createStock(stockCode, name, null, stockInfo.getMarketName(), stockInfo.getCategoryName());
         return createStockPort.create(stock);
     }
 
