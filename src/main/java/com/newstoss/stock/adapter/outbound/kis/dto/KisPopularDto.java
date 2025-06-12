@@ -40,4 +40,7 @@ public class KisPopularDto {
     @Schema(description = "전일 대비 상승/하락 비율", example = "0.5")
     private String changeRate;
 
+    private String stockImage;
+
+
 }
