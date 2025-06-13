@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -21,6 +22,7 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@Transactional
 public class MemberPnlSchedulerService {
 
     private final MemberQueryPort memberQueryPort;
@@ -34,7 +36,8 @@ public class MemberPnlSchedulerService {
 
         List<Member> allMembers = memberQueryPort.findAll();
         LocalDate today = LocalDate.now();
-        LocalDate yesterday = LocalDate.now().minusDays(1);
+        LocalDate yesterday = today.minusDays(1);
+        LocalDate beforeDay = today.minusDays(2);
         for (Member member : allMembers) {
             List<PortfolioStock> portfolioStockStocks = getPortfolioStocksPort.getPortfolioStocks(member.getMemberId());
             long pnl = 0;
@@ -42,21 +45,21 @@ public class MemberPnlSchedulerService {
 
             for (PortfolioStock portfolioStock : portfolioStockStocks) {
                 KisStockDto stockInfo = stockInfoPort.getStockInfo(portfolioStock.getStock().getStockCode());
-                pnl += Long.parseLong(stockInfo.getChangeAmount());
-                stocksValue += Long.parseLong(stockInfo.getPrice());
+                stocksValue += Long.parseLong(stockInfo.getPrice()) * portfolioStock.getStockCount();
             }
-
-            Optional<MemberPnl> optionalPnl = getMemberPnlPort.getMemberPnl(member.getMemberId(), yesterday);
-            if (optionalPnl.isPresent()) {
-                MemberPnl yesterdayPnl = optionalPnl.get();
-                yesterdayPnl.updatePnl(pnl);
-                yesterdayPnl.updateAsset(stocksValue);
-                MemberPnl todayPnl = MemberPnl.createMemberPnl(member.getMemberId(), 0L, today, yesterdayPnl.getAsset());
-                createMemberPnlPort.create(todayPnl);
-            } else {
-                MemberPnl todayPnl = MemberPnl.createMemberPnl(member.getMemberId(), 0L, today, 0L);
-                createMemberPnlPort.create(todayPnl);
-            }
+            final long asset = stocksValue;
+            getMemberPnlPort.getMemberPnl(member.getMemberId(),yesterday).ifPresentOrElse(
+                    yPnl -> {
+                        yPnl.initAsset(asset);
+                        Long prevAsset = getMemberPnlPort.getMemberPnl(member.getMemberId(), beforeDay)
+                                .map(MemberPnl::getAsset)
+                                .orElse(0L);
+                        createMemberPnlPort.create(MemberPnl.createMemberPnl(member.getMemberId(),asset - prevAsset,today,asset));
+                    },
+                    () -> {
+                        createMemberPnlPort.create(MemberPnl.createMemberPnl(member.getMemberId(),0L,today,0L));
+                    }
+            );
         }
     }
 }
