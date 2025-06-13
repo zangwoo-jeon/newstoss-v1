@@ -19,7 +19,7 @@ public class MemberPnlPeriodResponseDto {
     private Long todayAsset; // 오늘 자산
 
     @Schema(description = "오늘 손익", example = "100000")
-    private Integer todayPnl; // 오늘 손익
+    private Long todayPnl; // 오늘 손익
 
     @Schema(description = "손익 이력")
     private List<MemberPnl> pnlHistory; // 손익 이력

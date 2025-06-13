@@ -1,5 +1,7 @@
 package com.newstoss.portfolio.application.port.in;
 
+import com.newstoss.portfolio.adapter.inbound.web.dto.response.PortfolioStocksResponseDto;
+
 import java.util.UUID;
 
 public interface AddPortfolioUseCase {
@@ -11,5 +13,5 @@ public interface AddPortfolioUseCase {
      * @param entryPrice 추가할 주식의 진입 가격
      * @return 추가된 포트폴리오 ID
      */
-    String addPortfolio(UUID memberId, String stockCode, Integer stockCount , Integer entryPrice);
+    PortfolioStocksResponseDto addPortfolio(UUID memberId, String stockCode, Integer stockCount , Integer entryPrice);
 }

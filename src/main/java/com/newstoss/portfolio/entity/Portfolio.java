@@ -1,14 +1,13 @@
 package com.newstoss.portfolio.entity;
 
 import com.newstoss.global.auditing.BaseTimeEntity;
-import com.newstoss.global.errorcode.PortfolioErrorCode;
-import com.newstoss.global.handler.CustomException;
-import com.newstoss.stock.entity.Stock;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -16,49 +15,56 @@ import java.util.UUID;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "portfolio", schema = "test_schema")
 public class Portfolio extends BaseTimeEntity {
+
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "portfolio_id")
     private Long id;
 
-    private Integer stockCount;
+    @Column(name = "pnl")
+    private Long pnl;
 
-    private Integer entryPrice;
+    @Column(name = "asset")
+    private Long asset;
 
-    @Column(name = "member_id", nullable = false)
+    @Column(name = "member_id")
     private UUID memberId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "stock_id")
-    private Stock stock;
+    @OneToMany(mappedBy = "portfolio", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PortfolioStock> portfolioStocks = new ArrayList<>();
 
     //== 생성 메서드 ==//
-    public static Portfolio createPortfolio(UUID memberId, Stock stock, Integer stockCount, Integer entryPrice) {
+    public static Portfolio createPortfolio(UUID memberId, Long pnl, Long asset) {
         Portfolio portfolio = new Portfolio();
+        portfolio.pnl = pnl;
+        portfolio.asset = asset;
         portfolio.memberId = memberId;
-        portfolio.setPortfolioStock(stock);
-        portfolio.stockCount = stockCount;
-        portfolio.entryPrice = entryPrice;
         return portfolio;
     }
 
-    //== 비즈니스 로직 ==//
-    public void addStock(Integer stockCount, Integer entryPrice) {
-        this.entryPrice = (this.entryPrice * this.stockCount + entryPrice * stockCount) / (this.stockCount + stockCount);
-        this.stockCount += stockCount;
-    }
-
-    public Integer removeStock(Integer stockCount, Integer currentPrice) {
-        if (this.stockCount < stockCount) {
-            throw new CustomException(PortfolioErrorCode.PORTFOLIO_STOCK_QUANTITY_NOT_ENOUGH);
+    //== 연관 관계 메서드 ==//
+    public void addPortfolioStock(PortfolioStock portfolioStock) {
+        this.portfolioStocks.add(portfolioStock);
+        if (portfolioStock.getPortfolio() != null) {
+            portfolioStock.setPortfolio(this);
         }
-        this.stockCount -= stockCount;
-        return (currentPrice - this.entryPrice) * stockCount;
     }
 
-    //== 연관관계 메서드==//
+    //== 비즈니스 메서드 ==//
 
-    public void setPortfolioStock(Stock stock) {
-        this.stock = stock;
+    /**
+     * 자산을 업데이트합니다. 매개변수를 원래 있던 자산에 더합니다.
+     * @param asset 변화량
+     */
+    public void updateAsset(Long asset) {
+        this.asset += asset;
     }
+    public void updatePnl(Long pnl) {
+        this.pnl += pnl;
+    }
+    public void removePortfolioStock(PortfolioStock portfolioStock) {
+        portfolioStocks.remove(portfolioStock);
+        portfolioStock.setPortfolio(null);
+    }
+
 }

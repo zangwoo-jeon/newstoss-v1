@@ -2,6 +2,8 @@ package com.newstoss.portfolio.application.port.out;
 
 import com.newstoss.portfolio.entity.Portfolio;
 
-public interface CreatePortfolioPort {
-    void create(Portfolio portfolio);
+import java.util.UUID;
+
+public interface LoadPortfolioPort {
+    Portfolio loadPortfolio(UUID memberId);
 }

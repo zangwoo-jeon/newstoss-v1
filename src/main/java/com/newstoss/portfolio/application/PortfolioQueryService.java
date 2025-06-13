@@ -6,18 +6,16 @@ import com.newstoss.portfolio.adapter.inbound.web.dto.response.PortfolioDailyPnl
 import com.newstoss.portfolio.adapter.inbound.web.dto.response.PortfolioStocksResponseDto;
 import com.newstoss.portfolio.application.port.in.GetPortfolioStockUseCase;
 import com.newstoss.portfolio.application.port.out.GetPortfolioStocksPort;
-import com.newstoss.portfolio.application.port.out.UpdateMemberPnlPort;
-import com.newstoss.portfolio.entity.Portfolio;
+import com.newstoss.portfolio.application.port.out.LoadPortfolioPort;
+import com.newstoss.portfolio.entity.PortfolioStock;
 import com.newstoss.stock.adapter.outbound.kis.dto.KisStockDto;
-import com.newstoss.stock.application.port.out.kis.KisStockInfoPort;
+import com.newstoss.stock.application.port.out.kis.StockInfoPort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicLong;
 
 @Service
 @RequiredArgsConstructor
@@ -25,35 +23,25 @@ import java.util.concurrent.atomic.AtomicLong;
 public class PortfolioQueryService implements GetPortfolioStockUseCase {
 
     private final GetPortfolioStocksPort getPortfolioStocksPort;
-    private final KisStockInfoPort kisStockInfoPort;
-    private final UpdateMemberPnlPort updateMemberPnlPort;
+    private final StockInfoPort stockInfoPort;
+    private final LoadPortfolioPort loadPortfolioPort;
     @Override
     public PortfolioDailyPnlResponseDto getPortfolioStocks(UUID memberId) {
-        List<Portfolio> portfolioStocks = getPortfolioStocksPort.getPortfolioStocks(memberId);
+        List<PortfolioStock> portfolioStocks = getPortfolioStocksPort.getPortfolioStocks(memberId);
         if (portfolioStocks.isEmpty()) {
             throw new CustomException(PortfolioErrorCode.PORTFOLIO_NOT_FOUND);
         }
-        AtomicInteger totalPnl = new AtomicInteger(0);
-        AtomicLong totalStockValue = new AtomicLong(0);
+
         List<PortfolioStocksResponseDto> dtos = portfolioStocks.stream()
-                .map(portfolio -> {
-                    PortfolioStocksResponseDto dto = new PortfolioStocksResponseDto(portfolio);
-                    KisStockDto stockInfo = kisStockInfoPort.getStockInfo(portfolio.getStock().getStockCode());
+                .map(portfolioStock -> {
+                    PortfolioStocksResponseDto dto = new PortfolioStocksResponseDto(portfolioStock);
+                    KisStockDto stockInfo = stockInfoPort.getStockInfo(portfolioStock.getStock().getStockCode());
                     int price = Integer.parseInt(stockInfo.getPrice());
-                    int count = portfolio.getStockCount();
-                    dto.setCurrentPrice(price);
-                    dto.setProfitLoss((price - portfolio.getEntryPrice()) * count);
-                    totalStockValue.addAndGet(price);
-                    totalPnl.addAndGet(dto.getProfitLoss());
-                    dto.setProfitLossRate(((double) (price - portfolio.getEntryPrice()) / portfolio.getEntryPrice()) * 100);
+                    int count = portfolioStock.getStockCount();
+                    dto.updatePrices(price,((long) (price - portfolioStock.getEntryPrice()) * count),((double) (price - portfolioStock.getEntryPrice()) / portfolioStock.getEntryPrice()) * 100);
                     return dto;
                 }).toList();
-        updateMemberPnlPort.updateMemberPnl(memberId, totalPnl.get(), totalStockValue.get());
-        PortfolioDailyPnlResponseDto dto = new PortfolioDailyPnlResponseDto(
-                totalPnl.get(),
-                dtos
-        );
-        return dto;
+        return new PortfolioDailyPnlResponseDto(dtos);
     }
 
 }

@@ -6,7 +6,7 @@ import com.newstoss.stock.adapter.outbound.kis.dto.response.KisApiResponseDto;
 
 import java.util.List;
 
-public interface KisIndicePort {
+public interface IndicePort {
     KisApiResponseDto<KisIndiceInfoDto, List<KisIndicePriceDto>> getIndiceInfo(String market, String startDate, String endDate);
 
 }

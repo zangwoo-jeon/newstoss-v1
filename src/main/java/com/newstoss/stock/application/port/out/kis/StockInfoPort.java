@@ -5,7 +5,7 @@ import com.newstoss.stock.adapter.outbound.kis.dto.KisStockDto;
 
 import java.util.List;
 
-public interface KisStockInfoPort {
+public interface StockInfoPort {
     /**
      * 주식 1개에 대한 정보를 가져온다.
      * @param stockCode 주식 코드
