@@ -21,7 +21,7 @@ public class HighlightNewsScheduler {
         log.info("✅ HighlightNewsScheduler 등록됨 (@Profile=prod)");
     }
 
-    @Scheduled(cron = "0 * 9-17 * * *") // 매일 00:00
+    @Scheduled(cron = "0 * 9-22 * * *") // 매일 00:00
     public void updateHighlightNews() {
 
         highlightNewsCacheService.UpdateRedis();

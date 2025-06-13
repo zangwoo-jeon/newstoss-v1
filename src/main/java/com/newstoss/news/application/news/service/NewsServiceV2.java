@@ -20,9 +20,9 @@ public class NewsServiceV2 {
     private final GetRelatedNewsUseCaseV2 getRelatedNews;
     private final GetAllNewsUseCaseV2 getAllNews;
     private final GetHighlightNewsUseCase getHighlight;
-    private final HighlightNewsCachePort highlightNews;
     private final GetNewsMataDataUseCaseV2 mataDataUseCaseV2;
     private final GetSearchNewsUseCase getSearchNews;
+    private final HighlightNewsCacheUseCase highlightNewsCacheUseCase;
 
     public List<NewsDTOv2> getRealTimeNews(){
         return getRealTimeNews.exec();
@@ -41,7 +41,7 @@ public class NewsServiceV2 {
     public List<HighlightNewsDTO> getHighlightNews() { return getHighlight.exec(); }
 
     public
-    List<NewsMathRelatedDTO<HighlightNewsDTO>> highlightWithRedis(){return highlightNews.loadHighlightsWithRelated();}
+    List<NewsMathRelatedDTO<HighlightNewsDTO>> highlightWithRedis(){return highlightNewsCacheUseCase.loadRedis();}
 
     public NewsMetaDataDTO getNewsMeta(String newsId){
         return mataDataUseCaseV2.exec(newsId);
