@@ -16,6 +16,7 @@ import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.net.URI;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
@@ -52,10 +53,10 @@ public class GetFxClient implements FxInfoPort {
                 .queryParam("FID_INPUT_DATE_1", startDate)
                 .queryParam("FID_INPUT_DATE_2", endDate)
                 .queryParam("FID_PERIOD_DIV_CODE", "D");
-
+        URI finalUri = uri.build().encode().toUri();
         try {
             ResponseEntity<KisFxDto> response = restTemplate.exchange(
-                    uri.toUriString(),
+                    finalUri,
                     HttpMethod.GET,
                     entity,
                     new ParameterizedTypeReference<>() {}

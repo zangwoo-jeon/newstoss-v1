@@ -20,6 +20,7 @@ import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 
 import static org.springframework.http.HttpMethod.*;
@@ -59,12 +60,10 @@ public class GetPopularStockService implements PopularStockPort {
                 .queryParam("FID_INPUT_PRICE_2", "") // 가격 상한
                 .queryParam("FID_VOL_CNT", "")
                 .queryParam("FID_INPUT_DATE_1", ""); // 시작
-        log.info("Authorization Header: {}", headers.get("authorization"));
-        log.info("AppSecret: {}", headers.get("appsecret"));
-        log.info("AppKey: {}", headers.get("appkey"));
+        URI finalUri = builder.build().encode().toUri();
         try{
             ResponseEntity<KisListOutputDto<KisPopularDto>> response = restTemplate.exchange(
-                    builder.toUriString(),
+                    finalUri,
                     GET,
                     entity,
                     new ParameterizedTypeReference<>() {}

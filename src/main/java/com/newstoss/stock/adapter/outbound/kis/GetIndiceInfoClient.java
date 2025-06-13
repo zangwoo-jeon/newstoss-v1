@@ -16,6 +16,7 @@ import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 
 @Component
@@ -53,9 +54,10 @@ public class GetIndiceInfoClient implements IndicePort {
                 .queryParam("FID_INPUT_DATE_1", startDate)
                 .queryParam("FID_INPUT_DATE_2", endDate)
                 .queryParam("FID_PERIOD_DIV_CODE", "D");         // 일간
+        URI finalUri = builder.build().encode().toUri();
         try {
             ResponseEntity<KisApiResponseDto<KisIndiceInfoDto,List<KisIndicePriceDto>>> response = restTemplate.exchange(
-                    builder.toUriString(),
+                    finalUri,
                     HttpMethod.GET,
                     entity,
                     new ParameterizedTypeReference<>() {}
