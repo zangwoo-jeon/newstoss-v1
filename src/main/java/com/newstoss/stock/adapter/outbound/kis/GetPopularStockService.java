@@ -1,8 +1,5 @@
 package com.newstoss.stock.adapter.outbound.kis;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.newstoss.global.errorcode.StockErrorCode;
 import com.newstoss.global.handler.CustomException;
 import com.newstoss.global.kis.KisTokenManager;
@@ -10,7 +7,7 @@ import com.newstoss.global.kis.KisTokenProperties;
 import com.newstoss.stock.adapter.outbound.kis.dto.response.KisListOutputDto;
 import com.newstoss.stock.adapter.outbound.kis.dto.KisPopularDto;
 import com.newstoss.stock.adapter.outbound.persistence.repository.StockRepository;
-import com.newstoss.stock.application.port.out.kis.KisPopularStockPort;
+import com.newstoss.stock.application.port.out.kis.PopularStockPort;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.ParameterizedTypeReference;
@@ -23,6 +20,7 @@ import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 
 import static org.springframework.http.HttpMethod.*;
@@ -30,7 +28,7 @@ import static org.springframework.http.HttpMethod.*;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class GetPopularStockService implements KisPopularStockPort {
+public class GetPopularStockService implements PopularStockPort {
     private final KisTokenProperties kisProperties;
     private final KisTokenManager kisTokenManager;
     private final RestTemplate restTemplate;
@@ -62,12 +60,10 @@ public class GetPopularStockService implements KisPopularStockPort {
                 .queryParam("FID_INPUT_PRICE_2", "") // 가격 상한
                 .queryParam("FID_VOL_CNT", "")
                 .queryParam("FID_INPUT_DATE_1", ""); // 시작
-        log.info("Authorization Header: {}", headers.get("authorization"));
-        log.info("AppSecret: {}", headers.get("appsecret"));
-        log.info("AppKey: {}", headers.get("appkey"));
+        URI finalUri = builder.build().encode().toUri();
         try{
             ResponseEntity<KisListOutputDto<KisPopularDto>> response = restTemplate.exchange(
-                    builder.toUriString(),
+                    finalUri,
                     GET,
                     entity,
                     new ParameterizedTypeReference<>() {}

@@ -1,9 +1,8 @@
 package com.newstoss.stock.application;
 
 import com.newstoss.stock.adapter.inbound.dto.response.FxResponseDto;
-import com.newstoss.stock.adapter.outbound.kis.dto.KisFxInfoDto;
 import com.newstoss.stock.application.port.in.GetFxInfoUseCase;
-import com.newstoss.stock.application.port.out.kis.KisFxInfoPort;
+import com.newstoss.stock.application.port.out.kis.FxInfoPort;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,7 +15,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @RequiredArgsConstructor
 public class FxInfoService implements GetFxInfoUseCase {
 
-    private final KisFxInfoPort port;
+    private final FxInfoPort port;
     private final Map<String, List<String>> FxEncoder = new ConcurrentHashMap<>();
     private final Map<String, List<String>> FeedstockEncoder = new ConcurrentHashMap<>();
     private final Map<String, List<String>> BondsEncoder = new ConcurrentHashMap<>();
@@ -46,7 +45,7 @@ public class FxInfoService implements GetFxInfoUseCase {
         FxEncoder.put("NQ", List.of("N","COMP"));
         FxEncoder.put("SP500", List.of("N","SPX"));
         FxEncoder.put("Nikkei", List.of("N","JP#NI225"));
-        FxEncoder.put("HangSang", List.of("N","HK#HS"));
+        FxEncoder.put("HangSeng", List.of("N","HK#HS"));
         FxEncoder.put("ShangHai", List.of("N","SHANG"));
 
         FeedstockEncoder.put("GOLD",List.of("N","NYGOLD"));

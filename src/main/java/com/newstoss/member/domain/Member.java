@@ -1,10 +1,8 @@
 package com.newstoss.member.domain;
 
-import com.newstoss.portfolio.entity.Portfolio;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -39,6 +37,15 @@ public class Member {
         }
         if (!newOffset.equals(this.fgOffset)) {
             this.fgOffset = newOffset;
+        }
+    }
+
+    public void changeInvestScore(long newScore) {
+        if (newScore < 0) {
+            throw new IllegalArgumentException("투자 점수는 0 이상이어야 합니다.");
+        }
+        if (this.investScore != newScore) {
+            this.investScore = newScore;
         }
     }
 

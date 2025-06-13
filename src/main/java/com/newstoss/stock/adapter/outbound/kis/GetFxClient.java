@@ -5,10 +5,8 @@ import com.newstoss.global.handler.CustomException;
 import com.newstoss.global.kis.KisTokenManager;
 import com.newstoss.global.kis.KisTokenProperties;
 import com.newstoss.stock.adapter.inbound.dto.response.FxResponseDto;
-import com.newstoss.stock.adapter.outbound.kis.dto.KisStockDto;
 import com.newstoss.stock.adapter.outbound.kis.dto.response.KisFxDto;
-import com.newstoss.stock.adapter.outbound.kis.dto.response.KisOutputDto;
-import com.newstoss.stock.application.port.out.kis.KisFxInfoPort;
+import com.newstoss.stock.application.port.out.kis.FxInfoPort;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.ParameterizedTypeReference;
@@ -18,13 +16,14 @@ import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.net.URI;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class GetKisFxClient implements KisFxInfoPort {
+public class GetFxClient implements FxInfoPort {
 
     private final KisTokenProperties kisProperties;
     private final KisTokenManager kisTokenManager;
@@ -54,10 +53,10 @@ public class GetKisFxClient implements KisFxInfoPort {
                 .queryParam("FID_INPUT_DATE_1", startDate)
                 .queryParam("FID_INPUT_DATE_2", endDate)
                 .queryParam("FID_PERIOD_DIV_CODE", "D");
-
+        URI finalUri = uri.build().encode().toUri();
         try {
             ResponseEntity<KisFxDto> response = restTemplate.exchange(
-                    uri.toUriString(),
+                    finalUri,
                     HttpMethod.GET,
                     entity,
                     new ParameterizedTypeReference<>() {}

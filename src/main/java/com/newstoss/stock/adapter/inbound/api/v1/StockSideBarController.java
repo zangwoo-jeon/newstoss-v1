@@ -43,7 +43,7 @@ public class StockSideBarController {
     )
     @Parameters({
             @Parameter(name = "type", description = "조회할 주식 타입", example = "FX , Feed, Bonds"),
-            @Parameter(name = "symbol", description = "조회할 코드 이름", example = "FX: dollar, yen, DOW, NQ, SP500, Nikkei, Hangsang"
+            @Parameter(name = "symbol", description = "조회할 코드 이름", example = "FX: dollar, yen, DOW, NQ, SP500, Nikkei, HangSeng"
             + ", ShangHai , Feed: GOLD, SILVER, WTI, CORN, COFFEE ,COTTON , Bonds: KRBONDS 1,3,5,10,20,30 USBONDS 1,10,30")
     })
     @GetMapping("/FX")

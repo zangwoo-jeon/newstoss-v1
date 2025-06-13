@@ -5,7 +5,7 @@ import com.newstoss.global.kis.KisTokenProperties;
 import com.newstoss.stock.adapter.outbound.kis.dto.KisIndiceInfoDto;
 import com.newstoss.stock.adapter.outbound.kis.dto.response.KisApiResponseDto;
 import com.newstoss.stock.adapter.outbound.kis.dto.KisIndicePriceDto;
-import com.newstoss.stock.application.port.out.kis.KisIndicePort;
+import com.newstoss.stock.application.port.out.kis.IndicePort;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.ParameterizedTypeReference;
@@ -16,12 +16,13 @@ import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class GetIndiceInfoClient implements KisIndicePort {
+public class GetIndiceInfoClient implements IndicePort {
     private final KisTokenManager kisTokenManager;
     private final KisTokenProperties kisTokenProperties;
     private final RestTemplate restTemplate;
@@ -53,9 +54,10 @@ public class GetIndiceInfoClient implements KisIndicePort {
                 .queryParam("FID_INPUT_DATE_1", startDate)
                 .queryParam("FID_INPUT_DATE_2", endDate)
                 .queryParam("FID_PERIOD_DIV_CODE", "D");         // 일간
+        URI finalUri = builder.build().encode().toUri();
         try {
             ResponseEntity<KisApiResponseDto<KisIndiceInfoDto,List<KisIndicePriceDto>>> response = restTemplate.exchange(
-                    builder.toUriString(),
+                    finalUri,
                     HttpMethod.GET,
                     entity,
                     new ParameterizedTypeReference<>() {}
