@@ -3,10 +3,11 @@ package com.newstoss.news.adapter.out.news.v2;
 import com.newstoss.global.errorcode.NewsErrorCode;
 import com.newstoss.global.handler.CustomException;
 import com.newstoss.news.adapter.in.web.news.dto.common.GetAllNewsDTO;
+import com.newstoss.news.adapter.out.news.dto.v2.MLHighlightNewsDTOv2;
 import com.newstoss.news.adapter.out.news.dto.v2.MLNewsDTOv2;
 import com.newstoss.news.adapter.out.news.dto.v2.MLNewsMataDataDTOv2;
 import com.newstoss.news.adapter.out.news.dto.v2.MLRelatedNewsDTOv2;
-import com.newstoss.news.application.ml.v2.port.out.MLNewsPortV2;
+import com.newstoss.news.application.news.v2.port.out.MLNewsPortV2;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.ParameterizedTypeReference;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,17 +26,17 @@ import java.util.Optional;
 @Slf4j
 public class MLNewsAdapterV2 implements MLNewsPortV2 {
     private final RestTemplate restTemplate;
-    private static final String BASE_URL = "http://3.37.207.16:8000/news/";
+    private static final String BASE_URL = "http://3.37.207.16:8000/news/v2/";
 
     @Override
     public List<MLNewsDTOv2> getRealTimeNews() {
-        String url = BASE_URL + "v2/" + "?skip=0&limit=10";
+        String url = BASE_URL + "?skip=0&limit=10";
         return safeExchangeList(url, new ParameterizedTypeReference<>() {});
     }
 
     @Override
     public MLNewsDTOv2 getDetailNews(String newsId) {
-        String url = BASE_URL + "v2/" + newsId;
+        String url = BASE_URL + newsId;
         return safeGetObject(url, MLNewsDTOv2.class);
     }
 
@@ -42,27 +44,34 @@ public class MLNewsAdapterV2 implements MLNewsPortV2 {
     public List<MLNewsDTOv2> getAllNews(GetAllNewsDTO getAllNewsDTO) {
         Integer skip = getAllNewsDTO.getSkip();
         Integer limit = getAllNewsDTO.getLimit();
-        String url = BASE_URL + "v2/" + "?skip="+skip+"&limit="+limit;
+        String url = BASE_URL + "?skip="+skip+"&limit="+limit;
         return safeExchangeList(url, new ParameterizedTypeReference<>() {});
     }
 
 
     @Override
     public List<MLRelatedNewsDTOv2> getSimilarNews(String newsId) {
-        String url = BASE_URL + "v2/" + newsId + "/related/news";
+        String url = BASE_URL + newsId + "/related/news";
         return safeExchangeList(url, new ParameterizedTypeReference<>() {});
     }
 
     @Override
-    public List<MLNewsDTOv2> getHighLightNews() {
-        String url = BASE_URL  + "/highlights";
+    public List<MLHighlightNewsDTOv2> getHighLightNews(LocalDateTime now, LocalDateTime before) {
+        String url = BASE_URL + "highlights" + "?start_datetime=" + before + "&end_datetime=" + now;;
+        System.out.println("ML 전송 url" + url);
         return safeExchangeList(url, new ParameterizedTypeReference<>() {});
     }
 
     @Override
     public MLNewsMataDataDTOv2 getNewsMeta(String newsId) {
-        String url = BASE_URL  + "v2/" + newsId + "/metadata" ;
+        String url = BASE_URL + newsId + "/metadata" ;
         return safeGetObject(url, MLNewsMataDataDTOv2.class);
+    }
+
+    @Override
+    public List<MLNewsDTOv2> searchNews(String searchNews){
+        String url = BASE_URL + "/?skip=0&limit=10&title="+searchNews;
+        return safeExchangeList(url, new ParameterizedTypeReference<>() {});
     }
 
     // 반환 값이 리스트고 응답 DTO랑 같을 경우
