@@ -45,7 +45,7 @@ public class FxInfoService implements GetFxInfoUseCase {
         FxEncoder.put("NQ", List.of("N","COMP"));
         FxEncoder.put("SP500", List.of("N","SPX"));
         FxEncoder.put("Nikkei", List.of("N","JP#NI225"));
-        FxEncoder.put("HangSang", List.of("N","HK#HS"));
+        FxEncoder.put("HangSeng", List.of("N","HK#HS"));
         FxEncoder.put("ShangHai", List.of("N","SHANG"));
 
         FeedstockEncoder.put("GOLD",List.of("N","NYGOLD"));
