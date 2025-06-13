@@ -20,6 +20,7 @@ import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 
 @Component
@@ -47,9 +48,11 @@ public class GetStockClient implements StockInfoPort {
         UriComponentsBuilder uri = UriComponentsBuilder.fromHttpUrl(url)
                 .queryParam("FID_COND_MRKT_DIV_CODE", "J")
                 .queryParam("FID_INPUT_ISCD", stockCode);
+        URI finalUri = uri.build().encode().toUri();
+
         try {
             ResponseEntity<KisOutputDto<KisStockDto>> response = restTemplate.exchange(
-                    uri.toUriString(),
+                    finalUri,
                     HttpMethod.GET,
                     entity,
                     new ParameterizedTypeReference<>() {}
@@ -94,10 +97,11 @@ public class GetStockClient implements StockInfoPort {
                 .queryParam("FID_INPUT_DATE_2", endDate)
                 .queryParam("FID_PERIOD_DIV_CODE", period)
                 .queryParam("FID_ORG_ADJ_PRC" , "1"); // 1: 수정주가, 0: 수정주가 미적용
+        URI finalUri = uri.build().encode().toUri();
 
         try {
             ResponseEntity<KisApiResponseDto<KisStockDto,List<KisPeriodStockDto>>> response = restTemplate.exchange(
-                    uri.toUriString(),
+                    finalUri,
                     HttpMethod.GET,
                     entity,
                     new ParameterizedTypeReference<>() {}
@@ -133,9 +137,10 @@ public class GetStockClient implements StockInfoPort {
         UriComponentsBuilder uri = UriComponentsBuilder.fromHttpUrl(url)
                 .queryParam("PDNO", stockCode)
                 .queryParam("PRDT_TYPE_CD", "300");
+        URI finalUri = uri.build().encode().toUri();
 
         ResponseEntity<KisOutputDto<KisStockNameDto>> response = restTemplate.exchange(
-                uri.toUriString(),
+                finalUri,
                 HttpMethod.GET,
                 entity,
                 new ParameterizedTypeReference<>() {}
