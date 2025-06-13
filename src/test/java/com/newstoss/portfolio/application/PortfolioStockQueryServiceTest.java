@@ -1,11 +1,17 @@
 package com.newstoss.portfolio.application;
 
+import com.newstoss.member.adapter.out.persistence.JpaMemberRepository;
+import com.newstoss.member.domain.Member;
 import com.newstoss.portfolio.adapter.inbound.web.dto.response.PortfolioDailyPnlResponseDto;
+import com.newstoss.portfolio.adapter.outbound.persistence.repository.JpaPortfolioRepository;
+import com.newstoss.portfolio.entity.Portfolio;
 import com.newstoss.stock.adapter.outbound.persistence.repository.StockRepository;
 import com.newstoss.stock.entity.Stock;
+import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
@@ -23,8 +29,16 @@ class PortfolioStockQueryServiceTest {
     private PortfolioStockCommandService commandService;
 
     @Autowired
-    private StockRepository stockRepository;
+    private PortfolioService portfolioService;
 
+    @Autowired
+    private StockRepository stockRepository;
+    @Autowired
+    private JpaMemberRepository memberRepository;
+    @Autowired
+    private JpaPortfolioRepository portfolioRepository;
+    @Autowired
+    private EntityManager em;
 
     @Test
     public void portfoliosTest() {
@@ -39,6 +53,22 @@ class PortfolioStockQueryServiceTest {
 
         //then
         assertThat(portfolioStocks).isNotNull();
-        System.out.println("portfolioStocks.getTotalPnl() = " + portfolioStocks.getTotalPnl());
     }
+
+    @Test
+    @Rollback(false)
+    public void CreateTestPortfolio() {
+        //given
+        Member member = memberRepository.findByName("test").get(0);
+        //when
+        portfolioService.createPortfolio(member.getMemberId());
+        //then
+        em.flush();
+        em.clear();
+
+        Portfolio portfolio = portfolioRepository.findByMemberId(member.getMemberId()).get();
+        System.out.println("portfolio.getMemberId() = " + portfolio.getMemberId());
+
+    }
+
 }
