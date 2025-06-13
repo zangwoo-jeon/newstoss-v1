@@ -9,7 +9,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class NewsMathRelatedDTO {
-    private NewsDTOv2 news;
+public class NewsMathRelatedDTO<T> {
+    private T news;
     private List<RelatedNewsDTOv2> related;
 }
