@@ -5,7 +5,7 @@ import com.newstoss.stock.application.port.in.CreateStockUseCase;
 import com.newstoss.stock.application.port.in.UpdateStockSearchCount;
 import com.newstoss.stock.application.port.out.kis.StockInfoPort;
 import com.newstoss.stock.application.port.out.persistence.CreateStockPort;
-import com.newstoss.stock.application.port.out.persistence.StockSearchCounterPort;
+import com.newstoss.stock.application.port.out.persistence.LoadStockPort;
 import com.newstoss.stock.entity.Stock;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,8 +17,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class StockCommandService implements CreateStockUseCase , UpdateStockSearchCount {
 
     private final CreateStockPort createStockPort;
-    private final StockSearchCounterPort stockSearchCounterPort;
     private final StockInfoPort stockInfoPort;
+    private final LoadStockPort loadStockPort;
     /**
      * 주식 저장
      * @param stockCode 주식 코드
@@ -34,6 +34,7 @@ public class StockCommandService implements CreateStockUseCase , UpdateStockSear
 
     @Override
     public void StockSearchCounter(String stockCode) {
-        stockSearchCounterPort.increase(stockCode);
+        Stock stock = loadStockPort.LoadStockByStockCode(stockCode);
+        stock.incrementStockSearchCount();
     }
 }
