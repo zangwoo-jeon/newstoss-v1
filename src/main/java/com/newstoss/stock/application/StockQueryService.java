@@ -7,7 +7,7 @@ import com.newstoss.stock.adapter.inbound.dto.response.CategoryStockResponseDto;
 import com.newstoss.stock.adapter.inbound.dto.response.SearchResponseDto;
 import com.newstoss.stock.adapter.outbound.kis.dto.KisStockDto;
 import com.newstoss.stock.application.port.in.*;
-import com.newstoss.stock.application.port.out.kis.KisStockInfoPort;
+import com.newstoss.stock.application.port.out.kis.StockInfoPort;
 import com.newstoss.stock.application.port.out.persistence.LoadCategoryPort;
 import com.newstoss.stock.application.port.out.persistence.SearchStockPort;
 import com.newstoss.stock.entity.Stock;
@@ -24,7 +24,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class StockQueryService implements GetCategoryUseCase , SearchStockUseCase{
 
-    private final KisStockInfoPort kisStockInfoPort;
+    private final StockInfoPort stockInfoPort;
     private final LoadCategoryPort loadCategoryPort;
     private final SearchStockPort searchStockPort;
     @Override
@@ -44,7 +44,7 @@ public class StockQueryService implements GetCategoryUseCase , SearchStockUseCas
         }
         List<CategoryStockResponseDto> list = stockPagingByCategory.stream()
                 .map(stock -> {
-                    KisStockDto stockInfo = kisStockInfoPort.getStockInfo(stock.getStockCode());
+                    KisStockDto stockInfo = stockInfoPort.getStockInfo(stock.getStockCode());
                     return new CategoryStockResponseDto(
                             stock.getName(),
                             stock.getStockCode(),
@@ -71,7 +71,7 @@ public class StockQueryService implements GetCategoryUseCase , SearchStockUseCas
             List<Stock> popularStocks = searchPopular();
             return popularStocks.stream()
                     .map(stock -> {
-                        KisStockDto stockInfo = kisStockInfoPort.getStockInfo(stock.getStockCode());
+                        KisStockDto stockInfo = stockInfoPort.getStockInfo(stock.getStockCode());
                         return new SearchResponseDto(
                                 stock.getName(),
                                 stock.getStockCode(),
@@ -85,7 +85,7 @@ public class StockQueryService implements GetCategoryUseCase , SearchStockUseCas
         } else {
             return stocks.stream()
                     .map(stock -> {
-                        KisStockDto stockInfo = kisStockInfoPort.getStockInfo(stock.getStockCode());
+                        KisStockDto stockInfo = stockInfoPort.getStockInfo(stock.getStockCode());
                         return new SearchResponseDto(
                                 stock.getName(),
                                 stock.getStockCode(),

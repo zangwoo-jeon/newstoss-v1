@@ -6,6 +6,7 @@ import com.newstoss.member.adapter.in.web.dto.requestDTO.SignupRequestDTO;
 import com.newstoss.member.adapter.in.web.dto.requestDTO.WithdrawDTO;
 import com.newstoss.member.application.MemberService;
 import com.newstoss.member.domain.Member;
+import com.newstoss.portfolio.application.port.in.CreatePortfolioUseCase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,9 +21,12 @@ import java.util.UUID;
 public class MemberController {
     private final MemberService memberService;
 
+    private final CreatePortfolioUseCase createPortfolioUseCase;
+
     @PostMapping("/register")
     public ResponseEntity<SuccessResponse<Object>> signup(@RequestBody SignupRequestDTO requestDTO){
         Member member= memberService.signup(requestDTO);
+        createPortfolioUseCase.createPortfolio(member.getMemberId());
         return ResponseEntity.ok(new SuccessResponse<>(true, "회원가입 성공", null));
     }
 

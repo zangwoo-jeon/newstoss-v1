@@ -1,13 +1,10 @@
 package com.newstoss.stock.entity;
 
 import com.newstoss.global.auditing.BaseTimeEntity;
-import com.newstoss.portfolio.entity.Portfolio;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.util.List;
 
 @Entity
 @Getter

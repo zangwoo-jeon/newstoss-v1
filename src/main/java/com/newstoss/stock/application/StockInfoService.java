@@ -5,7 +5,7 @@ import com.newstoss.global.handler.CustomException;
 import com.newstoss.stock.adapter.outbound.kis.dto.KisPeriodStockDto;
 import com.newstoss.stock.adapter.outbound.kis.dto.KisStockDto;
 import com.newstoss.stock.application.port.in.GetStockInfoUseCase;
-import com.newstoss.stock.application.port.out.kis.KisStockInfoPort;
+import com.newstoss.stock.application.port.out.kis.StockInfoPort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +18,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class StockInfoService implements GetStockInfoUseCase {
 
-    private final KisStockInfoPort stockInfoPort;
+    private final StockInfoPort stockInfoPort;
 
     @Override
     public String getStockPrice(String stockCode) {

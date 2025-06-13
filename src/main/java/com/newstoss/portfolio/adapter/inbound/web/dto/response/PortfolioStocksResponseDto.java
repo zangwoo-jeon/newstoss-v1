@@ -1,6 +1,6 @@
 package com.newstoss.portfolio.adapter.inbound.web.dto.response;
 
-import com.newstoss.portfolio.entity.Portfolio;
+import com.newstoss.portfolio.entity.PortfolioStock;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,6 +13,9 @@ import lombok.NoArgsConstructor;
 public class PortfolioStocksResponseDto {
     @Schema(description = "주식 이름" , example = "삼성전자")
     private String stockName;
+
+    @Schema(description = "주식 이미지 url")
+    private String stockImage;
 
     @Schema(description = "주식 코드", example = "005930")
     private String stockCode;
@@ -27,17 +30,24 @@ public class PortfolioStocksResponseDto {
     private Integer currentPrice;
 
     @Schema(description = "손익", example = "100000")
-    private Integer profitLoss;
+    private Long profitLoss;
 
     @Schema(description = "손익률", example = "20.0")
     private Double profitLossRate;
 
 
 
-    public PortfolioStocksResponseDto(Portfolio portfolio) {
-        this.stockName = portfolio.getStock().getName();
-        this.stockCode = portfolio.getStock().getStockCode();
-        this.stockCount = portfolio.getStockCount();
-        this.entryPrice = portfolio.getEntryPrice();
+    public PortfolioStocksResponseDto(PortfolioStock portfolioStock) {
+        this.stockName = portfolioStock.getStock().getName();
+        this.stockImage = portfolioStock.getStock().getStockImage();
+        this.stockCode = portfolioStock.getStock().getStockCode();
+        this.stockCount = portfolioStock.getStockCount();
+        this.entryPrice = portfolioStock.getEntryPrice();
+    }
+
+    public void updatePrices(Integer currentPrice, Long profitLoss , Double profitLossRate) {
+        this.currentPrice = currentPrice;
+        this.profitLoss = profitLoss;
+        this.profitLossRate = profitLossRate;
     }
 }

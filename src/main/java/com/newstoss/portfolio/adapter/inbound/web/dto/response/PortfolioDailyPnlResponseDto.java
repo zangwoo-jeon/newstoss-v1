@@ -14,11 +14,7 @@ import java.util.List;
         description = "포트폴리오 일일 손익 응답 DTO",
         title = "포트폴리오 일일 손익 응답 DTO")
 public class PortfolioDailyPnlResponseDto {
-
-    @Schema(description = "총 손익", example = "100000")
-    private Integer totalPnl;
-
     @Schema(description = "포트폴리오 주식 종목 DTO")
-    private List<PortfolioStocksResponseDto> portfolioStocksResponseDto;
+    private List<PortfolioStocksResponseDto> portfolioStocks;
 
 }

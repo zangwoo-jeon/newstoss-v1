@@ -5,22 +5,27 @@ import com.newstoss.global.handler.CustomException;
 import com.newstoss.portfolio.adapter.inbound.web.dto.response.MemberPnlPeriodResponseDto;
 import com.newstoss.portfolio.application.port.in.GetMemberPnlAccUseCase;
 import com.newstoss.portfolio.application.port.in.GetMemberPnlPeriodUseCase;
+import com.newstoss.portfolio.application.port.in.UpdateMemberPnlUseCase;
 import com.newstoss.portfolio.application.port.out.GetMemberPnlPeriodPort;
 import com.newstoss.portfolio.application.port.out.GetMemberPnlPort;
+import com.newstoss.portfolio.application.port.out.GetPortfolioStocksPort;
 import com.newstoss.portfolio.entity.MemberPnl;
+import com.newstoss.portfolio.entity.PortfolioStock;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class MemberPnlService implements GetMemberPnlPeriodUseCase , GetMemberPnlAccUseCase {
+public class MemberPnlService implements GetMemberPnlPeriodUseCase , GetMemberPnlAccUseCase , UpdateMemberPnlUseCase {
 
     private final GetMemberPnlPeriodPort getMemberPnlPeriodPort;
     private final GetMemberPnlPort getMemberPnlPort;
+    private final GetPortfolioStocksPort getPortfolioStocksPort;
 
     @Override
     public MemberPnlPeriodResponseDto getMemberPnlPeriod(UUID memberId, String period) {
@@ -62,7 +67,10 @@ public class MemberPnlService implements GetMemberPnlPeriodUseCase , GetMemberPn
     @Override
     public Long getMemberPnlAcc(UUID memberId, String period) {
         LocalDate endDate = LocalDate.now();
-        if (period.equals("M")) {
+        if (period.equals("Today")) {
+            LocalDate startDate = endDate.minusDays(1);
+            return getMemberPnlPort.getMemberPnlAcc(memberId,startDate,endDate);
+        } else if (period.equals("M")) {
             LocalDate startDate = endDate.withDayOfMonth(1);
             return getMemberPnlPort.getMemberPnlAcc(memberId, startDate, endDate);
         } else {
@@ -70,5 +78,25 @@ public class MemberPnlService implements GetMemberPnlPeriodUseCase , GetMemberPn
         }
     }
 
+    @Override
+    public void updateTodayPnl(UUID memberId) {
+        MemberPnl todayPnl = getMemberPnlPort.getMemberPnl(memberId, LocalDate.now()).orElseThrow(
+                () -> new CustomException(MemberPnlErrorCode.MEMBER_PNL_NOT_FOUND)
+        );
+        Optional<MemberPnl> yesterDayPnl = getMemberPnlPort.getMemberPnl(memberId, LocalDate.now().minusDays(1));
+        Long yesterDayAsset;
+        if (yesterDayPnl.isEmpty()) {
+            yesterDayAsset = 0L;
+        } else {
+            yesterDayAsset = yesterDayPnl.get().getAsset();
+        }
+        List<PortfolioStock> portfolioStocks = getPortfolioStocksPort.getPortfolioStocks(memberId);
+        long asset = 0L;
+        for (PortfolioStock portfolioStock : portfolioStocks) {
+            asset += (long)portfolioStock.getEntryPrice() * portfolioStock.getStockCount();
+        }
+        todayPnl.updateAsset(asset);
+        todayPnl.initPnl(asset - yesterDayAsset);
+    }
 }
 

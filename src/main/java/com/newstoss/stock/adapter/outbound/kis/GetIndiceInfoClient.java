@@ -5,7 +5,7 @@ import com.newstoss.global.kis.KisTokenProperties;
 import com.newstoss.stock.adapter.outbound.kis.dto.KisIndiceInfoDto;
 import com.newstoss.stock.adapter.outbound.kis.dto.response.KisApiResponseDto;
 import com.newstoss.stock.adapter.outbound.kis.dto.KisIndicePriceDto;
-import com.newstoss.stock.application.port.out.kis.KisIndicePort;
+import com.newstoss.stock.application.port.out.kis.IndicePort;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.ParameterizedTypeReference;
@@ -21,7 +21,7 @@ import java.util.List;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class GetIndiceInfoClient implements KisIndicePort {
+public class GetIndiceInfoClient implements IndicePort {
     private final KisTokenManager kisTokenManager;
     private final KisTokenProperties kisTokenProperties;
     private final RestTemplate restTemplate;

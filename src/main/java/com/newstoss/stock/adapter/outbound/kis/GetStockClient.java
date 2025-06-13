@@ -9,8 +9,7 @@ import com.newstoss.stock.adapter.outbound.kis.dto.KisStockNameDto;
 import com.newstoss.stock.adapter.outbound.kis.dto.response.KisApiResponseDto;
 import com.newstoss.stock.adapter.outbound.kis.dto.response.KisOutputDto;
 import com.newstoss.stock.adapter.outbound.kis.dto.KisStockDto;
-import com.newstoss.stock.application.port.in.GetStockInfoUseCase;
-import com.newstoss.stock.application.port.out.kis.KisStockInfoPort;
+import com.newstoss.stock.application.port.out.kis.StockInfoPort;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.ParameterizedTypeReference;
@@ -26,7 +25,7 @@ import java.util.List;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class GetKisStockClient implements KisStockInfoPort {
+public class GetStockClient implements StockInfoPort {
     private final KisTokenProperties kisProperties;
     private final KisTokenManager kisTokenManager;
     private final RestTemplate restTemplate;

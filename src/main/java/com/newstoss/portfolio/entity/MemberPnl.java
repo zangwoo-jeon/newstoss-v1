@@ -21,7 +21,7 @@ public class MemberPnl {
     @Column(name = "member_id", nullable = false)
     private UUID memberId;
 
-    private Integer Pnl;
+    private Long Pnl;
 
     @Column(name = "pnl_date")
     private LocalDate date;
@@ -30,7 +30,7 @@ public class MemberPnl {
 
 
     //== 생성 메서드 ==//
-    public static MemberPnl createMemberPnl(UUID memberId, Integer pnl, LocalDate date, Long asset) {
+    public static MemberPnl createMemberPnl(UUID memberId, Long pnl, LocalDate date, Long asset) {
         MemberPnl memberPnl = new MemberPnl();
         memberPnl.memberId = memberId;
         memberPnl.Pnl = pnl;
@@ -39,12 +39,18 @@ public class MemberPnl {
         return memberPnl;
     }
     //== 비즈니스 로직 ==//
-    public void updatePnl(Integer pnl, Long asset) {
-        this.Pnl = pnl;
-        this.asset = asset;
+    public void updatePnl(Long pnl) {
+        this.Pnl += pnl;
     }
 
     public void updateAsset(Long asset) {
         this.asset += asset;
+    }
+
+    public void initAsset(Long asset) {
+        this.asset = asset;
+    }
+    public void initPnl(Long pnl) {
+        this.Pnl = pnl;
     }
 }

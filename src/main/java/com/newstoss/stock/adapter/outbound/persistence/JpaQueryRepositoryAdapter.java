@@ -2,6 +2,7 @@ package com.newstoss.stock.adapter.outbound.persistence;
 
 import com.newstoss.stock.adapter.outbound.persistence.repository.StockRepository;
 import com.newstoss.stock.application.port.out.persistence.LoadCategoryPort;
+import com.newstoss.stock.application.port.out.persistence.LoadStockPort;
 import com.newstoss.stock.application.port.out.persistence.SearchStockPort;
 import com.newstoss.stock.entity.Stock;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +14,7 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
-public class JpaQueryRepositoryAdapter implements LoadCategoryPort , SearchStockPort {
+public class JpaQueryRepositoryAdapter implements LoadCategoryPort , SearchStockPort , LoadStockPort {
 
     private final StockRepository repository;
 
@@ -36,5 +37,10 @@ public class JpaQueryRepositoryAdapter implements LoadCategoryPort , SearchStock
     @Override
     public List<Stock> searchPopuarStock() {
         return repository.findStockByStockSearchCount();
+    }
+
+    @Override
+    public Stock LoadStockByStockCode(String stockCode) {
+        return repository.findByStockCode(stockCode).isPresent() ? repository.findByStockCode(stockCode).get() : null;
     }
 }

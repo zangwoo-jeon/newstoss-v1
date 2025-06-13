@@ -1,8 +1,5 @@
 package com.newstoss.stock.adapter.outbound.kis;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.newstoss.global.errorcode.StockErrorCode;
 import com.newstoss.global.handler.CustomException;
 import com.newstoss.global.kis.KisTokenManager;
@@ -10,7 +7,7 @@ import com.newstoss.global.kis.KisTokenProperties;
 import com.newstoss.stock.adapter.outbound.kis.dto.response.KisListOutputDto;
 import com.newstoss.stock.adapter.outbound.kis.dto.KisPopularDto;
 import com.newstoss.stock.adapter.outbound.persistence.repository.StockRepository;
-import com.newstoss.stock.application.port.out.kis.KisPopularStockPort;
+import com.newstoss.stock.application.port.out.kis.PopularStockPort;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.ParameterizedTypeReference;
@@ -30,7 +27,7 @@ import static org.springframework.http.HttpMethod.*;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class GetPopularStockService implements KisPopularStockPort {
+public class GetPopularStockService implements PopularStockPort {
     private final KisTokenProperties kisProperties;
     private final KisTokenManager kisTokenManager;
     private final RestTemplate restTemplate;
