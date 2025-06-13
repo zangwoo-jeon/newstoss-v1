@@ -1,5 +1,6 @@
 <configuration>
-
+<!-- Broken pipe 무시 필터    -->
+    <logger name="org.apache.coyote.http11.Http11OutputBuffer" level="WARN"/>
     <springProfile name="dev">
         <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
             <encoder>

@@ -1,8 +1,8 @@
 package com.newstoss.news.application.scrap.impl;
 
 import com.newstoss.news.adapter.in.web.news.dto.v2.NewsDTOv2;
-import com.newstoss.news.application.ml.v2.impl.NewsDTOv2Mapper;
-import com.newstoss.news.application.ml.v2.port.out.MLNewsPortV2;
+import com.newstoss.news.application.news.v2.impl.NewsDTOv2Mapper;
+import com.newstoss.news.application.news.v2.port.out.MLNewsPortV2;
 import com.newstoss.news.application.scrap.port.in.GetScrapNewsListUseCase;
 import com.newstoss.news.application.scrap.port.out.ScrapNewsPort;
 import lombok.RequiredArgsConstructor;

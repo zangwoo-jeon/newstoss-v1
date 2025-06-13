@@ -3,11 +3,8 @@ package com.newstoss.news.adapter.in.web.news.controller;
 import com.newstoss.global.response.SuccessResponse;
 import com.newstoss.news.adapter.in.web.news.dto.common.GetAllNewsDTO;
 import com.newstoss.news.adapter.in.web.news.dto.v1.NewsMathRelatedDTOTest;
-import com.newstoss.news.adapter.in.web.news.dto.v2.NewsDTOv2;
-import com.newstoss.news.adapter.in.web.news.dto.v2.NewsMathRelatedDTO;
-import com.newstoss.news.adapter.in.web.news.dto.v2.NewsMetaDataDTO;
-import com.newstoss.news.adapter.in.web.news.dto.v2.RelatedNewsDTOv2;
-import com.newstoss.news.application.ml.service.NewsServiceV2;
+import com.newstoss.news.adapter.in.web.news.dto.v2.*;
+import com.newstoss.news.application.news.service.NewsServiceV2;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -23,13 +20,12 @@ import java.util.List;
 public class NewsControllerV2{
     private final NewsServiceV2 newsServiceV2;
 
-    @Operation(summary = "실시간 뉴스 조회", description = "최신 뉴스 10개를 조회합니다.")
-    @GetMapping("/top10")
-    public ResponseEntity<SuccessResponse<Object>> top10news(){
-        List<NewsDTOv2> topNews = newsServiceV2.getRealTimeNews();
-        return ResponseEntity.ok(new SuccessResponse<>(true, "실시간 뉴스 10개 불러오기 성공", topNews));
-    }
-
+//    @Operation(summary = "실시간 뉴스 조회", description = "최신 뉴스 10개를 조회합니다. redis pub/sub으로 종속 예정")
+//    @GetMapping("/top10")
+//    public ResponseEntity<SuccessResponse<Object>> top10news(){
+//        List<NewsDTOv2> topNews = newsServiceV2.getRealTimeNews();
+//        return ResponseEntity.ok(new SuccessResponse<>(true, "실시간 뉴스 10개 불러오기 성공", topNews));
+//    }
     @Operation(summary = "뉴스 상세 조회", description = "특정 뉴스 ID에 해당하는 뉴스 상세 정보를 조회합니다.")
     @GetMapping("/detail")
     public ResponseEntity<SuccessResponse<Object>> newsdetail(@RequestParam String newsId){
@@ -44,7 +40,12 @@ public class NewsControllerV2{
         return ResponseEntity.ok(new SuccessResponse<>(true, "과거 유사 뉴스 조회 성공", news));
     }
 
-
+    @Operation(summary = "뉴스 검색", description = "ML api를 통해 뉴스 검색을 합니다.")
+    @GetMapping("/search")
+    public ResponseEntity<SuccessResponse<Object>> newSearch(@RequestParam String search){
+        List<NewsDTOv2> searchNews = newsServiceV2.searchNews(search);
+        return ResponseEntity.ok(new SuccessResponse<>(true,"뉴스 검색 성공", searchNews));
+    }
 
     @Operation(summary = "전체 뉴스 조회", description = "입력 받은 파라미터 값에 따라 뉴스를 조회합니다.")
     @GetMapping("/all")
@@ -53,24 +54,17 @@ public class NewsControllerV2{
         return ResponseEntity.ok(new SuccessResponse<>(true, "전체 뉴스 조회 성공", news));
     }
 
-    @Operation(summary = "하이라이트 뉴스 조회", description = "하이라이트 뉴스를 조회합니다(ml api 미완성)")
+    @Operation(summary = "하이라이트 뉴스 조회", description = "하이라이트 뉴스를 조회합니다. redis캐시에 종속 예정")
     @GetMapping("/highlight")
     public ResponseEntity<SuccessResponse<Object>> highlight(){
-        List<NewsDTOv2> news = newsServiceV2.getHighlightNews();
+        List<HighlightNewsDTO> news = newsServiceV2.getHighlightNews();
         return ResponseEntity.ok(new SuccessResponse<>(true, "하이라이트 뉴스 조회 성공", news));
     }
 
-    @Operation(summary = "하이라이트 뉴스 with redis 캐시", description = "하이라이트 뉴스를 조회합니다(ml api 미완성)")
-    @GetMapping("/highlight/reids")
+    @Operation(summary = "하이라이트 뉴스 with redis 캐시", description = "하이라이트 뉴스를 조회합니다.")
+    @GetMapping("/highlight/redis")
     public ResponseEntity<SuccessResponse<Object>> highlight2(){
-        List<NewsMathRelatedDTO> news = newsServiceV2.highlightWithRedis();
-        return ResponseEntity.ok(new SuccessResponse<>(true, "하이라이트 뉴스 조회 성공", news));
-    }
-
-    @Operation(summary = "하이라이트 뉴스 with redis 캐시 test", description = "하이라이트 뉴스를 조회합니다(ml api 미완성)")
-    @GetMapping("/highlight/reidstest")
-    public ResponseEntity<SuccessResponse<Object>> highlighttest(){
-        List<NewsMathRelatedDTOTest> news = newsServiceV2.highlightWithRedisTest();
+        List<NewsMathRelatedDTO<HighlightNewsDTO>> news = newsServiceV2.highlightWithRedis();
         return ResponseEntity.ok(new SuccessResponse<>(true, "하이라이트 뉴스 조회 성공", news));
     }
 

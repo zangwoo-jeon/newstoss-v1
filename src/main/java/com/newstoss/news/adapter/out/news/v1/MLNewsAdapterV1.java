@@ -8,7 +8,7 @@ import com.newstoss.news.adapter.out.news.dto.v1.MLRelatedReportDTOv1;
 import com.newstoss.news.adapter.out.news.dto.v1.MLRelatedReportListWrapperv1;
 import com.newstoss.news.adapter.out.news.dto.v1.MLRelatedStockDTOv1;
 import com.newstoss.news.adapter.out.news.dto.v1.MLNewsDTOv1;
-import com.newstoss.news.application.ml.v1.port.out.MLNewsPortV1;
+import com.newstoss.news.application.news.v1.port.out.MLNewsPortV1;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.ParameterizedTypeReference;
@@ -53,12 +53,6 @@ public class MLNewsAdapterV1 implements MLNewsPortV1 {
         String url = BASE_URL + newsId + "/related/news";
         return safeExchangeList(url, new ParameterizedTypeReference<>() {});
     }
-// stock_code, stock_name 줄 때 코드
-//    @Override
-//    public List<MLRelatedStockDTO> getRelatedStock(String newsId) {
-//        String url = BASE_URL + newsId + "/related/stocks";
-//        return safeExchangeList(url, new ParameterizedTypeReference<>() {});
-//    }
 
     // stock_name만 줄 때 코드
     @Override
