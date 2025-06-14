@@ -51,7 +51,7 @@ public class MLNewsAdapterV2 implements MLNewsPortV2 {
 
     @Override
     public List<MLRelatedNewsDTOv2> getSimilarNews(String newsId) {
-        String url = BASE_URL + newsId + "/related/news";
+        String url = BASE_URL + newsId + "/similar";
         return safeExchangeList(url, new ParameterizedTypeReference<>() {});
     }
 
