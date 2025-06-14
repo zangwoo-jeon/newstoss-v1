@@ -1,5 +1,6 @@
 package com.newstoss.portfolio.entity;
 
+import com.newstoss.global.auditing.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,7 +15,7 @@ import static lombok.AccessLevel.*;
 @Getter
 @NoArgsConstructor(access = PROTECTED)
 @Table(name = "member_pnl", schema = "test_schema")
-public class MemberPnl {
+public class MemberPnl extends BaseTimeEntity {
     @Id @GeneratedValue(strategy = IDENTITY)
     private Long id;
 
@@ -39,9 +40,6 @@ public class MemberPnl {
         return memberPnl;
     }
     //== 비즈니스 로직 ==//
-    public void updatePnl(Long pnl) {
-        this.Pnl += pnl;
-    }
 
     public void updateAsset(Long asset) {
         this.asset += asset;
