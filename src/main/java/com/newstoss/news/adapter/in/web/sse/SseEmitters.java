@@ -88,7 +88,7 @@ public class SseEmitters {
                 emitter.send(SseEmitter.event()
                         .name("news")
                         .data(data));
-            } catch (IOException e) {
+            } catch (IOException | IllegalStateException e) {
                 toRemove.add(emitter);
                 log.debug("❗ Broken pipe 또는 SSE 전송 실패, 제거 예정 – {}", e.getMessage());
             }
@@ -102,7 +102,7 @@ public class SseEmitters {
         for (SseEmitter emitter : emitters) {
             try {
                 emitter.send(SseEmitter.event().name("ping").data("💓"));
-            } catch (IOException e) {
+            } catch (IOException | IllegalStateException e) {
                 log.info("❌ ping 실패 – 연결 종료");
                 emitter.complete();          // 💡 명시적으로 연결 닫기
                 toRemove.add(emitter);      // 💡 반복 중 직접 remove하지 않기
