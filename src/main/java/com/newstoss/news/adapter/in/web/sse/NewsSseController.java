@@ -27,7 +27,7 @@ public class NewsSseController {
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     @GetMapping(produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public SseEmitter stream() {
-        System.out.println("✅ [Controller] 클라이언트에서 SSE 연결 요청 들어옴");
+        log.info("✅ [Controller] 클라이언트에서 SSE 연결 요청 들어옴");
         SseEmitter emitter = sseEmitters.add();
         try {
             emitter.send(SseEmitter.event()
