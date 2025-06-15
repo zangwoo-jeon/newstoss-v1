@@ -16,7 +16,7 @@ public class NewsMetaDataDTO {
     private String newsId;
     private String summary;
     private List<RelatedStockDTOv2> stockList;
-    private List<String> stockListView;
+    private List<RelatedStockDTOv2> stockListView;
     private List<IndustryListDTO> industryList;
     private double impactScore;
 }

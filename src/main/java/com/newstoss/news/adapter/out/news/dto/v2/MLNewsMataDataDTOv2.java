@@ -1,6 +1,7 @@
 package com.newstoss.news.adapter.out.news.dto.v2;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.newstoss.news.adapter.in.web.news.dto.v2.RelatedStockDTOv2;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,7 +18,7 @@ public class MLNewsMataDataDTOv2 {
     @JsonProperty("stock_list")
     private List<MLRelatedStockDTOv2> stockList;
     @JsonProperty("stock_list_view")
-    private List<String> stockViewList;
+    private List<MLRelatedStockDTOv2> stockViewList;
     @JsonProperty("industry_list")
     private List<MLIndustryListDTO> industryList;
     private double impact_score;
