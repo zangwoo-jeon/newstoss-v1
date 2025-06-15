@@ -15,9 +15,10 @@ public class MLNewsMataDataDTOv2 {
     private String newsId;
     private String summary;
     @JsonProperty("stock_list")
-    private List<String> stockList;
-    @JsonProperty("industry_list")
-    private List<String> industryList;
+    private List<MLRelatedStockDTOv2> stockList;
     @JsonProperty("stock_list_view")
     private List<String> stockViewList;
+    @JsonProperty("industry_list")
+    private List<MLIndustryListDTO> industryList;
+    private double impact_score;
 }
