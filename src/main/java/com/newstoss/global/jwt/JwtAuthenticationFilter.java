@@ -1,5 +1,7 @@
 package com.newstoss.global.jwt;
 
+import com.newstoss.global.errorcode.JwtErrorCode;
+import com.newstoss.global.handler.CustomException;
 import com.newstoss.member.application.in.query.GetMemberService;
 import com.newstoss.member.domain.Member;
 import jakarta.servlet.FilterChain;
@@ -16,6 +18,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -54,6 +57,21 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             }
         }
         return null;
+    }
+
+    public UUID extractMemberIdFromToken(HttpServletRequest request) {
+        Cookie[] cookies = request.getCookies();
+        if (cookies == null) throw new CustomException(JwtErrorCode.MISSING_TOKEN);
+
+        String token = Arrays.stream(cookies)
+                .filter(c -> "access_token".equals(c.getName()))
+                .findFirst()
+                .map(Cookie::getValue)
+                .orElseThrow(() -> new CustomException(JwtErrorCode.MISSING_TOKEN));
+
+        jwtProvider.validateToken(token);
+
+        return jwtProvider.getMemberId(token);
     }
 }
 
