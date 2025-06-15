@@ -30,7 +30,7 @@ public class SseEmitters {
 
     @PostConstruct
     public void initPingScheduler() {
-        scheduler.scheduleAtFixedRate(this::sendPingToAll, 0, 30, TimeUnit.MINUTES); // 1시간마다 ping
+        scheduler.scheduleAtFixedRate(this::sendPingToAll, 0, 30, TimeUnit.SECONDS); // 1시간마다 ping
     }
     public SseEmitter add() {
         SseEmitter emitter = new SseEmitter(Long.MAX_VALUE); // 1시간 타임아웃
