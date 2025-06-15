@@ -4,6 +4,8 @@ import com.newstoss.news.adapter.in.web.sse.SseEmitters;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
@@ -11,48 +13,33 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
-import java.util.Map;
+import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.fail;
 
 @SpringBootTest
 @ActiveProfiles("test")
+@TestMethodOrder(OrderAnnotation.class)
 class SseEmittersTest {
 
     @Autowired
     private SseEmitters sseEmitters;
 
-    private UUID testMemberId;
-
-    @BeforeEach
-    void setUp() {
-        testMemberId = UUID.randomUUID();
-    }
 
     @Test
     @Order(1)
     void emitter_추가_및_정상등록() {
-        sseEmitters.add(testMemberId);
+        sseEmitters.add();
         assertThat(sseEmitters.getEmitterCount()).isEqualTo(1);
-    }
-
-    @Test
-    @Order(3)
-    void 모든_emitter에_sendAll_전송() {
-        sseEmitters.add(testMemberId);
-        sseEmitters.sendAll("테스트 메시지");
-        assertThat(sseEmitters.getEmitterCount()).isEqualTo(2);
     }
 
     @Test
     @Order(2)
     void emitter_send중_IOException_발생시_제거됨() throws Exception {
-        UUID memberId = UUID.randomUUID();
-        sseEmitters.add(memberId); // 정상 등록 먼저
-
-        // 예외 발생용 커스텀 emitter 생성
+        // 정상 emitter 추가
+        sseEmitters.add();
         SseEmitter brokenEmitter = new SseEmitter() {
             @Override
             public void send(SseEventBuilder builder) throws IOException {
@@ -60,19 +47,27 @@ class SseEmittersTest {
             }
         };
 
-        // 리플렉션으로 내부 Map 접근 및 emitter 강제 교체
+        // 내부 emitter 리스트에 접근해 고장난 emitter 추가
         Field field = SseEmitters.class.getDeclaredField("emitters");
         field.setAccessible(true);
         @SuppressWarnings("unchecked")
-        Map<UUID, SseEmitter> emitterMap = (Map<UUID, SseEmitter>) field.get(sseEmitters);
-        emitterMap.put(memberId, brokenEmitter); // 덮어쓰기
+        List<SseEmitter> emitterList = (List<SseEmitter>) field.get(sseEmitters);
 
-        // 전송 및 제거 확인
+        emitterList.add(brokenEmitter); // 강제 삽입
+
         sseEmitters.sendAll("데이터");
-        Thread.sleep(100); // async 제거 시간 확보
+        Thread.sleep(100); // async 제거 대기
 
-        assertThat(sseEmitters.getEmitterCount()).isEqualTo(1); // 제거됐는지 확인
+        assertThat(sseEmitters.getEmitterCount()).isEqualTo(2); // 정상 emitter 1개만 남아야 함
     }
+    @Test
+    @Order(3)
+    void 모든_emitter에_sendAll_전송() {
+        sseEmitters.add(); // 새로운 emitter 등록
 
+        sseEmitters.sendAll("테스트 메시지");
+
+        // 전송 후, 정상 emitter는 그대로 유지
+        assertThat(sseEmitters.getEmitterCount()).isEqualTo(3);
+    }
 }
-

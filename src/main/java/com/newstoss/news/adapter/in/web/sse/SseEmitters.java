@@ -1,6 +1,7 @@
 package com.newstoss.news.adapter.in.web.sse;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.newstoss.global.errorcode.RedisAndSseErrorCode;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.io.IOException;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.*;
@@ -17,7 +20,8 @@ import java.util.concurrent.*;
 public class SseEmitters {
 
     // memberId 기준 emitter 관리
-    private final Map<UUID, SseEmitter> emitters = new ConcurrentHashMap<>();
+    private final Map<UUID, SseEmitter> emittersWithID = new ConcurrentHashMap<>();
+    private final List<SseEmitter> emitters = new CopyOnWriteArrayList<>();
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -28,62 +32,81 @@ public class SseEmitters {
     public void initPingScheduler() {
         scheduler.scheduleAtFixedRate(this::sendPingToAll, 0, 30, TimeUnit.MINUTES); // 1시간마다 ping
     }
-
-    public SseEmitter add(UUID memberId) {
-        SseEmitter emitter = new SseEmitter(Long.MAX_VALUE);
-        emitters.put(memberId, emitter);
+    public SseEmitter add() {
+        SseEmitter emitter = new SseEmitter(Long.MAX_VALUE); // 1시간 타임아웃
+        emitters.add(emitter);
 
         emitter.onCompletion(() -> {
-            emitters.remove(memberId);
-            log.info("❌ SSE 연결 종료됨 – memberId: {}, 현재 연결 수: {}", memberId, emitters.size());
+            emitters.remove(emitter);
+            log.info("❌ 연결 종료됨 → 현재 연결 수: {}", emitters.size());
         });
 
         emitter.onTimeout(() -> {
-            emitters.remove(memberId);
-            log.info("⏱️ SSE 타임아웃 – memberId: {}, 현재 연결 수: {}", memberId, emitters.size());
+            emitters.remove(emitter);
+            log.info("⏱️ 타임아웃으로 SSE 연결 종료됨 → {}", RedisAndSseErrorCode.SSE_CONNECTED_FAILURE.getMessage());
         });
 
-        emitter.onError(e -> {
-            emitters.remove(memberId);
-            log.info("🚨 SSE 에러 – memberId: {}, 이유: {}", memberId, e.getMessage());
+        emitter.onError((e) -> {
+            emitters.remove(emitter);
+            log.info("🚨 SSE 연결 에러 발생 → {}, 예외: {}", RedisAndSseErrorCode.SSE_CONNECTED_FAILURE.getMessage(), e.getMessage());
         });
 
         return emitter;
     }
 
-    public void sendAll(Object data) {
-        for (Map.Entry<UUID, SseEmitter> entry : emitters.entrySet()) {
-            UUID memberId = entry.getKey();
-            SseEmitter emitter = entry.getValue();
+//    public SseEmitter addWithId(UUID memberId) {
+//        SseEmitter emitter = new SseEmitter(Long.MAX_VALUE);
+//        emittersWithID.put(memberId, emitter);
+//
+//        emitter.onCompletion(() -> {
+//            emittersWithID.remove(memberId);
+//            log.info("❌ SSE 연결 종료됨 – memberId: {}, 현재 연결 수: {}", memberId, emittersWithID.size());
+//        });
+//
+//        emitter.onTimeout(() -> {
+//            emittersWithID.remove(memberId);
+//            log.info("⏱️ SSE 타임아웃 – memberId: {}, 현재 연결 수: {}", memberId, emittersWithID.size());
+//        });
+//
+//        emitter.onError(e -> {
+//            emittersWithID.remove(memberId);
+//            log.info("🚨 SSE 에러 – memberId: {}, 이유: {}", memberId, e.getMessage());
+//        });
+//
+//        return emitter;
+//    }
 
+    public void sendAll(Object data) {
+        if (emitters.isEmpty()) {
+            log.info("연결된 클라이언트 없음 {} ", RedisAndSseErrorCode.SSE_NO_CONNECTED_CLIENT.getMessage());
+            return;
+        }
+
+        log.info("📡 전체 브로드캐스트 시작 – 등록된 emitter 수: {}", emitters.size());
+
+        List<SseEmitter> toRemove = new CopyOnWriteArrayList<>();
+
+        for (SseEmitter emitter : emitters) {
             try {
-                System.out.println("🔥 send to memberId:"+ memberId);
-                emitter.send(SseEmitter.event().name("news").data(data));
+                emitter.send(SseEmitter.event()
+                        .name("news")
+                        .data(data));
             } catch (IOException e) {
-                emitters.remove(memberId);
-                System.out.println("✅ emitter 제거 시도  제거 후 count:" + emitters.size());
-                if (e.getMessage() != null && e.getMessage().contains("Broken pipe")) {
-                    System.out.println("error:"+ memberId);
-                    log.debug("❗ Broken pipe: 클라이언트가 연결 종료 – memberId: {}", memberId);
-                } else {
-                    System.out.println("error:"+ memberId);
-                    log.warn("❗ SSE 전송 실패 – memberId: {}, 이유: {}", memberId, e.getMessage());
-                }
+                toRemove.add(emitter);
+                log.debug("❗ Broken pipe 또는 SSE 전송 실패, 제거 예정 – {}", e.getMessage());
             }
         }
+
+        // 따로 제거
+        emitters.removeAll(toRemove);
     }
-
     private void sendPingToAll() {
-        for (Map.Entry<UUID, SseEmitter> entry : emitters.entrySet()) {
-            UUID memberId = entry.getKey();
-            SseEmitter emitter = entry.getValue();
-
+        for (SseEmitter emitter : emitters) {
             try {
-                emitter.send(SseEmitter.event().name("ping").data("💓")); // ping 전송
-                log.debug("💓 ping 전송 – memberId: {}", memberId);
+                emitter.send(SseEmitter.event().name("ping").data("💓"));
             } catch (IOException e) {
-                emitters.remove(memberId);
-                log.info("❌ ping 실패 – 연결 종료 – memberId: {}", memberId);
+                emitters.remove(emitter);
+                log.info("❌ ping 실패 – 연결 종료");
             }
         }
     }
