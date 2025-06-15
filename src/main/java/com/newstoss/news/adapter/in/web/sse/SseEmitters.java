@@ -9,10 +9,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.io.IOException;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.*;
 
 @Slf4j
@@ -33,7 +30,7 @@ public class SseEmitters {
         scheduler.scheduleAtFixedRate(this::sendPingToAll, 0, 30, TimeUnit.SECONDS); // 1시간마다 ping
     }
     public SseEmitter add() {
-        SseEmitter emitter = new SseEmitter(Long.MAX_VALUE); // 1시간 타임아웃
+        SseEmitter emitter = new SseEmitter(Long.MAX_VALUE);
         emitters.add(emitter);
 
         emitter.onCompletion(() -> {
@@ -101,14 +98,17 @@ public class SseEmitters {
         emitters.removeAll(toRemove);
     }
     private void sendPingToAll() {
+        List<SseEmitter> toRemove = new ArrayList<>();
         for (SseEmitter emitter : emitters) {
             try {
                 emitter.send(SseEmitter.event().name("ping").data("💓"));
             } catch (IOException e) {
-                emitters.remove(emitter);
                 log.info("❌ ping 실패 – 연결 종료");
+                emitter.complete();          // 💡 명시적으로 연결 닫기
+                toRemove.add(emitter);      // 💡 반복 중 직접 remove하지 않기
             }
         }
+        emitters.removeAll(toRemove);       // 💡 반복 끝난 후 한꺼번에 제거
     }
 
     public int getEmitterCount() {
