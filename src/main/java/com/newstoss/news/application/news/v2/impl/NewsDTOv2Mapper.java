@@ -28,7 +28,7 @@ public class NewsDTOv2Mapper {
 
 
     public static NewsMetaDataDTO from(MLNewsMataDataDTOv2 ml) {
-        return new NewsMetaDataDTO(ml.getNewsId(), ml.getSummary(), mapToRelatedStockDTOs(ml.getStockList()),ml.getStockViewList(), mapToIndustryListDTOs(ml.getIndustryList()), ml.getImpact_score());
+        return new NewsMetaDataDTO(ml.getNewsId(), ml.getSummary(), mapToRelatedStockDTOs(ml.getStockList()),mapToRelatedStockDTOs(ml.getStockViewList()), mapToIndustryListDTOs(ml.getIndustryList()), ml.getImpact_score());
     }
 
     public static HighlightNewsDTO from (MLHighlightNewsDTOv2 ml){
