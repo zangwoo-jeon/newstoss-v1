@@ -26,26 +26,22 @@ public class NewsSseController {
     private final SseEmitters sseEmitters;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     @GetMapping(produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-    public ResponseEntity<SseEmitter> stream(HttpServletRequest request) {
-        UUID memberId;
-        try {
-            memberId = jwtAuthenticationFilter.extractMemberIdFromToken(request);
-        } catch (CustomException e) {
-            log.warn("❌ JWT 인증 실패: {}", e.getErrorCode().getMessage());
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
-        log.info("✅ 클라이언트에서 SSE 연결 요청 들어옴 - memberId: {} ", memberId);
-        SseEmitter emitter = sseEmitters.add(memberId);
+    public SseEmitter stream() {
+        System.out.println("✅ [Controller] 클라이언트에서 SSE 연결 요청 들어옴");
+        SseEmitter emitter = sseEmitters.add();
         try {
             emitter.send(SseEmitter.event()
                     .name("connect")
                     .data("connected"));
             System.out.println("✅ 연결 확인용 메시지 전송됨");
         } catch (IOException e) {
+            System.out.println("❌ 연결 메시지 전송 실패: " + e.getMessage());
             log.error("❌ 연결 메시지 전송 실패: {}", e.getMessage());
             emitter.complete();
         }
-        return ResponseEntity.ok(emitter);
+        return emitter;
     }
 }
+
+
 
