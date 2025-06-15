@@ -19,7 +19,7 @@ public class SseEmitters {
     private ObjectMapper objectMapper;
 
     public SseEmitter add() {
-        SseEmitter emitter = new SseEmitter(Long.MAX_VALUE);
+        SseEmitter emitter = new SseEmitter(60 * 60 * 1000L);
         emitters.add(emitter);
 
         emitter.onCompletion(() -> {

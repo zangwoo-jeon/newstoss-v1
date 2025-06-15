@@ -5,14 +5,14 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-public class MLRelatedStockDTOv2 {
+@AllArgsConstructor
+public class MLIndustryListDTO {
     @JsonProperty("stock_id")
     private String stockId;
-    @JsonProperty("stock_name")
-    private String stockName;
+    @JsonProperty("industry_id")
+    private String industryId;
+    @JsonProperty("industry_name")
+    private String industryName;
 }

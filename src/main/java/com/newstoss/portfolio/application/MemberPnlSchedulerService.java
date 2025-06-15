@@ -54,7 +54,8 @@ public class MemberPnlSchedulerService {
                         Long prevAsset = getMemberPnlPort.getMemberPnl(member.getMemberId(), beforeDay)
                                 .map(MemberPnl::getAsset)
                                 .orElse(0L);
-                        createMemberPnlPort.create(MemberPnl.createMemberPnl(member.getMemberId(),asset - prevAsset,today,asset));
+                        yPnl.initPnl(asset - prevAsset);
+                        createMemberPnlPort.create(MemberPnl.createMemberPnl(member.getMemberId(),0L,today,asset));
                     },
                     () -> {
                         createMemberPnlPort.create(MemberPnl.createMemberPnl(member.getMemberId(),0L,today,0L));

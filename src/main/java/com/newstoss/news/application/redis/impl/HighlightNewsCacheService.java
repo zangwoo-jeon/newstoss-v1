@@ -1,17 +1,10 @@
 package com.newstoss.news.application.redis.impl;
 
-import com.newstoss.news.adapter.in.web.news.dto.v1.NewsDTOv1;
-import com.newstoss.news.adapter.in.web.news.dto.v1.NewsMathRelatedDTOTest;
 import com.newstoss.news.adapter.in.web.news.dto.v2.HighlightNewsDTO;
-import com.newstoss.news.adapter.in.web.news.dto.v2.NewsDTOv2;
 import com.newstoss.news.adapter.in.web.news.dto.v2.NewsMathRelatedDTO;
-import com.newstoss.news.application.news.v1.port.in.GetRealTimeNewsUseCaseV1;
-import com.newstoss.news.application.news.v2.impl.NewsDTOv2Mapper;
 import com.newstoss.news.application.news.v2.port.in.GetHighlightNewsUseCase;
 import com.newstoss.news.application.news.v2.port.in.MatchNewsWithRelatedUseCase;
 import com.newstoss.news.application.redis.port.in.HighlightNewsCacheUseCase;
-import com.newstoss.news.application.news.v2.port.out.MLNewsPortV2;
-import com.newstoss.news.adapter.out.news.dto.v2.MLNewsDTOv2;
 import com.newstoss.news.application.redis.port.out.HighlightNewsCachePort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
