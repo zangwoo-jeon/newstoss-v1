@@ -1,6 +1,9 @@
 package com.newstoss.portfolio.application;
 
+import com.newstoss.member.adapter.in.web.dto.requestDTO.AddressDTO;
+import com.newstoss.member.adapter.in.web.dto.requestDTO.SignupRequestDTO;
 import com.newstoss.member.adapter.out.persistence.JpaMemberRepository;
+import com.newstoss.member.application.in.command.SignupService;
 import com.newstoss.member.domain.Member;
 import com.newstoss.portfolio.adapter.inbound.web.dto.response.PortfolioDailyPnlResponseDto;
 import com.newstoss.portfolio.adapter.outbound.persistence.repository.JpaPortfolioRepository;
@@ -39,6 +42,8 @@ class PortfolioStockQueryServiceTest {
     private JpaPortfolioRepository portfolioRepository;
     @Autowired
     private EntityManager em;
+    @Autowired
+    private SignupService signupService;
 
     @Test
     public void portfoliosTest() {
@@ -55,20 +60,6 @@ class PortfolioStockQueryServiceTest {
         assertThat(portfolioStocks).isNotNull();
     }
 
-    @Test
-    @Rollback(false)
-    public void CreateTestPortfolio() {
-        //given
-        Member member = memberRepository.findByName("test").get(0);
-        //when
-        portfolioService.createPortfolio(member.getMemberId());
-        //then
-        em.flush();
-        em.clear();
 
-        Portfolio portfolio = portfolioRepository.findByMemberId(member.getMemberId()).get();
-        System.out.println("portfolio.getMemberId() = " + portfolio.getMemberId());
-
-    }
 
 }
