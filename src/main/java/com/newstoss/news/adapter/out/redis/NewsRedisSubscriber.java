@@ -17,7 +17,6 @@ import org.springframework.stereotype.Component;
 public class NewsRedisSubscriber implements MessageListener {
 
     private final ObjectMapper objectMapper;
-    private final NewsRepository newsRepository;
     private final SseEmitters sseEmitters;
 
     @Override
@@ -34,19 +33,12 @@ public class NewsRedisSubscriber implements MessageListener {
                 return;
             }
 
-            // DB 저장
-            NewsEntity entity = new NewsEntity(
-                    dto.getNewsId(), dto.getWdate(), dto.getTitle(), dto.getArticle(),
-                    dto.getUrl(), dto.getPress(), dto.getImage()
-            );
-            newsRepository.save(entity);
-
             // 직렬화 테스트 로그
             String serialized = objectMapper.writeValueAsString(dto);
             log.info("SSE 전송 직렬화 데이터: {}", serialized);
 
             // SSE 전송
-            sseEmitters.send(dto);
+            sseEmitters.sendAll(dto);
             log.info("실시간 뉴스 저장 및 SSE 전송 완료 → {}", dto.getTitle());
 
         } catch (Exception e) {
