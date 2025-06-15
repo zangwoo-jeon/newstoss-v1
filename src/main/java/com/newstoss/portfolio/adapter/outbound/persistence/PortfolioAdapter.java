@@ -23,6 +23,7 @@ public class PortfolioAdapter implements CreatePortfolioPort, LoadPortfolioPort 
 
     @Override
     public void create(Portfolio portfolio) {
+        log.info("포트폴리오 생성 완료");
         repository.save(portfolio);
     }
 

@@ -56,7 +56,8 @@ public class MemberPnlService implements GetMemberPnlPeriodUseCase , GetMemberPn
 
     private LocalDate calculateStartDate(String period, LocalDate endDate) {
         return switch (period) {
-            case "D" -> endDate.minusDays(7);
+            case "D" -> endDate.minusDays(1);
+            case "W" -> endDate.minusDays(7);
             case "M" -> endDate.minusMonths(1);
             case "3M" -> endDate.minusMonths(3);
             case "Y" -> endDate.minusYears(1);

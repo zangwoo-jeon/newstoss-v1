@@ -3,11 +3,16 @@ package com.newstoss.portfolio.application;
 import com.newstoss.member.adapter.out.persistence.JpaMemberRepository;
 import com.newstoss.member.domain.Member;
 import com.newstoss.portfolio.adapter.inbound.web.dto.response.MemberPnlPeriodResponseDto;
+import com.newstoss.portfolio.adapter.outbound.persistence.repository.JPAMemberPnlRepository;
 import com.newstoss.portfolio.entity.MemberPnl;
+import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Rollback;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -18,10 +23,14 @@ class MemberPnlServiceTest {
 
     @Autowired
     MemberPnlService service;
-
+    
     @Autowired
     JpaMemberRepository repository;
+    @Autowired
+    JPAMemberPnlRepository pnlRepository;
 
+    @Autowired
+    EntityManager em;
     @Test
     public void memberPnlServiceTest() {
         //given

@@ -50,6 +50,8 @@ public class PortfolioStock extends BaseTimeEntity {
         portfolioStock.setPortfolioStock(stock);
         portfolioStock.stockCount = stockCount;
         portfolioStock.entryPrice = entryPrice;
+        portfolioStock.realizedPnl =0L;
+        portfolioStock.unrealizedPnl =0L;
         return portfolioStock;
     }
 
