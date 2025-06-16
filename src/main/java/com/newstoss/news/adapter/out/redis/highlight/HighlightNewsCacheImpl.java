@@ -1,8 +1,7 @@
-package com.newstoss.news.adapter.out.redis;
+package com.newstoss.news.adapter.out.redis.highlight;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.newstoss.news.adapter.in.web.news.dto.v1.NewsMathRelatedDTOTest;
 import com.newstoss.news.adapter.in.web.news.dto.v2.HighlightNewsDTO;
 import com.newstoss.news.adapter.in.web.news.dto.v2.NewsMathRelatedDTO;
 import com.newstoss.news.application.redis.port.out.HighlightNewsCachePort;
