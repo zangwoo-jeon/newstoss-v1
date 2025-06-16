@@ -5,6 +5,7 @@ import com.newstoss.member.adapter.in.web.dto.response.MemberStockDto;
 import com.newstoss.member.adapter.in.web.dto.response.QMemberInfoDto;
 
 import com.newstoss.member.adapter.in.web.dto.response.QMemberStockDto;
+import com.querydsl.core.Tuple;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -24,18 +25,20 @@ public class JpaMemberInfoRepositoryImpl implements JpaMemberInfoRepository {
     @Override
     public MemberInfoDto findMemberInfo(UUID id) {
         MemberInfoDto dto = new MemberInfoDto();
-        String name = queryFactory
-                .select(member.name)
+        Tuple result = queryFactory
+                .select(member.name, portfolio.asset)
                 .from(member)
+                .join(portfolio).on(portfolio.memberId.eq(member.memberId))
+                .where(member.memberId.eq(id))
                 .fetchOne();
 
-        Long asset = queryFactory
-                .select(portfolio.asset)
-                .from(portfolio)
-                .fetchOne();
+        if (result == null) return null;
+
+        dto.setUsername(result.get(member.name));
+        dto.setAsset(result.get(portfolio.asset));
 
         List<MemberStockDto> dtos = queryFactory
-                .select(new QMemberStockDto(portfolioStock.stock.stockCode, portfolioStock.stock.stockCode ,
+                .select(new QMemberStockDto(portfolioStock.stock.stockCode, portfolioStock.stock.name ,
                         portfolioStock.unrealizedPnl))
                 .from(portfolioStock)
                 .fetch();
@@ -43,9 +46,7 @@ public class JpaMemberInfoRepositoryImpl implements JpaMemberInfoRepository {
         for (MemberStockDto memberStockDto : dtos) {
             pnl += memberStockDto.getPnl();
         }
-        dto.setUsername(name);
         dto.setUserPnl(pnl);
-        dto.setAsset(asset);
         dto.setMemberStocks(dtos);
         return dto;
     }
