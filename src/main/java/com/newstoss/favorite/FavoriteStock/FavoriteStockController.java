@@ -68,7 +68,7 @@ public class FavoriteStockController {
         return ResponseEntity.ok(new SuccessResponse<>(true, "관심 종목 삭제 성공", null));
     }
 
-    //순서변경
+
     @PatchMapping("/{memberId}/{groupId}/stock/sequence")
     @Operation(summary = "관심 종목 순서 변경", description = "회원 ID와 그룹 ID로 관심 종목의 순서를 변경합니다.")
     public ResponseEntity<SuccessResponse<Object>> updateStockSequence(
