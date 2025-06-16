@@ -1,10 +1,9 @@
-package com.newstoss.news.adapter.out.redis;
+package com.newstoss.news.adapter.out.redis.highlight;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.newstoss.news.adapter.in.web.sse.SseEmitters;
+import com.newstoss.news.adapter.in.web.news.dto.v2.RealTimeNewsDTO;
+import com.newstoss.news.adapter.in.web.sse.NewsSseEmitters;
 import com.newstoss.savenews.adapter.in.NewsDTO;
-import com.newstoss.savenews.adapter.out.NewsRepository;
-import com.newstoss.news.domain.NewsEntity;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.connection.Message;
@@ -17,7 +16,7 @@ import org.springframework.stereotype.Component;
 public class NewsRedisSubscriber implements MessageListener {
 
     private final ObjectMapper objectMapper;
-    private final SseEmitters sseEmitters;
+    private final NewsSseEmitters newsSseEmitters;
 
     @Override
     public void onMessage(Message message, byte[] pattern) {
@@ -26,7 +25,7 @@ public class NewsRedisSubscriber implements MessageListener {
             String msg = new String(message.getBody());
 
             // JSON → DTO 역직렬화
-            NewsDTO dto = objectMapper.readValue(msg, NewsDTO.class);
+            RealTimeNewsDTO dto = objectMapper.readValue(msg, RealTimeNewsDTO.class);
 
             if (dto.getNewsId() == null) {
                 log.info("뉴스 ID 없음 → 제목: {}", dto.getTitle());
@@ -38,7 +37,7 @@ public class NewsRedisSubscriber implements MessageListener {
             log.info("SSE 전송 직렬화 데이터: {}", serialized);
 
             // SSE 전송
-            sseEmitters.sendAll(dto);
+            newsSseEmitters.sendAll(dto);
             log.info("실시간 뉴스 저장 및 SSE 전송 완료 → {}", dto.getTitle());
 
         } catch (Exception e) {

@@ -64,7 +64,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         if (cookies == null) throw new CustomException(JwtErrorCode.MISSING_TOKEN);
 
         String token = Arrays.stream(cookies)
-                .filter(c -> "access_token".equals(c.getName()))
+                .filter(c -> "accessToken".equals(c.getName()))
                 .findFirst()
                 .map(Cookie::getValue)
                 .orElseThrow(() -> new CustomException(JwtErrorCode.MISSING_TOKEN));

@@ -1,6 +1,7 @@
 package com.newstoss.global.config;
 
-import com.newstoss.news.adapter.out.redis.NewsRedisSubscriber;
+import com.newstoss.news.adapter.out.redis.chatbot.ChatRedisSubscriber;
+import com.newstoss.news.adapter.out.redis.highlight.NewsRedisSubscriber;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,21 +17,24 @@ public class RedisConfig {
     private final NewsRedisSubscriber subscriber;
 
     @Bean
-    public RedisMessageListenerContainer redisContainer(RedisConnectionFactory connectionFactory,
-                                                        MessageListenerAdapter listenerAdapter) {
+    public RedisMessageListenerContainer redisContainer(
+            RedisConnectionFactory connectionFactory,
+            MessageListenerAdapter newsAdapter,
+            MessageListenerAdapter chatAdapter) {
+
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(connectionFactory);
-        container.addMessageListener(listenerAdapter, topic());
+        container.addMessageListener(newsAdapter, new ChannelTopic("news-channel"));
+        container.addMessageListener(chatAdapter, new ChannelTopic("chat-response"));
         return container;
     }
-
     @Bean
-    public MessageListenerAdapter listenerAdapter() {
+    public MessageListenerAdapter newsAdapter(NewsRedisSubscriber subscriber) {
         return new MessageListenerAdapter(subscriber, "onMessage");
     }
 
     @Bean
-    public ChannelTopic topic() {
-        return new ChannelTopic("news-channel");
+    public MessageListenerAdapter chatAdapter(ChatRedisSubscriber subscriber) {
+        return new MessageListenerAdapter(subscriber, "onMessage");
     }
 }
