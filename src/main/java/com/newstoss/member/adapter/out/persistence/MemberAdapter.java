@@ -1,5 +1,6 @@
 package com.newstoss.member.adapter.out.persistence;
 
+import com.newstoss.member.adapter.in.web.dto.response.MemberInfoDto;
 import com.newstoss.member.domain.Member;
 import com.newstoss.member.application.out.MemberCommandPort;
 import com.newstoss.member.application.out.MemberQueryPort;
@@ -43,6 +44,11 @@ public class MemberAdapter implements MemberCommandPort, MemberQueryPort {
     @Override
     public List<Member> findAll() {
         return jpaMemberRepository.findAll();
+    }
+
+    @Override
+    public MemberInfoDto findMemberInfo(UUID memberId) {
+        return jpaMemberRepository.findMemberInfo(memberId);
     }
 
 }
