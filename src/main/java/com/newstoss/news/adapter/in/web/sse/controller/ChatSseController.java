@@ -1,6 +1,7 @@
 package com.newstoss.news.adapter.in.web.sse.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.newstoss.news.adapter.in.web.news.dto.v2.ChatMessage;
 import com.newstoss.news.adapter.in.web.sse.dto.ChatStreamRequest;
 import com.newstoss.news.application.redis.ChatStreamService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -25,14 +26,14 @@ public class ChatSseController {
     private final ChatStreamService chatStreamService;
 
     @PostMapping(value = "/stream", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-    public SseEmitter stream(@RequestBody String request,
+    public SseEmitter stream(@RequestBody ChatMessage message,
                              HttpServletRequest httpReq,
                              HttpServletResponse httpRes) throws JsonProcessingException {
         System.out.println("✅ /chat/stream 컨트롤러 진입");
         UUID clientId = getOrCreateClientId(httpReq, httpRes);
         log.info("{}",clientId);
         System.out.println("💡 요청으로 생성된 UUID: " + clientId);
-        return chatStreamService.handleStream(clientId, request);
+        return chatStreamService.handleStream(clientId, message);
     }
 
     private UUID getOrCreateClientId(HttpServletRequest req, HttpServletResponse res) {
