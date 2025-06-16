@@ -11,5 +11,5 @@ import java.util.UUID;
 public record ChatStreamResponse(
         @JsonProperty("client_id") String clientId,
         @JsonProperty("message") String message,
-        @JsonProperty("isLast") boolean isLast
+        @JsonProperty("is_last") boolean isLast
 ) {}
