@@ -2,6 +2,7 @@ package com.newstoss.member.application.in.query;
 
 import com.newstoss.global.errorcode.UserErrorCode;
 import com.newstoss.global.handler.CustomException;
+import com.newstoss.member.adapter.in.web.dto.response.MemberInfoDto;
 import com.newstoss.member.domain.Member;
 import com.newstoss.member.application.out.MemberQueryPort;
 import lombok.RequiredArgsConstructor;
@@ -11,7 +12,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class GetMemberService {
+public class GetMemberService implements GetMemberInfoUseCase{
     private final MemberQueryPort memberQueryPort;
 
     public Member findByAccount(String account) {
@@ -24,4 +25,8 @@ public class GetMemberService {
                 .orElseThrow(() -> new CustomException(UserErrorCode.MEMBERID_NOT_FOUND));
     }
 
+    @Override
+    public MemberInfoDto getMemberInfo(UUID memberId) {
+        return memberQueryPort.findMemberInfo(memberId);
+    }
 }

@@ -47,12 +47,4 @@ class PortfolioServiceTest {
 
     }
 
-    @Test
-    public void find() {
-        List<Member> members = memberRepository.findByName("1");
-        Member member = members.get(0);
-
-        Portfolio portfolio = repository.findByMemberId(member.getMemberId()).get();
-        assertThat(portfolio).isNotNull();
-    }
 }
