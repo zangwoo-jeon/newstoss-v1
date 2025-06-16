@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 @Repository
-public interface JpaMemberRepository extends JpaRepository<Member, UUID> {
+public interface JpaMemberRepository extends JpaRepository<Member, UUID> , JpaMemberInfoRepository {
     Optional<Member> findByAccount(String account);
     Optional<Member> findByEmail(String email);
 

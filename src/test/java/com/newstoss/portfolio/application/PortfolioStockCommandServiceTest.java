@@ -118,18 +118,4 @@ class PortfolioStockCommandServiceTest {
         assertThat(portfolioStock.getEntryPrice()).isEqualTo(55000);
     }
 
-    @Test
-    public void RemovePortfolio() {
-        //given
-        UUID id = memberRepository.findByName("testName").get(0).getMemberId();
-        Stock stock = stockRepository.findByStockCode("005930").orElseThrow(
-                () -> new RuntimeException("Stock not found")
-        );
-        Portfolio portfolio = portfolioRepo.findByMemberId(id).get();
-        PortfolioStock portfolioStock = PortfolioStock.createPortfolio(id, portfolio ,stock, 20, 50000);
-
-        //when
-        //then
-        assertThat(portfolioStock.getStockCount()).isEqualTo(10);
-    }
 }

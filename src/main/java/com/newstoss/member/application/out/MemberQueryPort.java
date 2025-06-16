@@ -1,5 +1,6 @@
 package com.newstoss.member.application.out;
 
+import com.newstoss.member.adapter.in.web.dto.response.MemberInfoDto;
 import com.newstoss.member.domain.Member;
 
 import java.util.List;
@@ -11,4 +12,5 @@ public interface MemberQueryPort {
     Optional<Member> findByEmail(String email);
     Optional<Member> findByAccount(String account);
     List<Member> findAll();
+    MemberInfoDto findMemberInfo(UUID memberId);
 }
