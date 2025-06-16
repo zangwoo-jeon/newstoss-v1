@@ -23,6 +23,9 @@ public class MemberInfoDto {
     @Schema(description = "유저 자산", example = "3000000")
     private Long asset;
 
+    @Schema(description = "유저 투자 성향 점수 ", example = "0~25")
+    private Long investScore;
+
     private List<MemberStockDto> memberStocks = new ArrayList<>();
 
     @QueryProjection

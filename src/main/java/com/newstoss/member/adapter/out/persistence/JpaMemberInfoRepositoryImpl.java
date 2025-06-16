@@ -30,7 +30,7 @@ public class JpaMemberInfoRepositoryImpl implements JpaMemberInfoRepository {
     public MemberInfoDto findMemberInfo(UUID id) {
         MemberInfoDto dto = new MemberInfoDto();
         Tuple result = queryFactory
-                .select(member.name, memberPnl.asset)
+                .select(member.name, member.investScore , memberPnl.asset)
                 .from(member)
                 .join(memberPnl).on(memberPnl.memberId.eq(member.memberId))
                 .where(member.memberId.eq(id), memberPnl.date.eq(LocalDate.now()))
@@ -40,6 +40,7 @@ public class JpaMemberInfoRepositoryImpl implements JpaMemberInfoRepository {
 
         dto.setUsername(result.get(member.name));
         dto.setAsset(result.get(memberPnl.asset));
+        dto.setInvestScore(result.get(member.investScore));
 
         List<MemberStockDto> dtos = queryFactory
                 .select(new QMemberStockDto(portfolioStock.stock.stockCode, portfolioStock.stock.name ,
