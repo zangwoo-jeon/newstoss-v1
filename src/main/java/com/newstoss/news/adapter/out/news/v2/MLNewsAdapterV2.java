@@ -3,6 +3,7 @@ package com.newstoss.news.adapter.out.news.v2;
 import com.newstoss.global.errorcode.NewsErrorCode;
 import com.newstoss.global.handler.CustomException;
 import com.newstoss.news.adapter.in.web.news.dto.common.GetAllNewsDTO;
+import com.newstoss.news.adapter.in.web.sse.dto.ChatStreamRequest;
 import com.newstoss.news.adapter.out.news.dto.v2.MLHighlightNewsDTOv2;
 import com.newstoss.news.adapter.out.news.dto.v2.MLNewsDTOv2;
 import com.newstoss.news.adapter.out.news.dto.v2.MLNewsMataDataDTOv2;
@@ -11,8 +12,7 @@ import com.newstoss.news.application.news.v2.port.out.MLNewsPortV2;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
@@ -20,6 +20,7 @@ import org.springframework.web.client.RestTemplate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
@@ -72,6 +73,19 @@ public class MLNewsAdapterV2 implements MLNewsPortV2 {
     public List<MLNewsDTOv2> searchNews(String searchNews){
         String url = BASE_URL + "/?skip=0&limit=10&title="+searchNews;
         return safeExchangeList(url, new ParameterizedTypeReference<>() {});
+    }
+
+    @Override
+    public String chat(String clientId, String question) {
+        ChatStreamRequest request = new ChatStreamRequest(clientId, question);
+        String url = "http://15.165.211.100:8000/news/chat/stream";
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        HttpEntity<ChatStreamRequest> entity = new HttpEntity<>(request, headers);
+
+        return restTemplate.postForObject(url, entity, String.class);
     }
 
     // 반환 값이 리스트고 응답 DTO랑 같을 경우

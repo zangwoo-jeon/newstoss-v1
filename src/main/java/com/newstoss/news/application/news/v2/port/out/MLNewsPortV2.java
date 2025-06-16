@@ -8,6 +8,7 @@ import com.newstoss.news.adapter.out.news.dto.v2.MLRelatedNewsDTOv2;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 public interface MLNewsPortV2 {
     List<MLNewsDTOv2> getRealTimeNews();
@@ -23,4 +24,6 @@ public interface MLNewsPortV2 {
     MLNewsMataDataDTOv2 getNewsMeta(String newsId);
 
     List<MLNewsDTOv2> searchNews(String searchNews);
+
+    String chat(String clientId, String question);
 }
