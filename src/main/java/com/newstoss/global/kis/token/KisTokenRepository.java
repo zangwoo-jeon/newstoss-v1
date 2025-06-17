@@ -1,7 +1,6 @@
-package com.newstoss.global.kis;
+package com.newstoss.global.kis.token;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 
 import java.util.Optional;
 

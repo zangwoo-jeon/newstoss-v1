@@ -1,5 +1,6 @@
 package com.newstoss.stock.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.newstoss.global.auditing.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -22,13 +23,22 @@ public class Stock extends BaseTimeEntity {
     private String name;
 
     @Column(name = "stock_price")
-    private Integer price;
+    private String price;
 
     @Column(name = "market_name")
     private String marketName;
 
     @Column(name = "stock_image")
     private String stockImage;
+
+    @Column(name = "change_price")
+    private String changeAmount;
+
+    @Column(name = "sign")
+    private String sign;
+
+    @Column(name = "change_rate")
+    private String changeRate;
 
     private Integer stockSearchCount;
     private String category;
@@ -51,5 +61,12 @@ public class Stock extends BaseTimeEntity {
             stockSearchCount = 0;
         }
         stockSearchCount++;
+    }
+
+    public void updateStockPrice(String price, String changePrice, String sign, String changeRate) {
+        this.price = price;
+        this.changeRate = changeRate;
+        this.changeAmount = changePrice;
+        this.sign = sign;
     }
 }

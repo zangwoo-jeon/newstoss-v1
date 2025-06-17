@@ -2,8 +2,8 @@ package com.newstoss.stock.adapter.outbound.kis;
 
 import com.newstoss.global.errorcode.StockErrorCode;
 import com.newstoss.global.handler.CustomException;
-import com.newstoss.global.kis.KisTokenManager;
-import com.newstoss.global.kis.KisTokenProperties;
+import com.newstoss.global.kis.token.KisTokenManager;
+import com.newstoss.global.kis.token.KisTokenProperties;
 import com.newstoss.stock.adapter.inbound.dto.response.FxResponseDto;
 import com.newstoss.stock.adapter.outbound.kis.dto.response.KisFxDto;
 import com.newstoss.stock.application.port.out.kis.FxInfoPort;
