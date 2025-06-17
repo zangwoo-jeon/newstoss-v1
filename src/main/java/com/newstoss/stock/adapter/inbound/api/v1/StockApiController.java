@@ -19,6 +19,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -31,7 +32,10 @@ import java.util.List;
 @Slf4j
 @Tag(name = "주식 API", description = "주식 관련 API")
 public class StockApiController {
+
+//    @Qualifier("StockQueryServiceV1")
     private final GetCategoryUseCase getCategoryUseCase;
+//    @Qualifier("StockQueryServiceV1")
     private final SearchStockUseCase searchStockUseCase;
     private final GetStockInfoUseCase getStockInfoUseCase;
     private final UpdateStockSearchCount updateStockSearchCount;

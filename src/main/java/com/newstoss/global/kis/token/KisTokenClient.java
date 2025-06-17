@@ -1,4 +1,4 @@
-package com.newstoss.global.kis;
+package com.newstoss.global.kis.token;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.*;
