@@ -82,7 +82,7 @@ jobs:
             CONTAINER_APP_PORT=8080 
 
             PG_CONTAINER_NAME="my-postgres" 
-            DOCKER_NETWORK_NAME="${{ secrets.DOCKER_NETWORK_NAME }}"
+            DOCKER_NETWORK_NAME="${{ secrets.DOCKER_NETWORK_NAMES }}"
 
             echo "Creating Docker network if not exists..."
             if ! docker network ls | grep -q ${DOCKER_NETWORK_NAME}; then
