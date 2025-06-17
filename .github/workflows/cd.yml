@@ -117,7 +117,7 @@ jobs:
               -e SPRING_DATASOURCE_USERNAME="${{ secrets.SPRING_DATASOURCE_USERNAME }}" \
               -e SPRING_DATASOURCE_PASSWORD="${{ secrets.SPRING_DATASOURCE_PASSWORD }}" \
               -e SPRING_PROFILES_ACTIVE=prod \
-              -e SPRING_DATA_REDIS_HOST=100.68.180.102 \
+              -e SPRING_DATA_REDIS_HOST=3.39.99.26 \
               -e SPRING_DATA_REDIS_PORT=6379 \
               -e SPRING_DATA_REDIS_PASSWORD="${{ secrets.REDIS_PASSWORD }}" \
               -e SPRING_MAIN_ALLOW_BEAN_DEFINITION_OVERRIDING=true \
