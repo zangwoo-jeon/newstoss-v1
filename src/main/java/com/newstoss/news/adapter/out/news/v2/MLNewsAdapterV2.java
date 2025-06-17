@@ -76,7 +76,7 @@ public class MLNewsAdapterV2 implements MLNewsPortV2 {
     }
 
     @Override
-    public String chat(String clientId, String question) {
+    public void chat(String clientId, String question) {
         ChatStreamRequest request = new ChatStreamRequest(clientId, question);
         String url = "http://15.165.211.100:8000/news/chat/stream";
 
@@ -85,7 +85,11 @@ public class MLNewsAdapterV2 implements MLNewsPortV2 {
 
         HttpEntity<ChatStreamRequest> entity = new HttpEntity<>(request, headers);
 
-        return restTemplate.postForObject(url, entity, String.class);
+        try {
+            restTemplate.postForEntity(url, entity, Void.class); // 응답을 기다리지 않음
+        } catch (Exception e) {
+            log.error("❌ ML 서버 요청 실패 - clientId: {}, question: {}", clientId, question, e);
+        }
     }
 
     // 반환 값이 리스트고 응답 DTO랑 같을 경우
