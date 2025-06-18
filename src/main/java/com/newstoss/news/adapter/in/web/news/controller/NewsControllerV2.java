@@ -67,12 +67,12 @@ public class NewsControllerV2{
 //        return ResponseEntity.ok(new SuccessResponse<>(true, "하이라이트 뉴스 조회 성공", news));
 //    }
 
-//    @Operation(summary = "하이라이트 뉴스 with redis 캐시", description = "하이라이트 뉴스를 조회합니다.")
-//    @GetMapping("/highlight/redis")
-//    public ResponseEntity<SuccessResponse<Object>> highlight2(){
-//        List<NewsMathRelatedDTO<HighlightNewsDTO>> news = newsServiceV2.highlightWithRedis();
-//        return ResponseEntity.ok(new SuccessResponse<>(true, "하이라이트 뉴스 조회 성공", news));
-//    }
+    @Operation(summary = "하이라이트 뉴스 with redis 캐시", description = "하이라이트 뉴스를 조회합니다.")
+    @GetMapping("/highlight/redis")
+    public ResponseEntity<SuccessResponse<Object>> highlight2(){
+        List<NewsMathRelatedDTO<HighlightNewsDTO>> news = newsServiceV2.highlightWithRedis();
+        return ResponseEntity.ok(new SuccessResponse<>(true, "하이라이트 뉴스 조회 성공", news));
+    }
 
     @Operation(summary = "뉴스 메타데이터를 조회", description = "뉴스 아이디, 요약본, 관련 종목, 관련종목 리스트를 보여줍니다")
     @GetMapping("/meta")
