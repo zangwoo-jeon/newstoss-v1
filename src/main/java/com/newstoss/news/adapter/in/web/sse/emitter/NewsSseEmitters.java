@@ -1,10 +1,8 @@
-package com.newstoss.news.adapter.in.web.sse;
+package com.newstoss.news.adapter.in.web.sse.emitter;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.newstoss.global.errorcode.RedisAndSseErrorCode;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
@@ -75,7 +73,6 @@ public class NewsSseEmitters {
             try {
                 emitter.send(SseEmitter.event().name("ping").data("💓"));
             } catch (IOException | IllegalStateException e) {
-                log.info("❌ ping 실패 – 연결 종료");
                 emitter.complete();          // 명시적으로 연결 닫기
                 toRemove.add(emitter);      // 반복 중 직접 remove하지 않기
             }

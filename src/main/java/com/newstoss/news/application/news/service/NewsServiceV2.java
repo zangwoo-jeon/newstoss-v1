@@ -1,11 +1,12 @@
 package com.newstoss.news.application.news.service;
 
-import com.newstoss.news.adapter.in.web.news.dto.common.GetAllNewsDTO;
-import com.newstoss.news.adapter.in.web.news.dto.v1.NewsMathRelatedDTOTest;
+import com.newstoss.news.adapter.in.web.news.dto.v2.GetAllNewsDTO;
 import com.newstoss.news.adapter.in.web.news.dto.v2.*;
+import com.newstoss.news.adapter.in.web.news.dto.v2.NewsMathRelatedDTO;
+import com.newstoss.news.adapter.in.web.news.dto.v2.Meta.NewsMetaDataDTO;
+import com.newstoss.news.adapter.in.web.news.dto.v2.Meta.RelatedNewsDTOv2;
 import com.newstoss.news.application.news.v2.port.in.*;
 import com.newstoss.news.application.redis.port.in.HighlightNewsCacheUseCase;
-import com.newstoss.news.application.redis.port.out.HighlightNewsCachePort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -15,7 +16,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class NewsServiceV2 {
 
-    private final GetRealTimeNewsUseCaseV2 getRealTimeNews;
+//    private final GetRealTimeNewsUseCaseV2 getRealTimeNews;
     private final GetNewsDetailUseCaseV2 getDetailNews;
     private final GetRelatedNewsUseCaseV2 getRelatedNews;
     private final GetAllNewsUseCaseV2 getAllNews;
@@ -23,10 +24,11 @@ public class NewsServiceV2 {
     private final GetNewsMataDataUseCaseV2 mataDataUseCaseV2;
     private final GetSearchNewsUseCase getSearchNews;
     private final HighlightNewsCacheUseCase highlightNewsCacheUseCase;
+    private final GetStockToNewsUseCase getStockToNewsUseCase;
 
-    public List<NewsDTOv2> getRealTimeNews(){
-        return getRealTimeNews.exec();
-    }
+//    public List<NewsDTOv2> getRealTimeNews(){
+//        return getRealTimeNews.exec();
+//    }
 
     public NewsDTOv2 getDetailNews(String newsId){
         return getDetailNews.exec(newsId);
@@ -38,7 +40,7 @@ public class NewsServiceV2 {
 
     public List<NewsDTOv2> getAllNews(GetAllNewsDTO getAllNewsDTO) { return getAllNews.exec(getAllNewsDTO); }
 
-    public List<HighlightNewsDTO> getHighlightNews() { return getHighlight.exec(); }
+//    public List<HighlightNewsDTO> getHighlightNews() { return getHighlight.exec(); }
 
     public
     List<NewsMathRelatedDTO<HighlightNewsDTO>> highlightWithRedis(){return highlightNewsCacheUseCase.loadRedis();}
@@ -48,4 +50,6 @@ public class NewsServiceV2 {
     };
 
     public List<NewsDTOv2> searchNews(String search) { return getSearchNews.exec(search); }
+
+    public List<NewsDTOv2> stockNews(StockNewsDTO stockNewsDTO) { return getStockToNewsUseCase.exec(stockNewsDTO); }
 }

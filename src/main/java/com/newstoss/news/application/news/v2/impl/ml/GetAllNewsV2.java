@@ -1,6 +1,6 @@
 package com.newstoss.news.application.news.v2.impl.ml;
 
-import com.newstoss.news.adapter.in.web.news.dto.common.GetAllNewsDTO;
+import com.newstoss.news.adapter.in.web.news.dto.v2.GetAllNewsDTO;
 import com.newstoss.news.adapter.in.web.news.dto.v2.NewsDTOv2;
 import com.newstoss.news.adapter.out.news.dto.v2.MLNewsDTOv2;
 import com.newstoss.news.application.news.v2.impl.NewsDTOv2Mapper;
@@ -19,9 +19,9 @@ public class GetAllNewsV2 implements GetAllNewsUseCaseV2 {
     public List<NewsDTOv2> exec(GetAllNewsDTO dto) {
         boolean isRealTime = dto == null;
 
-        List<MLNewsDTOv2> rawNews = isRealTime
-                ? mlNewsPortV2.getRealTimeNews()
-                : mlNewsPortV2.getAllNews(dto);
+        List<MLNewsDTOv2> rawNews = mlNewsPortV2.getAllNews(dto);
+//                ? mlNewsPortV2.getRealTimeNews()
+//                : mlNewsPortV2.getAllNews(dto);
 
         return rawNews.stream()
                 .map(NewsDTOv2Mapper::from)

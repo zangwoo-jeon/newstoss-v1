@@ -1,9 +1,8 @@
-package com.newstoss.news.adapter.out.redis.highlight;
+package com.newstoss.news.adapter.out.redis.subscriber;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.newstoss.news.adapter.in.web.news.dto.v2.RealTimeNewsDTO;
-import com.newstoss.news.adapter.in.web.sse.NewsSseEmitters;
-import com.newstoss.savenews.adapter.in.NewsDTO;
+import com.newstoss.news.adapter.in.web.sse.emitter.NewsSseEmitters;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.connection.Message;
@@ -32,9 +31,9 @@ public class NewsRedisSubscriber implements MessageListener {
                 return;
             }
 
-            // 직렬화 테스트 로그
-            String serialized = objectMapper.writeValueAsString(dto);
-            log.info("SSE 전송 직렬화 데이터: {}", serialized);
+//            // 직렬화 테스트 로그
+//            String serialized = objectMapper.writeValueAsString(dto);
+//            log.info("SSE 전송 직렬화 데이터: {}", serialized);
 
             // SSE 전송
             newsSseEmitters.sendAll(dto);

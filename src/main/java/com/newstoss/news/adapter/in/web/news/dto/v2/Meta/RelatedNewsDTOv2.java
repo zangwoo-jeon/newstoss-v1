@@ -1,4 +1,4 @@
-package com.newstoss.news.adapter.in.web.news.dto.v2;
+package com.newstoss.news.adapter.in.web.news.dto.v2.Meta;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;

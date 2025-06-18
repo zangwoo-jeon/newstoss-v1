@@ -19,7 +19,7 @@ public class GetHighLightNews implements GetHighlightNewsUseCase {
     private final MLNewsPortV2 mlNewsPortV2;
     @Override
     public List<HighlightNewsDTO> exec() {
-        LocalDateTime now = LocalDateTime.now().minusMonths(1);
+        LocalDateTime now = LocalDateTime.now();
         LocalDateTime before = now.minusDays(7);
 
         List<MLHighlightNewsDTOv2> highlight = mlNewsPortV2.getHighLightNews(now, before);

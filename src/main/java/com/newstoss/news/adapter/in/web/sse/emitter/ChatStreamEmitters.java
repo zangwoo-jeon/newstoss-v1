@@ -1,4 +1,4 @@
-package com.newstoss.news.adapter.in.web.sse;
+package com.newstoss.news.adapter.in.web.sse.emitter;
 
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
