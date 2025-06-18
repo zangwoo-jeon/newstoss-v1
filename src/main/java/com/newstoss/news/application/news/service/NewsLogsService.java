@@ -24,7 +24,7 @@ public class NewsLogsService {
     // 현재 로그 라인 패턴에 맞춘 정규 표현식 (LogEntryDTO에서 사용)
     // 그룹 1: 날짜 시간, 그룹 2: 스레드, 그룹 3: 레벨, 그룹 4: 로거 이름, 그룹 5: memberId, 그룹 6: news_id
     private static final Pattern LOG_PATTERN = Pattern.compile(
-            "^(\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}) \\[(.*?)\\] \\[(.*?)\\] (.*?) - \\[memberId : (.*?)\\]\\s*\\[news_id : (.*?)\\]$"
+            "^(\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}) \\[(.*?)\\] \\[(.*?)\\] (.*?) - \\[memberId : (.*?)\\]\\s*\\[newsId : (.*?)\\]$"
     );
 
     // API 엔드포인트에서 호출될 메인 메서드
