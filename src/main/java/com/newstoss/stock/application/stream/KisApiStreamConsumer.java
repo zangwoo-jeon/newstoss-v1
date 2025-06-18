@@ -36,12 +36,12 @@ public class KisApiStreamConsumer {
 //    @Scheduled(fixedRate = 1000)
     public void consume() {
         log.info("[consume] 컨슈머 동작");
+
         List<MapRecord<String, Object, Object>> messages = redisTemplate
                 .opsForStream()
                 .read(Consumer.from(GROUP, CONSUMER),
                         StreamReadOptions.empty().block(Duration.ofSeconds(1)).count(20),
                         StreamOffset.create(STREAM, ReadOffset.lastConsumed()));
-        log.info("오프셋 위치: {}", ReadOffset.lastConsumed());
         if (messages != null) {
             log.info("message 개수: {}" , messages.size());
             for (MapRecord<String, Object, Object> message : messages) {
@@ -52,7 +52,7 @@ public class KisApiStreamConsumer {
         // ✅ 메시지 처리 후에도 pending이 남아있다면 즉시 재시도
         PendingMessages pending = redisTemplate.opsForStream()
                 .pending(STREAM, GROUP, Range.unbounded(), 10);
-        log.info("pending 사이즈: {}", pending.size());
+
         if (!pending.isEmpty()) {
             log.warn("[consume] pending 메시지 {}개 발견 → 즉시 재처리", pending.size());
             for (PendingMessage pendingMessage : pending) {
