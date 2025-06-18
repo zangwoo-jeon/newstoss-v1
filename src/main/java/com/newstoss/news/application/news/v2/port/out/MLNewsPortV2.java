@@ -25,5 +25,5 @@ public interface MLNewsPortV2 {
 
     List<MLNewsDTOv2> searchNews(String searchNews);
 
-    String chat(String clientId, String question);
+    void chat(String clientId, String question);
 }

@@ -2,7 +2,6 @@ package com.newstoss.news.adapter.in.web.sse.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.newstoss.news.adapter.in.web.news.dto.v2.ChatMessage;
-import com.newstoss.news.adapter.in.web.sse.dto.ChatStreamRequest;
 import com.newstoss.news.application.redis.ChatStreamService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
