@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -59,4 +60,33 @@ public class MemberApiController {
         MemberInfoDto memberInfo = getMemberInfoUseCase.getMemberInfo(memberId);
         return ResponseEntity.ok(new SuccessResponse<>(true, "유저 정보 조회에 성공하였습니다.", memberInfo));
     }
+    @Operation(
+            summary = "모든 유저 정보 조회",
+            description = "모든 유저 정보를 조회합니다. " +
+                    "유저 이름, 유저 포트폴리오 pnl, 유저 포트폴리오 자산, 유저가 가지고 있는 주식정보를 응답으로 보냅니다.<br>",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "유저 정보 조회 성공",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = MemberInfoDto.class)
+                            )
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "사용자를 찾을 수 없음"
+                    ),
+                    @ApiResponse(
+                            responseCode = "500",
+                            description = "서버 오류"
+                    )
+            }
+    )
+    @GetMapping("/all")
+    public ResponseEntity<?> allMembers() {
+        List<MemberInfoDto> allMembersInfo = getMemberInfoUseCase.getAllMembersInfo();
+        return ResponseEntity.ok(new SuccessResponse<>(true, "모든 유저 정보 조회에 성공하였습니다.", allMembersInfo));
+    }
+
 }

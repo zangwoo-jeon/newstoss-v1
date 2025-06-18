@@ -2,6 +2,7 @@ package com.newstoss.portfolio.application;
 
 import com.newstoss.global.errorcode.MemberPnlErrorCode;
 import com.newstoss.global.handler.CustomException;
+import com.newstoss.member.domain.MemberSignUpEvent;
 import com.newstoss.portfolio.adapter.inbound.web.dto.response.MemberPnlPeriodResponseDto;
 import com.newstoss.portfolio.application.port.in.GetMemberPnlAccUseCase;
 import com.newstoss.portfolio.application.port.in.GetMemberPnlPeriodUseCase;
@@ -12,6 +13,7 @@ import com.newstoss.portfolio.application.port.out.GetPortfolioStocksPort;
 import com.newstoss.portfolio.entity.MemberPnl;
 import com.newstoss.portfolio.entity.PortfolioStock;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -98,6 +100,12 @@ public class MemberPnlService implements GetMemberPnlPeriodUseCase , GetMemberPn
         }
         todayPnl.updateAsset(asset);
         todayPnl.initPnl(asset - yesterDayAsset);
+    }
+
+    @EventListener(MemberSignUpEvent.class)
+    public void createMemberPnl(MemberSignUpEvent event) {
+        UUID memberId = event.memberId();
+        MemberPnl.createMemberPnl(memberId, 0L, LocalDate.now(), 0L);
     }
 }
 
