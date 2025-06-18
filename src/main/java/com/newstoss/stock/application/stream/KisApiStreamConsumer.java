@@ -33,7 +33,7 @@ public class KisApiStreamConsumer {
     private static final String GROUP = "kis-group";
     private static final String CONSUMER = "worker-1";
 
-    @Scheduled(fixedRate = 2000)
+//    @Scheduled(fixedRate = 1000)
     public void consume() {
         log.info("[consume] 컨슈머 동작");
 
@@ -68,6 +68,8 @@ public class KisApiStreamConsumer {
 
                 if (!claimed.isEmpty()) {
                     processMessage(claimed.get(0));
+                } else {
+                    log.warn("claim 했지만 메시지 없음: {}", messageId);
                 }
             }
         }
@@ -76,6 +78,7 @@ public class KisApiStreamConsumer {
     private void processMessage(MapRecord<String, Object, Object> record) {
         try {
             KisApiRequestDto dto = objectMapper.convertValue(record.getValue(), KisApiRequestDto.class);
+            log.info("메세지 처리중 : {}" ,dto.getPayload().get("stockCode"));
             KisApiMessageHandler handler = handlers.stream()
                     .filter(h -> h.supports(dto.getType()))
                     .findFirst()
@@ -94,7 +97,7 @@ public class KisApiStreamConsumer {
         }
     }
 
-    @Scheduled(fixedRate = 60_000) // 1분마다
+//    @Scheduled(fixedRate = 60_000) // 1분마다
     public void trimStream() {
         Long trimmed = redisTemplate.opsForStream().trim(STREAM, 1000); // 정확하게 1000개 유지
         log.info("Stream 트리밍: {}개 제거됨", trimmed);
