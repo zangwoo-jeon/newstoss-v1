@@ -61,6 +61,7 @@ public class JpaMemberInfoRepositoryImpl implements JpaMemberInfoRepository {
 
     private MemberInfoDto getData(Tuple tuple, UUID memberId) {
         MemberInfoDto dto = new MemberInfoDto();
+        dto.setMemberId(memberId);
         dto.setUsername(tuple.get(member.name));
         dto.setAsset(tuple.get(memberPnl.asset));
         dto.setInvestScore(tuple.get(member.investScore));
