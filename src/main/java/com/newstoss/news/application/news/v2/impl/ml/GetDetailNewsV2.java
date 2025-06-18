@@ -21,9 +21,7 @@ public class GetDetailNewsV2 implements GetNewsDetailUseCaseV2 {
     @Override
     public NewsDTOv2 exec(String newsId) {
         try {
-            // 현재 로그인한 사용자 ID 가져오기
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
             String userId = authentication != null ? authentication.getName() : "anonymous";
 
             // MDC에 값 설정
