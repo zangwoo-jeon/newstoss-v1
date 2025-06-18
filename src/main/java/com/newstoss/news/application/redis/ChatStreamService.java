@@ -2,7 +2,7 @@ package com.newstoss.news.application.redis;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.newstoss.news.adapter.in.web.news.dto.v2.ChatMessage;
-import com.newstoss.news.adapter.in.web.sse.ChatStreamEmitters;
+import com.newstoss.news.adapter.in.web.sse.emitter.ChatStreamEmitters;
 import com.newstoss.news.application.news.v2.port.out.MLNewsPortV2;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
