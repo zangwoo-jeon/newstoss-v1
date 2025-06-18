@@ -1,6 +1,7 @@
 package com.newstoss.news.adapter.in.web.news.controller;
 
 import com.newstoss.global.response.SuccessResponse;
+import com.newstoss.member.domain.Member;
 import com.newstoss.news.adapter.in.web.news.dto.v2.GetAllNewsDTO;
 import com.newstoss.news.adapter.in.web.news.dto.v2.*;
 import com.newstoss.news.adapter.in.web.news.dto.v2.Meta.NewsMetaDataDTO;
@@ -10,9 +11,12 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
+
 @Tag(name = "뉴스 API V2", description = "뉴스 관련 API V2")
 @RequestMapping("/api/news/v2")
 @CrossOrigin("*")
@@ -29,8 +33,9 @@ public class NewsControllerV2{
 //    }
     @Operation(summary = "뉴스 상세 조회", description = "특정 뉴스 ID에 해당하는 뉴스 상세 정보를 조회합니다.")
     @GetMapping("/detail")
-    public ResponseEntity<SuccessResponse<Object>> newsdetail(@RequestParam String newsId){
-        NewsDTOv2 detailNews = newsServiceV2.getDetailNews(newsId);
+    public ResponseEntity<SuccessResponse<Object>> newsdetail(@RequestParam String newsId, @AuthenticationPrincipal Member member){
+        UUID memberId = (member != null) ? member.getMemberId() : null;
+        NewsDTOv2 detailNews = newsServiceV2.getDetailNews(newsId,memberId);
         return ResponseEntity.ok(new SuccessResponse<>(true,"뉴스 상세 조회 성공", detailNews));
     }
 
