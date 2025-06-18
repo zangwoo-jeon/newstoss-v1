@@ -51,4 +51,9 @@ public class MemberAdapter implements MemberCommandPort, MemberQueryPort {
         return jpaMemberRepository.findMemberInfo(memberId);
     }
 
+    @Override
+    public List<MemberInfoDto> findMemberInfos() {
+        return jpaMemberRepository.findMemberInfos();
+    }
+
 }

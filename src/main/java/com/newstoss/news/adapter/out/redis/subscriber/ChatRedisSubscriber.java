@@ -1,7 +1,7 @@
-package com.newstoss.news.adapter.out.redis.chatbot;
+package com.newstoss.news.adapter.out.redis.subscriber;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.newstoss.news.adapter.in.web.sse.ChatStreamEmitters;
+import com.newstoss.news.adapter.in.web.sse.emitter.ChatStreamEmitters;
 import com.newstoss.news.adapter.in.web.sse.dto.ChatStreamResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

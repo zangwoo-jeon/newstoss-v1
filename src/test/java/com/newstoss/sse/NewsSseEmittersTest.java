@@ -1,6 +1,6 @@
 package com.newstoss.sse;
 
-import com.newstoss.news.adapter.in.web.sse.NewsSseEmitters;
+import com.newstoss.news.adapter.in.web.sse.emitter.NewsSseEmitters;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;

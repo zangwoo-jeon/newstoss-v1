@@ -1,7 +1,7 @@
 package com.newstoss.global.config;
 
-import com.newstoss.news.adapter.out.redis.chatbot.ChatRedisSubscriber;
-import com.newstoss.news.adapter.out.redis.highlight.NewsRedisSubscriber;
+import com.newstoss.news.adapter.out.redis.subscriber.ChatRedisSubscriber;
+import com.newstoss.news.adapter.out.redis.subscriber.NewsRedisSubscriber;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

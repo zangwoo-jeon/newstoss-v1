@@ -1,8 +1,11 @@
 package com.newstoss.news.application.news.v2.impl;
 
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.newstoss.news.adapter.in.web.news.dto.v2.*;
+import com.newstoss.news.adapter.in.web.news.dto.v2.Meta.IndustryListDTO;
+import com.newstoss.news.adapter.in.web.news.dto.v2.Meta.NewsMetaDataDTO;
+import com.newstoss.news.adapter.in.web.news.dto.v2.Meta.RelatedNewsDTOv2;
+import com.newstoss.news.adapter.in.web.news.dto.v2.Meta.RelatedStockDTOv2;
 import com.newstoss.news.adapter.out.news.dto.v2.*;
 
 import java.time.LocalDateTime;

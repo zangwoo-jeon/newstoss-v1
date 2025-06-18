@@ -1,5 +1,6 @@
 package com.newstoss.news.adapter.in.web.news.dto.v2;
 
+import com.newstoss.news.adapter.in.web.news.dto.v2.Meta.RelatedNewsDTOv2;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

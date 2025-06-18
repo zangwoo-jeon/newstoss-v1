@@ -1,9 +1,10 @@
 package com.newstoss.news.adapter.in.web.news.controller;
 
 import com.newstoss.global.response.SuccessResponse;
-import com.newstoss.news.adapter.in.web.news.dto.common.GetAllNewsDTO;
-import com.newstoss.news.adapter.in.web.news.dto.v1.NewsMathRelatedDTOTest;
+import com.newstoss.news.adapter.in.web.news.dto.v2.GetAllNewsDTO;
 import com.newstoss.news.adapter.in.web.news.dto.v2.*;
+import com.newstoss.news.adapter.in.web.news.dto.v2.Meta.NewsMetaDataDTO;
+import com.newstoss.news.adapter.in.web.news.dto.v2.Meta.RelatedNewsDTOv2;
 import com.newstoss.news.application.news.service.NewsServiceV2;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -61,17 +62,24 @@ public class NewsControllerV2{
 //        return ResponseEntity.ok(new SuccessResponse<>(true, "하이라이트 뉴스 조회 성공", news));
 //    }
 
-    @Operation(summary = "하이라이트 뉴스 with redis 캐시", description = "하이라이트 뉴스를 조회합니다.")
-    @GetMapping("/highlight/redis")
-    public ResponseEntity<SuccessResponse<Object>> highlight2(){
-        List<NewsMathRelatedDTO<HighlightNewsDTO>> news = newsServiceV2.highlightWithRedis();
-        return ResponseEntity.ok(new SuccessResponse<>(true, "하이라이트 뉴스 조회 성공", news));
-    }
+//    @Operation(summary = "하이라이트 뉴스 with redis 캐시", description = "하이라이트 뉴스를 조회합니다.")
+//    @GetMapping("/highlight/redis")
+//    public ResponseEntity<SuccessResponse<Object>> highlight2(){
+//        List<NewsMathRelatedDTO<HighlightNewsDTO>> news = newsServiceV2.highlightWithRedis();
+//        return ResponseEntity.ok(new SuccessResponse<>(true, "하이라이트 뉴스 조회 성공", news));
+//    }
 
     @Operation(summary = "뉴스 메타데이터를 조회", description = "뉴스 아이디, 요약본, 관련 종목, 관련종목 리스트를 보여줍니다")
     @GetMapping("/meta")
     public ResponseEntity<SuccessResponse<Object>> meta(@RequestParam String newsId){
         NewsMetaDataDTO news = newsServiceV2.getNewsMeta(newsId);
+        return ResponseEntity.ok(new SuccessResponse<>(true, "메타데이터 조회 성공", news));
+    }
+
+    @Operation(summary = "종목과 관현된 뉴스 조회", description = "종목코드를 입력하면 관련된 뉴스를 조회합니다.")
+    @GetMapping("/stocknews")
+    public ResponseEntity<SuccessResponse<Object>> meta(@ModelAttribute StockNewsDTO stockNewsDTO){
+        List<NewsDTOv2> news = newsServiceV2.stockNews(stockNewsDTO);
         return ResponseEntity.ok(new SuccessResponse<>(true, "메타데이터 조회 성공", news));
     }
 }
