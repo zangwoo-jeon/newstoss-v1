@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.newstoss.global.kis.dto.KisApiRequestDto;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
@@ -11,6 +12,7 @@ import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class KisApiStreamProducer {
 
     private final RedisTemplate<String,Object> redisTemplate;
@@ -29,9 +31,13 @@ public class KisApiStreamProducer {
         Boolean isFirst = redisTemplate.opsForValue().setIfAbsent(dedupKey, "1", DEDUP_TTL, java.util.concurrent.TimeUnit.SECONDS);
 
         if (Boolean.TRUE.equals(isFirst)) {
+            log.info("메세지 적재 성공 : 주식 코드 {}", stockCode);
             KisApiRequestDto dto = new KisApiRequestDto("stock", Map.of("stockCode", stockCode));
-            Map<String, Object> map = new ObjectMapper().convertValue(dto, new TypeReference<>() {});
+            Map<String, Object> map = new ObjectMapper().convertValue(dto, new TypeReference<>() {
+            });
             redisTemplate.opsForStream().add("kis-api-request", map);
+        } else {
+            log.info("주식이 이미 호출되었습니다. 주식 코드  : {}", stockCode);
         }
     }
 

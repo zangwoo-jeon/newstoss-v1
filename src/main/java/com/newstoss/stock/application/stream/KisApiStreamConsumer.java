@@ -33,15 +33,15 @@ public class KisApiStreamConsumer {
     private static final String GROUP = "kis-group";
     private static final String CONSUMER = "worker-1";
 
-    @Scheduled(fixedRate = 1000)
+//    @Scheduled(fixedRate = 1000)
     public void consume() {
         log.info("[consume] 컨슈머 동작");
-
         List<MapRecord<String, Object, Object>> messages = redisTemplate
                 .opsForStream()
                 .read(Consumer.from(GROUP, CONSUMER),
                         StreamReadOptions.empty().block(Duration.ofSeconds(1)).count(20),
                         StreamOffset.create(STREAM, ReadOffset.lastConsumed()));
+        log.info("오프셋 위치: {}", ReadOffset.lastConsumed());
         if (messages != null) {
             log.info("message 개수: {}" , messages.size());
             for (MapRecord<String, Object, Object> message : messages) {
@@ -52,7 +52,7 @@ public class KisApiStreamConsumer {
         // ✅ 메시지 처리 후에도 pending이 남아있다면 즉시 재시도
         PendingMessages pending = redisTemplate.opsForStream()
                 .pending(STREAM, GROUP, Range.unbounded(), 10);
-
+        log.info("pending 사이즈: {}", pending.size());
         if (!pending.isEmpty()) {
             log.warn("[consume] pending 메시지 {}개 발견 → 즉시 재처리", pending.size());
             for (PendingMessage pendingMessage : pending) {
@@ -68,6 +68,8 @@ public class KisApiStreamConsumer {
 
                 if (!claimed.isEmpty()) {
                     processMessage(claimed.get(0));
+                } else {
+                    log.warn("claim 했지만 메시지 없음: {}", messageId);
                 }
             }
         }
@@ -76,6 +78,7 @@ public class KisApiStreamConsumer {
     private void processMessage(MapRecord<String, Object, Object> record) {
         try {
             KisApiRequestDto dto = objectMapper.convertValue(record.getValue(), KisApiRequestDto.class);
+            log.info("메세지 처리중 : {}" ,dto.getPayload().get("stockCode"));
             KisApiMessageHandler handler = handlers.stream()
                     .filter(h -> h.supports(dto.getType()))
                     .findFirst()
@@ -94,7 +97,7 @@ public class KisApiStreamConsumer {
         }
     }
 
-    @Scheduled(fixedRate = 60_000) // 1분마다
+//    @Scheduled(fixedRate = 60_000) // 1분마다
     public void trimStream() {
         Long trimmed = redisTemplate.opsForStream().trim(STREAM, 1000); // 정확하게 1000개 유지
         log.info("Stream 트리밍: {}개 제거됨", trimmed);
