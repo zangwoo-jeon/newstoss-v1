@@ -19,7 +19,7 @@ import java.util.List;
 public class NewsLogsController {
     private final NewsLogsService newsLogsService;
 
-    @Operation(summary = "뉴스 로그 조회", description = "특정 뉴스 ID에 해당하는 뉴스 상세 정보를 조회합니다.")
+    @Operation(summary = "뉴스 로그 조회", description = "뉴스 로그 정보(memberId, newsId)를 조회합니다.")
     @GetMapping("")
     public ResponseEntity<SuccessResponse<Object>> getNewsLogs(
             @RequestParam(required = false) String startDate,
