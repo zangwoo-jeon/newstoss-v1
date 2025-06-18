@@ -12,6 +12,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -19,24 +21,13 @@ public class GetDetailNewsV2 implements GetNewsDetailUseCaseV2 {
     private final MLNewsPortV2 mlNewsPortV2;
 
     @Override
-    public NewsDTOv2 exec(String newsId) {
-        try {
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            String userId = authentication != null ? authentication.getName() : "anonymous";
-
-            // MDC에 값 설정
-            MDC.put("userId", userId);
-            MDC.put("newsId", newsId);
-
-            // 로그 기록
-            log.info("뉴스 상세 조회");
-            log.info("Principal type: {}", authentication != null ? authentication.getPrincipal().getClass().getName() : "null");
-
-            MLNewsDTOv2 news = mlNewsPortV2.getDetailNews(newsId);
-            return NewsDTOv2Mapper.from(news);
-        } finally {
-            // MDC 컨텍스트 정리
-            MDC.clear();
+    public NewsDTOv2 exec(String newsId, UUID memberId) {
+        MLNewsDTOv2 news = mlNewsPortV2.getDetailNews(newsId);
+        if (memberId == null) {
+            log.info("[memberId : anonymous]  [news_id : {}]", newsId);
+        }else{
+            log.info("[memberId : {}] [news_id : {}]", memberId, newsId);
         }
+        return NewsDTOv2Mapper.from(news);
     }
 }

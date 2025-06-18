@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -30,8 +31,8 @@ public class NewsServiceV2 {
 //        return getRealTimeNews.exec();
 //    }
 
-    public NewsDTOv2 getDetailNews(String newsId){
-        return getDetailNews.exec(newsId);
+    public NewsDTOv2 getDetailNews(String newsId, UUID memberId){
+        return getDetailNews.exec(newsId,memberId);
     }
 
     public List<RelatedNewsDTOv2> getRelatedNews(String newsId) {
