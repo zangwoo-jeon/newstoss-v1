@@ -7,9 +7,6 @@ import com.newstoss.news.application.news.v2.port.in.GetNewsDetailUseCaseV2;
 import com.newstoss.news.application.news.v2.port.out.MLNewsPortV2;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.MDC;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
@@ -24,9 +21,9 @@ public class GetDetailNewsV2 implements GetNewsDetailUseCaseV2 {
     public NewsDTOv2 exec(String newsId, UUID memberId) {
         MLNewsDTOv2 news = mlNewsPortV2.getDetailNews(newsId);
         if (memberId == null) {
-            log.info("[memberId : anonymous]  [news_id : {}]", newsId);
+            log.info("[memberId : anonymous]  [newsId : {}]", newsId);
         }else{
-            log.info("[memberId : {}] [news_id : {}]", memberId, newsId);
+            log.info("[memberId : {}] [newsId : {}]", memberId, newsId);
         }
         return NewsDTOv2Mapper.from(news);
     }
