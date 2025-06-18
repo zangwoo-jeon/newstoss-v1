@@ -1,4 +1,4 @@
-package com.newstoss.stock.application;
+package com.newstoss.stock.application.V2;
 
 import com.newstoss.global.errorcode.StockErrorCode;
 import com.newstoss.global.handler.CustomException;
@@ -6,14 +6,15 @@ import com.newstoss.global.kis.stream.KisApiStreamProducer;
 import com.newstoss.stock.adapter.inbound.dto.response.CategoryPageResponseDto;
 import com.newstoss.stock.adapter.inbound.dto.response.CategoryStockResponseDto;
 import com.newstoss.stock.adapter.inbound.dto.response.SearchResponseDto;
-import com.newstoss.stock.adapter.outbound.kis.dto.KisStockDto;
 import com.newstoss.stock.application.port.in.GetCategoryUseCase;
 import com.newstoss.stock.application.port.in.SearchStockUseCase;
 import com.newstoss.stock.application.port.out.persistence.LoadCategoryPort;
 import com.newstoss.stock.application.port.out.persistence.SearchStockPort;
 import com.newstoss.stock.entity.Stock;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -22,6 +23,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Qualifier("StockServiceV2")
@@ -30,6 +32,7 @@ public class StockRedisService implements GetCategoryUseCase,SearchStockUseCase 
     private final LoadCategoryPort loadCategoryPort;
     private final KisApiStreamProducer producer;
     private final SearchStockPort searchStockPort;
+    private final ApplicationEventPublisher publisher;
 
     @Override
     public List<String> getCategories() {

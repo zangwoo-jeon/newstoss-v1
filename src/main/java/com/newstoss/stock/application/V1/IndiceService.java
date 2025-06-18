@@ -1,4 +1,4 @@
-package com.newstoss.stock.application;
+package com.newstoss.stock.application.V1;
 
 import com.newstoss.stock.adapter.inbound.dto.response.IndicesResponseDto;
 import com.newstoss.stock.adapter.outbound.kis.dto.KisIndiceInfoDto;
