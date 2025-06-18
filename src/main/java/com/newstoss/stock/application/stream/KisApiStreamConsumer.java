@@ -4,11 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.newstoss.global.errorcode.RedisStreamErrorCode;
 import com.newstoss.global.handler.CustomException;
 import com.newstoss.global.kis.dto.KisApiRequestDto;
-import com.newstoss.stock.adapter.outbound.kis.dto.KisStockDto;
 import com.newstoss.stock.application.port.out.kis.FxInfoPort;
-import com.newstoss.stock.application.port.out.kis.StockInfoPort;
-import com.newstoss.stock.application.port.out.persistence.LoadStockPort;
-import com.newstoss.stock.entity.Stock;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Range;
@@ -30,10 +26,8 @@ public class KisApiStreamConsumer {
 
     private final RedisTemplate<String, Object> redisTemplate;
     private final ObjectMapper objectMapper;
-
-    private final LoadStockPort loadStockPort;
-    private final StockInfoPort stockInfoPort;
     private final FxInfoPort fxInfoPort;
+    private final List<KisApiMessageHandler> handlers;
 
     private static final String STREAM = "kis-api-request";
     private static final String GROUP = "kis-group";
@@ -51,7 +45,7 @@ public class KisApiStreamConsumer {
         if (messages != null) {
             log.info("message 개수: {}" , messages.size());
             for (MapRecord<String, Object, Object> message : messages) {
-                processMessage(message, false);
+                processMessage(message);
             }
         }
 
@@ -73,32 +67,26 @@ public class KisApiStreamConsumer {
                 );
 
                 if (!claimed.isEmpty()) {
-                    processMessage(claimed.get(0), true);
+                    processMessage(claimed.get(0));
                 }
             }
         }
     }
 
-    private void processMessage(MapRecord<String, Object, Object> record, boolean isRetry) {
+    private void processMessage(MapRecord<String, Object, Object> record) {
         try {
             KisApiRequestDto dto = objectMapper.convertValue(record.getValue(), KisApiRequestDto.class);
-
-            if ("stock".equals(dto.getType())) {
-                KisStockDto stockInfo = stockInfoPort.getStockInfo(dto.getStockCode());
-                Stock stock = loadStockPort.LoadStockByStockCode(dto.getStockCode());
-                stock.updateStockPrice(
-                        stockInfo.getPrice(), stockInfo.getChangeAmount(), stockInfo.getSign(), stockInfo.getChangeRate()
-                );
-                log.info("{} 처리 완료 - stockCode: {}", isRetry ? "[RETRY]" : "[NEW]", dto.getStockCode());
-            } else if ("fx".equals(dto.getType())) {
-                fxInfoPort.FxInfo(dto.getFxType(), dto.getFxCode());
-            }
+            KisApiMessageHandler handler = handlers.stream()
+                    .filter(h -> h.supports(dto.getType()))
+                    .findFirst()
+                    .orElseThrow(() -> new CustomException(RedisStreamErrorCode.REDIS_TYPE_ERROR_CODE));
+            handler.handle(dto);
 
             // ✅ ACK 처리
             redisTemplate.opsForStream().acknowledge(STREAM, GROUP, record.getId());
 
         } catch (Exception e) {
-            log.error("{} 처리 실패 - id: {}, 에러: {}", isRetry ? "[RETRY]" : "[NEW]", record.getId(), e.getMessage(), e);
+            log.error("처리 실패 - id: {}, 에러: {}", record.getId(), e.getMessage(), e);
 
             // 선택사항: 실패 시 dead-letter로 보내기
             // redisTemplate.opsForStream().add("kis-dead-letter", record.getValue());
