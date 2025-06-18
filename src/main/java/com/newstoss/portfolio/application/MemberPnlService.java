@@ -7,6 +7,7 @@ import com.newstoss.portfolio.adapter.inbound.web.dto.response.MemberPnlPeriodRe
 import com.newstoss.portfolio.application.port.in.GetMemberPnlAccUseCase;
 import com.newstoss.portfolio.application.port.in.GetMemberPnlPeriodUseCase;
 import com.newstoss.portfolio.application.port.in.UpdateMemberPnlUseCase;
+import com.newstoss.portfolio.application.port.out.CreateMemberPnlPort;
 import com.newstoss.portfolio.application.port.out.GetMemberPnlPeriodPort;
 import com.newstoss.portfolio.application.port.out.GetMemberPnlPort;
 import com.newstoss.portfolio.application.port.out.GetPortfolioStocksPort;
@@ -28,6 +29,7 @@ public class MemberPnlService implements GetMemberPnlPeriodUseCase , GetMemberPn
     private final GetMemberPnlPeriodPort getMemberPnlPeriodPort;
     private final GetMemberPnlPort getMemberPnlPort;
     private final GetPortfolioStocksPort getPortfolioStocksPort;
+    private final CreateMemberPnlPort createMemberPnlPort;
 
     @Override
     public MemberPnlPeriodResponseDto getMemberPnlPeriod(UUID memberId, String period) {
@@ -102,10 +104,10 @@ public class MemberPnlService implements GetMemberPnlPeriodUseCase , GetMemberPn
         todayPnl.initPnl(asset - yesterDayAsset);
     }
 
-    @EventListener(MemberSignUpEvent.class)
+    @EventListener
     public void createMemberPnl(MemberSignUpEvent event) {
         UUID memberId = event.memberId();
-        MemberPnl.createMemberPnl(memberId, 0L, LocalDate.now(), 0L);
+        createMemberPnlPort.create(MemberPnl.createMemberPnl(memberId, 0L, LocalDate.now(), 0L));
     }
 }
 
