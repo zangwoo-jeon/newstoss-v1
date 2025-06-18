@@ -1,4 +1,4 @@
-package com.newstoss.stock.application;
+package com.newstoss.stock.application.V1;
 
 import com.newstoss.global.errorcode.StockErrorCode;
 import com.newstoss.global.handler.CustomException;

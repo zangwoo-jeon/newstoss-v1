@@ -1,12 +1,14 @@
-package com.newstoss.stock.application;
+package com.newstoss.stock.application.V1;
 
 import com.newstoss.global.errorcode.StockErrorCode;
 import com.newstoss.global.handler.CustomException;
 import com.newstoss.stock.adapter.outbound.kis.dto.KisPeriodStockDto;
 import com.newstoss.stock.adapter.outbound.kis.dto.KisStockDto;
 import com.newstoss.stock.application.port.in.GetStockInfoUseCase;
+import com.newstoss.stock.application.port.in.GetStockPeriodUseCase;
 import com.newstoss.stock.application.port.out.kis.StockInfoPort;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -16,7 +18,8 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class StockInfoService implements GetStockInfoUseCase {
+@Primary
+public class StockInfoService implements GetStockInfoUseCase , GetStockPeriodUseCase {
 
     private final StockInfoPort stockInfoPort;
 
@@ -42,15 +45,6 @@ public class StockInfoService implements GetStockInfoUseCase {
         } else {
             throw new CustomException(StockErrorCode.INVALID_PERIOD_TYPE);
         }
-    }
-
-    @Override
-    public KisStockDto getStockInfo(String stockCode) {
-        KisStockDto stockInfo = stockInfoPort.getStockInfo(stockCode);
-        if (stockInfo == null) {
-            throw new CustomException(StockErrorCode.STOCK_NOT_FOUND);
-        }
-        return stockInfo;
     }
 
     @Override

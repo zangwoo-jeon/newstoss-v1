@@ -1,4 +1,4 @@
-package com.newstoss.stock.application;
+package com.newstoss.stock.application.V1;
 
 import com.newstoss.stock.adapter.outbound.kis.dto.KisStockDto;
 import com.newstoss.stock.application.port.in.CreateStockUseCase;
