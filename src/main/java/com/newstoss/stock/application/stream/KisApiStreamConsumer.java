@@ -33,7 +33,7 @@ public class KisApiStreamConsumer {
     private static final String GROUP = "kis-group";
     private static final String CONSUMER = "worker-1";
 
-    @Scheduled(fixedRate = 1000)
+    @Scheduled(fixedRate = 2000)
     public void consume() {
         log.info("[consume] 컨슈머 동작");
 
