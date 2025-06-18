@@ -1,7 +1,7 @@
 package com.newstoss.stock.adapter.outbound.kis;
 
-import com.newstoss.global.kis.KisTokenManager;
-import com.newstoss.global.kis.KisTokenProperties;
+import com.newstoss.global.kis.token.KisTokenManager;
+import com.newstoss.global.kis.token.KisTokenProperties;
 import com.newstoss.stock.adapter.outbound.kis.dto.KisIndiceInfoDto;
 import com.newstoss.stock.adapter.outbound.kis.dto.response.KisApiResponseDto;
 import com.newstoss.stock.adapter.outbound.kis.dto.KisIndicePriceDto;

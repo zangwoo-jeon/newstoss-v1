@@ -27,7 +27,7 @@ public class FavoriteController {
         return ResponseEntity.ok(new SuccessResponse<>(true, "관심그룹 조회 성공", result));
     }
 
-
+    //관심그룹추가
     @PostMapping("/{memberId}")
     @Operation(summary = "관심 그룹 추가", description = "회원 ID로 관심 그룹을 추가합니다.")
     public ResponseEntity<SuccessResponse<Object>> addFavoriteGroup(

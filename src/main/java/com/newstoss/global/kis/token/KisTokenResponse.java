@@ -1,8 +1,6 @@
-package com.newstoss.global.kis;
+package com.newstoss.global.kis.token;
 
 import lombok.Data;
-
-import java.time.LocalDateTime;
 
 @Data
 public class KisTokenResponse {

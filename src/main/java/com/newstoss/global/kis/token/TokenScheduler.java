@@ -1,4 +1,4 @@
-package com.newstoss.global.kis;
+package com.newstoss.global.kis.token;
 
 import jakarta.annotation.PostConstruct;
 import lombok.Getter;
