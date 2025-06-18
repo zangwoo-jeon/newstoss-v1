@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
 import java.util.List;
+import java.util.Map;
 
 @Component
 @RequiredArgsConstructor
@@ -84,14 +85,18 @@ public class KisApiStreamConsumer {
             KisApiRequestDto dto = objectMapper.convertValue(record.getValue(), KisApiRequestDto.class);
 
             if ("stock".equals(dto.getType())) {
-                KisStockDto stockInfo = stockInfoPort.getStockInfo(dto.getStockCode());
-                Stock stock = loadStockPort.LoadStockByStockCode(dto.getStockCode());
+                Map<String, String> stockPayLoad = dto.getPayload();
+                KisStockDto stockInfo = stockInfoPort.getStockInfo(stockPayLoad.get("stockCode"));
+                Stock stock = loadStockPort.LoadStockByStockCode(stockPayLoad.get("stockCode"));
                 stock.updateStockPrice(
                         stockInfo.getPrice(), stockInfo.getChangeAmount(), stockInfo.getSign(), stockInfo.getChangeRate()
                 );
-                log.info("{} 처리 완료 - stockCode: {}", isRetry ? "[RETRY]" : "[NEW]", dto.getStockCode());
+                log.info("{} 처리 완료 - stockCode: {}", isRetry ? "[RETRY]" : "[NEW]", stockPayLoad.get("stockCode"));
             } else if ("fx".equals(dto.getType())) {
-                fxInfoPort.FxInfo(dto.getFxType(), dto.getFxCode());
+                Map<String, String> FxPayLoad = dto.getPayload();
+                String FxType = FxPayLoad.get("fxType");
+                String FxCode = FxPayLoad.get("fxCode");
+                fxInfoPort.FxInfo(FxType, FxCode);
             }
 
             // ✅ ACK 처리
