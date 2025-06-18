@@ -29,7 +29,7 @@ public class KisApiStreamProducer {
         Boolean isFirst = redisTemplate.opsForValue().setIfAbsent(dedupKey, "1", DEDUP_TTL, java.util.concurrent.TimeUnit.SECONDS);
 
         if (Boolean.TRUE.equals(isFirst)) {
-            KisApiRequestDto dto = new KisApiRequestDto("stock", stockCode, null, null);
+            KisApiRequestDto dto = new KisApiRequestDto("stock", Map.of("stockCode", stockCode));
             Map<String, Object> map = new ObjectMapper().convertValue(dto, new TypeReference<>() {});
             redisTemplate.opsForStream().add("kis-api-request", map);
         }
@@ -41,7 +41,7 @@ public class KisApiStreamProducer {
      * @param FxCode Fx 맵에서 코드값
      */
     public void sendFxRequest(String FxType, String FxCode) {
-        KisApiRequestDto dto = new KisApiRequestDto("fx", null, FxType, FxCode);
+        KisApiRequestDto dto = new KisApiRequestDto("fx", Map.of("fxType", FxType, "fxCode", FxCode));
         Map<String, Object> map = new ObjectMapper().convertValue(dto, new TypeReference<>() {});
         redisTemplate.opsForStream().add("kis-api-request", map);
     }
