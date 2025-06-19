@@ -1,7 +1,7 @@
 package com.newstoss.news.adapter.in.web.news.controller;
 
 import com.newstoss.global.response.SuccessResponse;
-import com.newstoss.member.domain.Member;
+import com.newstoss.member.domain.UserAccount;
 import com.newstoss.news.adapter.in.web.news.dto.v2.*;
 import com.newstoss.news.adapter.in.web.news.dto.v2.Meta.NewsMetaDataDTO;
 import com.newstoss.news.adapter.in.web.news.dto.v2.Meta.RelatedNewsDTOv2;
@@ -35,8 +35,11 @@ public class NewsControllerV2{
 
     @Operation(summary = "뉴스 상세 조회", description = "특정 뉴스 ID에 해당하는 뉴스 상세 정보를 조회합니다.")
     @GetMapping("/detail")
-    public ResponseEntity<SuccessResponse<Object>> newsdetail(@RequestParam String newsId, @AuthenticationPrincipal Member member){
-        UUID memberId = (member != null) ? member.getMemberId() : null;
+    public ResponseEntity<SuccessResponse<Object>> newsdetail(@RequestParam String newsId, @AuthenticationPrincipal UserAccount userAccount){
+        log.info("[newsdetail] principal: {}", userAccount);
+        log.info("[newsdetail] principal class: {}", userAccount != null ? userAccount.getClass() : "null");
+        UUID memberId = (userAccount != null) ? userAccount.getMemberId() : null;
+        log.info("[newsdetail] memberId: {}", memberId);
         NewsDTOv2 detailNews = newsServiceV2.getDetailNews(newsId,memberId);
         return ResponseEntity.ok(new SuccessResponse<>(true,"뉴스 상세 조회 성공", detailNews));
     }
