@@ -1,7 +1,7 @@
 package com.newstoss.news.adapter.in.web.news.controller;
 
 import com.newstoss.global.response.SuccessResponse;
-import com.newstoss.member.domain.Member;
+import com.newstoss.member.domain.UserAccount;
 import com.newstoss.news.adapter.in.web.news.dto.v2.*;
 import com.newstoss.news.adapter.in.web.news.dto.v2.Meta.NewsMetaDataDTO;
 import com.newstoss.news.adapter.in.web.news.dto.v2.Meta.RelatedNewsDTOv2;
@@ -10,8 +10,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
