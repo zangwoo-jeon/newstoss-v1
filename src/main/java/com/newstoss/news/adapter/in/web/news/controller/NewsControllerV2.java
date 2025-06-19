@@ -1,7 +1,6 @@
 package com.newstoss.news.adapter.in.web.news.controller;
 
 import com.newstoss.global.response.SuccessResponse;
-import com.newstoss.member.domain.Member;
 import com.newstoss.news.adapter.in.web.news.dto.v2.*;
 import com.newstoss.news.adapter.in.web.news.dto.v2.Meta.NewsMetaDataDTO;
 import com.newstoss.news.adapter.in.web.news.dto.v2.Meta.RelatedNewsDTOv2;
@@ -11,8 +10,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -35,11 +32,8 @@ public class NewsControllerV2{
     @Operation(summary = "뉴스 상세 조회", description = "특정 뉴스 ID에 해당하는 뉴스 상세 정보를 조회합니다.")
     @GetMapping("/detail")
     public ResponseEntity<SuccessResponse<Object>> newsdetail(@RequestParam String newsId){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Object principal = authentication.getPrincipal();
-        log.info("Controller에서 받은 principal: {}", principal);
-        Member member = (principal instanceof Member) ? (Member) principal : null;
-        NewsDTOv2 detailNews = newsServiceV2.getDetailNews(newsId, member.getMemberId());
+
+        NewsDTOv2 detailNews = newsServiceV2.getDetailNews(newsId);
         return ResponseEntity.ok(new SuccessResponse<>(true,"뉴스 상세 조회 성공", detailNews));
     }
 
