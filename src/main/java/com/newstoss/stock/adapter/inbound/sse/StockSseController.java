@@ -33,4 +33,15 @@ public class StockSseController {
         return emitter;
     }
 
+    @GetMapping(value = "/", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    public SseEmitter connect() throws IOException {
+        log.info("주식 비회원 emitter 설정 완료");
+        String emitterId = "guest" + "_" + System.currentTimeMillis();
+        SseEmitter emitter = new SseEmitter(60 * 60 * 1000L);
+        emitterRepository.save(emitterId, emitter);
+        emitter.send(SseEmitter.event().name("connect").data("비회원 connected!"));
+        return emitter;
+    }
+
+
 }
