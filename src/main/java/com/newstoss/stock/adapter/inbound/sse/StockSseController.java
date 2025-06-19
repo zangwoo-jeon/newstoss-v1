@@ -33,7 +33,7 @@ public class StockSseController {
         return emitter;
     }
 
-    @GetMapping(value = "/", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    @GetMapping(value = "/guest", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public SseEmitter connect() throws IOException {
         log.info("주식 비회원 emitter 설정 완료");
         String emitterId = "guest" + "_" + System.currentTimeMillis();
