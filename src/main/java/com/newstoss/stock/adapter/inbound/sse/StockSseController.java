@@ -29,7 +29,7 @@ public class StockSseController {
         String emitterId = memberId + "_" + System.currentTimeMillis();
         SseEmitter emitter = new SseEmitter(60 * 60 * 1000L);
         emitterRepository.save(emitterId, emitter);
-        emitter.send(SseEmitter.event().name("connect").data("connected!"));
+        emitter.send(SseEmitter.event().name("connect").id(emitterId).data("connected!"));
         return emitter;
     }
 
@@ -39,7 +39,7 @@ public class StockSseController {
         String emitterId = "guest" + "_" + System.currentTimeMillis();
         SseEmitter emitter = new SseEmitter(60 * 60 * 1000L);
         emitterRepository.save(emitterId, emitter);
-        emitter.send(SseEmitter.event().name("connect").data("비회원 connected!"));
+        emitter.send(SseEmitter.event().name("connect").id(emitterId).data("비회원 connected!"));
         return emitter;
     }
 
