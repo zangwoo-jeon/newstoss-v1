@@ -11,6 +11,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -22,6 +23,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
@@ -39,6 +41,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         if (token != null && jwtProvider.validateToken(token)) {
             UUID memberId = jwtProvider.getMemberId(token);
             Member member = getMemberService.findById(memberId);
+            log.info("JwtFilter - memberId: {}, member: {}", memberId, member);
             Authentication authentication =
                     new UsernamePasswordAuthenticationToken(member, null, List.of()); // 권한 필요시 추가
 
