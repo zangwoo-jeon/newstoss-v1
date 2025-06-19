@@ -46,7 +46,7 @@ public class KisStreamListener implements StreamListener<String, MapRecord<Strin
 
             redisTemplate.opsForStream().acknowledge(STREAM, GROUP, message.getId());
             int count = counter.incrementAndGet();
-            log.info("메세지 처리 횟수 : {}", count);
+//            log.info("메세지 처리 횟수 : {}", count);
             //처리후 삭제
             redisTemplate.opsForStream().delete(STREAM, message.getId());
         } catch (Exception e) {

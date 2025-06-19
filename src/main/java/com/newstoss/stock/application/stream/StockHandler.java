@@ -1,6 +1,7 @@
 package com.newstoss.stock.application.stream;
 
 import com.newstoss.global.kis.dto.KisApiRequestDto;
+import com.newstoss.stock.adapter.inbound.dto.response.v2.StockSseDto;
 import com.newstoss.stock.adapter.outbound.kis.dto.KisStockDto;
 import com.newstoss.stock.application.port.out.kis.FxInfoPort;
 import com.newstoss.stock.application.port.out.kis.StockInfoPort;
@@ -33,6 +34,7 @@ public class StockHandler implements KisApiMessageHandler{
         Map<String, String> stockPayLoad = dto.getPayload();
         String stockCode = stockPayLoad.get("stockCode");
         KisStockDto stockInfo = stockInfoPort.getStockInfo(stockCode);
+        StockSseDto sseDto = new StockSseDto(stockCode,stockInfo);
 
         redisTemplate.opsForValue().set("stock:" + stockCode, stockInfo);
         Map<String, SseEmitter> allEmitters = emitterRepository.findAllEmitter();
@@ -41,7 +43,7 @@ public class StockHandler implements KisApiMessageHandler{
                 emitter.send(
                         SseEmitter.event()
                                 .name("stock")
-                                .data(stockInfo)
+                                .data(sseDto)
                                 .id(stockCode)
                 );
             } catch (Exception e) {

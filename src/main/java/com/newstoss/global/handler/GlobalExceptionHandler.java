@@ -6,12 +6,18 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.client.HttpServerErrorException;
 
 import java.io.IOException;
 
 @RestControllerAdvice
 @Slf4j
 public class GlobalExceptionHandler {
+
+    @ExceptionHandler(HttpServerErrorException.class)
+    public void handleHttpServerError(HttpServerErrorException ex) {
+        log.warn("KIS API 초과 요청 감지 - 상태: {}, 메시지: {}", ex.getStatusCode(), ex.getResponseBodyAsString());
+    }
 
     @ExceptionHandler(CustomException.class)
     public ResponseEntity<ResponseErrorEntity> handleCustomException(CustomException e) {
