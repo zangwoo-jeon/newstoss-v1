@@ -12,6 +12,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.Cookie;
 
 import java.util.List;
 import java.util.UUID;
@@ -37,25 +39,34 @@ public class NewsControllerV2{
     @GetMapping("/detail")
     public ResponseEntity<SuccessResponse<Object>> newsdetail(
             @RequestParam String newsId,
-            @CookieValue(value = "accessToken", required = false) String accessToken
+            HttpServletRequest request
     ){
-        log.info("[newsdetail] accessToken: {}", accessToken);
-
-        UUID memberId = null;
-        if (accessToken != null) {
-            try {
-                if (jwtProvider.validateToken(accessToken)) {
-                    log.info("[newsdetail] Token is valid.");
-                    memberId = jwtProvider.getMemberId(accessToken);
-                } else {
-                    log.warn("[newsdetail] Received invalid or expired token.");
-                }
-            } catch (Exception e) {
-                log.error("[newsdetail] Error processing token: {}", accessToken, e);
-                // return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new SuccessResponse<>(false, "인증 토큰이 유효하지 않습니다.", null));
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                log.info("쿠키 → {} = {}", cookie.getName(), cookie.getValue());
             }
         } else {
-            log.info("[newsdetail] No accessToken cookie found.");
+            log.info("요청에 쿠키 없음");
+        }
+
+        UUID memberId = null;
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals("accessToken")) {
+                    try {
+                        if (jwtProvider.validateToken(cookie.getValue())) {
+                            log.info("[newsdetail] Token is valid.");
+                            memberId = jwtProvider.getMemberId(cookie.getValue());
+                        } else {
+                            log.warn("[newsdetail] Received invalid or expired token.");
+                        }
+                    } catch (Exception e) {
+                        log.error("[newsdetail] Error processing token: {}", cookie.getValue(), e);
+                        // return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new SuccessResponse<>(false, "인증 토큰이 유효하지 않습니다.", null));
+                    }
+                }
+            }
         }
 
         log.info("[newsdetail] memberId: {}", memberId);
