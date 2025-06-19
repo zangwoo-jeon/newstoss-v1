@@ -1,9 +1,8 @@
 package com.newstoss.stock.application.V2;
 
 import com.newstoss.stock.adapter.outbound.redis.KisApiStreamProducer;
-import com.newstoss.stock.application.port.out.persistence.LoadStockPort;
 import com.newstoss.stock.application.sse.EmitterRepository;
-import com.newstoss.stock.entity.Stock;
+import com.newstoss.stock.entity.FxEncoder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -14,23 +13,23 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class RedisStockInfoService{
+public class FxToRedisService {
 
     private final KisApiStreamProducer producer;
     private final EmitterRepository emitterRepository;
-    private final LoadStockPort loadStockPort;
+    private final FxEncoder encoder;
 
-//    @Scheduled(fixedDelay = 30_000)
-    public void enqueueStockCodesIfClientsConnected() {
+    @Scheduled(fixedDelay = 30_000)
+    public void enqueueFxIfClientsConnected() {
         if (emitterRepository.findAllEmitter().isEmpty()) {
-            log.info("Stock Clients : No emitters found");
+            log.info("fx Clients : No emitters found");
             return;
         }
-
-        List<Stock> stocks = loadStockPort.LoadAllStocks();
-
-        stocks.forEach(stock -> {
-            producer.sendStockRequest(stock.getStockCode());
-        });
+        List<List<String>> allFx = encoder.getAllFx();
+        for (List<String> fx : allFx) {
+            String type = fx.get(0);
+            String code = fx.get(1);
+            producer.sendFxRequest(type, code);
+        }
     }
 }
