@@ -1,7 +1,7 @@
 package com.newstoss.news.adapter.in.web.news.controller;
 
+import com.newstoss.global.jwt.JwtProvider;
 import com.newstoss.global.response.SuccessResponse;
-import com.newstoss.member.domain.UserAccount;
 import com.newstoss.news.adapter.in.web.news.dto.v2.*;
 import com.newstoss.news.adapter.in.web.news.dto.v2.Meta.NewsMetaDataDTO;
 import com.newstoss.news.adapter.in.web.news.dto.v2.Meta.RelatedNewsDTOv2;
@@ -11,7 +11,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,6 +24,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class NewsControllerV2{
     private final NewsServiceV2 newsServiceV2;
+    private final JwtProvider jwtProvider;
 
 //    @Operation(summary = "실시간 뉴스 조회", description = "최신 뉴스 10개를 조회합니다. redis pub/sub으로 종속 예정")
 //    @GetMapping("/top10")
@@ -35,13 +35,34 @@ public class NewsControllerV2{
 
     @Operation(summary = "뉴스 상세 조회", description = "특정 뉴스 ID에 해당하는 뉴스 상세 정보를 조회합니다.")
     @GetMapping("/detail")
-    public ResponseEntity<SuccessResponse<Object>> newsdetail(@RequestParam String newsId, @AuthenticationPrincipal UserAccount userAccount){
-        log.info("[newsdetail] principal: {}", userAccount);
-        log.info("[newsdetail] principal class: {}", userAccount != null ? userAccount.getClass() : "null");
-        UUID memberId = (userAccount != null) ? userAccount.getMemberId() : null;
+    public ResponseEntity<SuccessResponse<Object>> newsdetail(
+            @RequestParam String newsId,
+            @CookieValue(value = "accessToken", required = false) String accessToken
+    ){
+        log.info("[newsdetail] accessToken: {}", accessToken);
+
+        UUID memberId = null;
+        if (accessToken != null) {
+            try {
+                if (jwtProvider.validateToken(accessToken)) {
+                    log.info("[newsdetail] Token is valid.");
+                    memberId = jwtProvider.getMemberId(accessToken);
+                } else {
+                    log.warn("[newsdetail] Received invalid or expired token.");
+                }
+            } catch (Exception e) {
+                log.error("[newsdetail] Error processing token: {}", accessToken, e);
+                // return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new SuccessResponse<>(false, "인증 토큰이 유효하지 않습니다.", null));
+            }
+        } else {
+            log.info("[newsdetail] No accessToken cookie found.");
+        }
+
         log.info("[newsdetail] memberId: {}", memberId);
-        NewsDTOv2 detailNews = newsServiceV2.getDetailNews(newsId,memberId);
-        return ResponseEntity.ok(new SuccessResponse<>(true,"뉴스 상세 조회 성공", detailNews));
+
+        NewsDTOv2 detailNews = newsServiceV2.getDetailNews(newsId, memberId);
+
+        return ResponseEntity.ok(new SuccessResponse<>(true, "뉴스 상세 조회 성공", detailNews));
     }
 
     @Operation(summary = "유사 뉴스 조회", description = "특정 뉴스와 유사한 과거 뉴스를 조회합니다.")
