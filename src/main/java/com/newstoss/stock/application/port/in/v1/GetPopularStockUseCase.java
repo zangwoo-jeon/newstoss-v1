@@ -1,6 +1,5 @@
-package com.newstoss.stock.application.port.in;
+package com.newstoss.stock.application.port.in.v1;
 
-import com.newstoss.stock.adapter.outbound.kis.dto.response.KisListOutputDto;
 import com.newstoss.stock.adapter.outbound.kis.dto.KisPopularDto;
 
 import java.util.List;

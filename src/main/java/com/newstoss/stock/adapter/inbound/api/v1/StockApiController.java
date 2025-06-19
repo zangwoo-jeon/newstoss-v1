@@ -2,12 +2,12 @@ package com.newstoss.stock.adapter.inbound.api.v1;
 
 import com.newstoss.global.response.SuccessResponse;
 import com.newstoss.stock.adapter.inbound.dto.request.StockCountRequestDto;
-import com.newstoss.stock.adapter.inbound.dto.response.CategoriesResponseDto;
-import com.newstoss.stock.adapter.inbound.dto.response.CategoryPageResponseDto;
-import com.newstoss.stock.adapter.inbound.dto.response.SearchResponseDto;
-import com.newstoss.stock.application.port.in.GetCategoryUseCase;
-import com.newstoss.stock.application.port.in.SearchStockUseCase;
-import com.newstoss.stock.application.port.in.UpdateStockSearchCount;
+import com.newstoss.stock.adapter.inbound.dto.response.v1.CategoriesResponseDto;
+import com.newstoss.stock.adapter.inbound.dto.response.v1.CategoryPageResponseDto;
+import com.newstoss.stock.adapter.inbound.dto.response.v1.SearchResponseDto;
+import com.newstoss.stock.application.port.in.v1.GetCategoryUseCase;
+import com.newstoss.stock.application.port.in.v1.SearchStockUseCase;
+import com.newstoss.stock.application.port.in.v1.UpdateStockSearchCount;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;

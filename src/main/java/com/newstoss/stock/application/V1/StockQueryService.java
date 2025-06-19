@@ -2,11 +2,12 @@ package com.newstoss.stock.application.V1;
 
 import com.newstoss.global.errorcode.StockErrorCode;
 import com.newstoss.global.handler.CustomException;
-import com.newstoss.stock.adapter.inbound.dto.response.CategoryPageResponseDto;
-import com.newstoss.stock.adapter.inbound.dto.response.CategoryStockResponseDto;
-import com.newstoss.stock.adapter.inbound.dto.response.SearchResponseDto;
+import com.newstoss.stock.adapter.inbound.dto.response.v1.CategoryPageResponseDto;
+import com.newstoss.stock.adapter.inbound.dto.response.v1.CategoryStockResponseDto;
+import com.newstoss.stock.adapter.inbound.dto.response.v1.SearchResponseDto;
 import com.newstoss.stock.adapter.outbound.kis.dto.KisStockDto;
-import com.newstoss.stock.application.port.in.*;
+import com.newstoss.stock.application.port.in.v1.GetCategoryUseCase;
+import com.newstoss.stock.application.port.in.v1.SearchStockUseCase;
 import com.newstoss.stock.application.port.out.kis.StockInfoPort;
 import com.newstoss.stock.application.port.out.persistence.LoadCategoryPort;
 import com.newstoss.stock.application.port.out.persistence.SearchStockPort;
@@ -26,7 +27,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Primary
 @Qualifier("StockQueryServiceV1")
-public class StockQueryService implements GetCategoryUseCase , SearchStockUseCase{
+public class StockQueryService implements GetCategoryUseCase, SearchStockUseCase {
 
     private final StockInfoPort stockInfoPort;
     private final LoadCategoryPort loadCategoryPort;

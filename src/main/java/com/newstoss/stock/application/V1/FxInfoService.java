@@ -1,7 +1,7 @@
 package com.newstoss.stock.application.V1;
 
-import com.newstoss.stock.adapter.inbound.dto.response.FxResponseDto;
-import com.newstoss.stock.application.port.in.GetFxInfoUseCase;
+import com.newstoss.stock.adapter.inbound.dto.response.v1.FxResponseDto;
+import com.newstoss.stock.application.port.in.v1.GetFxInfoUseCase;
 import com.newstoss.stock.application.port.out.kis.FxInfoPort;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;

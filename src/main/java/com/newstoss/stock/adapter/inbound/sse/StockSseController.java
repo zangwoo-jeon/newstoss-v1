@@ -1,6 +1,7 @@
 package com.newstoss.stock.adapter.inbound.sse;
 
 import com.newstoss.stock.application.sse.EmitterRepository;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
@@ -16,6 +17,7 @@ import java.util.UUID;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v2/stock/sse")
+@Tag(name = "주식 조회 API V2" , description = "주식 조회 API V2")
 @Slf4j
 public class StockSseController {
 

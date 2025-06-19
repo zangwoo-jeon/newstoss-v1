@@ -1,7 +1,7 @@
 package com.newstoss.stock.adapter.outbound.persistence.init;
 
 import com.newstoss.stock.adapter.outbound.persistence.repository.StockRepository;
-import com.newstoss.stock.application.port.in.CreateStockUseCase;
+import com.newstoss.stock.application.port.in.v1.CreateStockUseCase;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -9,7 +9,6 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;

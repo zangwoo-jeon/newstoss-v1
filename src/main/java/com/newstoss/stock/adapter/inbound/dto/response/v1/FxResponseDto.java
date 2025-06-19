@@ -1,4 +1,4 @@
-package com.newstoss.stock.adapter.inbound.dto.response;
+package com.newstoss.stock.adapter.inbound.dto.response.v1;
 
 import com.newstoss.stock.adapter.outbound.kis.dto.KisFxInfoDto;
 import com.newstoss.stock.adapter.outbound.kis.dto.KisFxPastInfoDto;

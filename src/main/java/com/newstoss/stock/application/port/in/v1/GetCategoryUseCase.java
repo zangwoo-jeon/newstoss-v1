@@ -1,10 +1,6 @@
-package com.newstoss.stock.application.port.in;
+package com.newstoss.stock.application.port.in.v1;
 
-import com.newstoss.stock.adapter.inbound.dto.response.CategoryPageResponseDto;
-import com.newstoss.stock.adapter.inbound.dto.response.CategoryStockResponseDto;
-import com.newstoss.stock.adapter.outbound.kis.dto.KisStockDto;
-import com.newstoss.stock.entity.Stock;
-import org.springframework.data.domain.Page;
+import com.newstoss.stock.adapter.inbound.dto.response.v1.CategoryPageResponseDto;
 
 import java.util.List;
 

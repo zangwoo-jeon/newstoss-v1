@@ -1,11 +1,9 @@
-package com.newstoss.stock.adapter.inbound.dto.response;
+package com.newstoss.stock.adapter.inbound.dto.response.v1;
 
 import com.newstoss.stock.adapter.outbound.kis.dto.KisPeriodStockDto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDate;
 
 @Data
 @NoArgsConstructor

@@ -4,7 +4,7 @@ import com.newstoss.favorite.FavoriteGroup.FavoriteRepository;
 import com.newstoss.favorite.FavoriteStock.dto.FavoriteStockResponseDto;
 import com.newstoss.favorite.FavoriteStock.dto.UpdateStockSequenceRequest;
 import com.newstoss.global.response.SuccessResponse;
-import com.newstoss.stock.adapter.inbound.dto.response.SearchResponseDto;
+import com.newstoss.stock.adapter.inbound.dto.response.v1.SearchResponseDto;
 import com.newstoss.stock.application.V1.StockQueryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

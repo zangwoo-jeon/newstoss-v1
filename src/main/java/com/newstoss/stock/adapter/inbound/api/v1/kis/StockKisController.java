@@ -1,12 +1,12 @@
 package com.newstoss.stock.adapter.inbound.api.v1.kis;
 
 import com.newstoss.global.response.SuccessResponse;
-import com.newstoss.stock.adapter.inbound.dto.response.IndicesResponseDto;
+import com.newstoss.stock.adapter.inbound.dto.response.v1.IndicesResponseDto;
 import com.newstoss.stock.adapter.outbound.kis.dto.*;
-import com.newstoss.stock.application.port.in.GetIndiceUseCase;
-import com.newstoss.stock.application.port.in.GetPopularStockUseCase;
-import com.newstoss.stock.application.port.in.GetStockInfoUseCase;
-import com.newstoss.stock.application.port.in.GetStockPeriodUseCase;
+import com.newstoss.stock.application.port.in.v1.GetIndiceUseCase;
+import com.newstoss.stock.application.port.in.v1.GetPopularStockUseCase;
+import com.newstoss.stock.application.port.in.v1.GetStockInfoUseCase;
+import com.newstoss.stock.application.port.in.v1.GetStockPeriodUseCase;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -66,7 +66,6 @@ public class StockKisController {
             @ApiResponse(responseCode = "200", description = "주식 가격 조회 성공",
                     content = @Content(schema = @Schema(implementation = KisPeriodStockDto.class)))
             })
-
     @GetMapping("/{stockCode}")
     public ResponseEntity<?> StockPrice(@PathVariable String stockCode,
                                            @RequestParam(required = false) String period) {

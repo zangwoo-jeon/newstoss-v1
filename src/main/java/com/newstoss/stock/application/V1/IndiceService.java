@@ -1,10 +1,10 @@
 package com.newstoss.stock.application.V1;
 
-import com.newstoss.stock.adapter.inbound.dto.response.IndicesResponseDto;
+import com.newstoss.stock.adapter.inbound.dto.response.v1.IndicesResponseDto;
 import com.newstoss.stock.adapter.outbound.kis.dto.KisIndiceInfoDto;
 import com.newstoss.stock.adapter.outbound.kis.dto.KisIndicePriceDto;
 import com.newstoss.stock.adapter.outbound.kis.dto.response.KisApiResponseDto;
-import com.newstoss.stock.application.port.in.GetIndiceUseCase;
+import com.newstoss.stock.application.port.in.v1.GetIndiceUseCase;
 import com.newstoss.stock.application.port.out.kis.IndicePort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

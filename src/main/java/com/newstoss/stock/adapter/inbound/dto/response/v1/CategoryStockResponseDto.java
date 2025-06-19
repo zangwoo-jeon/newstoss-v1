@@ -1,4 +1,4 @@
-package com.newstoss.stock.adapter.inbound.dto.response;
+package com.newstoss.stock.adapter.inbound.dto.response.v1;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;

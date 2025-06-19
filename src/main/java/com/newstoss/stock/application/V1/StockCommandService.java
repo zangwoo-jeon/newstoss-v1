@@ -1,8 +1,8 @@
 package com.newstoss.stock.application.V1;
 
 import com.newstoss.stock.adapter.outbound.kis.dto.KisStockDto;
-import com.newstoss.stock.application.port.in.CreateStockUseCase;
-import com.newstoss.stock.application.port.in.UpdateStockSearchCount;
+import com.newstoss.stock.application.port.in.v1.CreateStockUseCase;
+import com.newstoss.stock.application.port.in.v1.UpdateStockSearchCount;
 import com.newstoss.stock.application.port.out.kis.StockInfoPort;
 import com.newstoss.stock.application.port.out.persistence.CreateStockPort;
 import com.newstoss.stock.application.port.out.persistence.LoadStockPort;

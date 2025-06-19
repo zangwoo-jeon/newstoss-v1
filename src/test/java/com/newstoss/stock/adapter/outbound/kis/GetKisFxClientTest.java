@@ -1,6 +1,6 @@
 package com.newstoss.stock.adapter.outbound.kis;
 
-import com.newstoss.stock.adapter.inbound.dto.response.FxResponseDto;
+import com.newstoss.stock.adapter.inbound.dto.response.v1.FxResponseDto;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

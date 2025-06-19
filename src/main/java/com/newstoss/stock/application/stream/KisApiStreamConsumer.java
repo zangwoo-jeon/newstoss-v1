@@ -33,7 +33,7 @@ public class KisApiStreamConsumer {
     private static final String GROUP = "kis-group";
     private static final String CONSUMER = "worker-1";
 
-//    @Scheduled(fixedRate = 1000)
+//    @Scheduled(fixedDelay = 1000)
     public void consume() {
         log.info("[consume] 컨슈머 동작");
 
@@ -97,7 +97,7 @@ public class KisApiStreamConsumer {
         }
     }
 
-//    @Scheduled(fixedRate = 60_000) // 1분마다
+//    @Scheduled(fixedDelay = 60_000) // 1분마다
     public void trimStream() {
         Long trimmed = redisTemplate.opsForStream().trim(STREAM, 1000); // 정확하게 1000개 유지
         log.info("Stream 트리밍: {}개 제거됨", trimmed);

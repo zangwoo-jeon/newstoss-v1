@@ -43,4 +43,9 @@ public class JpaQueryRepositoryAdapter implements LoadCategoryPort , SearchStock
     public Stock LoadStockByStockCode(String stockCode) {
         return repository.findByStockCode(stockCode).isPresent() ? repository.findByStockCode(stockCode).get() : null;
     }
+
+    @Override
+    public List<Stock> LoadAllStocks() {
+        return repository.findAll();
+    }
 }
