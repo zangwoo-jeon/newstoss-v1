@@ -10,6 +10,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -35,8 +37,11 @@ public class NewsControllerV2{
 
     @Operation(summary = "뉴스 상세 조회", description = "특정 뉴스 ID에 해당하는 뉴스 상세 정보를 조회합니다.")
     @GetMapping("/detail")
-    public ResponseEntity<SuccessResponse<Object>> newsdetail(@RequestParam String newsId, @AuthenticationPrincipal Member member){
-        UUID memberId = (member != null) ? member.getMemberId() : null;
+    public ResponseEntity<SuccessResponse<Object>> newsdetail(@RequestParam String newsId, @AuthenticationPrincipal UserAccount userAccount){
+        log.info("[newsdetail] principal: {}", userAccount);
+        log.info("[newsdetail] principal class: {}", userAccount != null ? userAccount.getClass() : "null");
+        UUID memberId = (userAccount != null) ? userAccount.getMemberId() : null;
+        log.info("[newsdetail] memberId: {}", memberId);
         NewsDTOv2 detailNews = newsServiceV2.getDetailNews(newsId,memberId);
         return ResponseEntity.ok(new SuccessResponse<>(true,"뉴스 상세 조회 성공", detailNews));
     }
