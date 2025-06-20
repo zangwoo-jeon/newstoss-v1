@@ -39,7 +39,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                     @NonNull FilterChain filterChain)
             throws ServletException, IOException {
         String uri = request.getRequestURI();
-        
+
         if (uri.startsWith("/sse/")) {
             filterChain.doFilter(request, response);
             return;
