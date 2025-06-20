@@ -27,7 +27,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(cors -> cors.configurationSource(request -> {
                     CorsConfiguration config = new CorsConfiguration();
-                    config.addAllowedOrigin("http://localhost:3000"); // 프론트 주소
+                    config.addAllowedOrigin("https://news-toss.vercel.app"); // 프론트 주소
                     config.setAllowCredentials(true); // 🔥 쿠키 포함 허용
                     config.addAllowedHeader("*");
                     config.addAllowedMethod("*");
