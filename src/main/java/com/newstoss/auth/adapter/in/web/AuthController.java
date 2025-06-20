@@ -11,7 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RequestMapping("/api/auth")
-//@CrossOrigin("*")
+@CrossOrigin("*")
 @RestController
 @RequiredArgsConstructor
 public class AuthController {
