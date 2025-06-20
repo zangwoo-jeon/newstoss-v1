@@ -14,7 +14,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/favorite")
 @RequiredArgsConstructor
-//@CrossOrigin("*")
+@CrossOrigin("*")
 public class FavoriteController {
 
     private final FavoriteService favoriteService;

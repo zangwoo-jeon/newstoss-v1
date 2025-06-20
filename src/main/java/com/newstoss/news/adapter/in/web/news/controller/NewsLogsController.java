@@ -13,7 +13,7 @@ import java.util.List;
 
 @Tag(name = "뉴스 로그 API", description = "뉴스 로그 API")
 @RequestMapping("/api/newsLogs")
-//@CrossOrigin("*")
+@CrossOrigin("*")
 @RestController
 @RequiredArgsConstructor
 public class NewsLogsController {
