@@ -21,10 +21,12 @@ public class AuthController {
         String jwt = authService.login(request);
         Cookie cookie = new Cookie("accessToken", jwt);
         cookie.setHttpOnly(true);
-        cookie.setSecure(false);
+        cookie.setSecure(true);
         cookie.setPath("/");
         cookie.setMaxAge(3600); // 1시간
         response.addCookie(cookie);
+        response.setHeader("Set-Cookie",
+                String.format("accessToken=%s; Max-Age=3600; Path=/; HttpOnly; Secure; SameSite=None", jwt));
         return ResponseEntity.ok(new SuccessResponse<>(true, "로그인 성공", null));
     }
 
