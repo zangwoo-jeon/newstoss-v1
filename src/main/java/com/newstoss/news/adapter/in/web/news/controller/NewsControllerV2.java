@@ -21,7 +21,7 @@ import java.util.UUID;
 @Slf4j
 @Tag(name = "뉴스 API V2", description = "뉴스 관련 API V2")
 @RequestMapping("/api/news/v2")
-@CrossOrigin("*")
+@CrossOrigin(origins = "https://news-toss.vercel.app", allowCredentials = "true")
 @RestController
 @RequiredArgsConstructor
 public class NewsControllerV2{
