@@ -8,6 +8,7 @@ import com.newstoss.stock.entity.Stock;
 import com.newstoss.stock.entity.StockHistory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
@@ -25,6 +26,7 @@ public class StockHistoryInitializer implements CommandLineRunner {
     private final StockHistoryRepository stockHistoryRepository;
     private final StockRepository stockRepository;
 
+    @Value("${init.enabled}")
     private boolean initEnabled = true;
     @Override
     public void run(String... args) throws Exception {

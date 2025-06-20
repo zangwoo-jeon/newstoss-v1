@@ -1,6 +1,5 @@
 package com.newstoss.stock.entity;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.newstoss.global.auditing.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
