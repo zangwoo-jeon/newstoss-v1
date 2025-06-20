@@ -67,7 +67,6 @@ public class StockInfoService implements GetStockInfoUseCase , GetStockPeriodUse
         for (int i = 0; i < 5; i++) {
             String endDate = LocalDate.now().minusWeeks(i*100).format(DateTimeFormatter.ofPattern("yyyyMMdd"));
             String startDate = LocalDate.now().minusWeeks(i*100+100).format(DateTimeFormatter.ofPattern("yyyyMMdd"));
-            stockWeeklyPeriod.addAll(stockInfoPort.getStockInfoByPeriod(stockCode, "W", startDate, endDate));
         }
         if (stockWeeklyPeriod.isEmpty()) {
             throw new CustomException(StockErrorCode.STOCK_NOT_FOUND);
