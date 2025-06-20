@@ -24,6 +24,7 @@ public class NewsServiceV2 {
     private final GetSearchNewsUseCase getSearchNews;
     private final HighlightNewsCacheUseCase highlightNewsCacheUseCase;
     private final GetStockToNewsUseCase getStockToNewsUseCase;
+    private final GetRecommendNewsUseCase getRecommendNewsUseCase;
 
 //    public List<NewsDTOv2> getRealTimeNews(){
 //        return getRealTimeNews.exec();
@@ -51,4 +52,6 @@ public class NewsServiceV2 {
     public List<NewsDTOv2> searchNews(String search) { return getSearchNews.exec(search); }
 
     public List<NewsDTOv2> stockNews(StockNewsDTO stockNewsDTO) { return getStockToNewsUseCase.exec(stockNewsDTO); }
+
+    public List<RecommendNewsDTO> recommedNews(UUID memberId) { return getRecommendNewsUseCase.exec(memberId); }
 }

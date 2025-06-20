@@ -18,7 +18,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/favorite")
 @RequiredArgsConstructor
-@CrossOrigin("*")
+//@CrossOrigin("*")
 @Tag(name = "관심 종목 API", description = "관심 종목 관련 API")
 public class FavoriteStockController {
     private final FavoriteRepository favoriteRepository;

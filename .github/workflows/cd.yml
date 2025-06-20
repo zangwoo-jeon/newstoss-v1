@@ -134,7 +134,6 @@ jobs:
               -e MANAGEMENT_INFO_OS_ENABLED="${{ secrets.MANAGEMENT_INFO_OS_ENABLED }}" \
               -e JWT_SECRET="${{ secrets.JWT_SECRET }}" \
               -e SERVER_TOMCAT_MBEANREGISTRY_ENABLED=true \
-              -e SERVER_FORWARD-HEADERS-STRATEGY=native \
               -e INIT_ENABLED=false \
               ${FULL_IMAGE_URI} || { echo "Docker run failed!"; exit 1; }
 

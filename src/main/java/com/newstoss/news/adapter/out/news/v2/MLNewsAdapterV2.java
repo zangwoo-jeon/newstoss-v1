@@ -4,10 +4,7 @@ import com.newstoss.global.errorcode.NewsErrorCode;
 import com.newstoss.global.handler.CustomException;
 import com.newstoss.news.adapter.in.web.news.dto.v2.GetAllNewsDTO;
 import com.newstoss.news.adapter.in.web.sse.dto.ChatStreamRequest;
-import com.newstoss.news.adapter.out.news.dto.v2.MLHighlightNewsDTOv2;
-import com.newstoss.news.adapter.out.news.dto.v2.MLNewsDTOv2;
-import com.newstoss.news.adapter.out.news.dto.v2.MLNewsMataDataDTOv2;
-import com.newstoss.news.adapter.out.news.dto.v2.MLRelatedNewsDTOv2;
+import com.newstoss.news.adapter.out.news.dto.v2.*;
 import com.newstoss.news.application.news.v2.port.out.MLNewsPortV2;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +17,7 @@ import org.springframework.web.client.RestTemplate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
@@ -98,6 +96,11 @@ public class MLNewsAdapterV2 implements MLNewsPortV2 {
         return safeExchangeList(url, new ParameterizedTypeReference<>() {});
     }
 
+    @Override
+    public List<MLRecommendNewsDTO> recommendNews(String memberId) {
+        String url = BASE_URL + "recommend" + "?user_id="+memberId;
+        return safeExchangeList(url, new ParameterizedTypeReference<>() {});
+    }
 
     // 반환 값이 리스트고 응답 DTO랑 같을 경우
     private <T> List<T> safeExchangeList(String url, ParameterizedTypeReference<List<T>> typeRef) {

@@ -10,7 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RequestMapping("/api/auth")
-@CrossOrigin("*")
+//@CrossOrigin("*")
 @RestController
 @RequiredArgsConstructor
 public class AuthController {
@@ -21,10 +21,10 @@ public class AuthController {
         String jwt = authService.login(request);
         Cookie cookie = new Cookie("accessToken", jwt);
         cookie.setHttpOnly(true);
-        cookie.setSecure(true);
+        cookie.setSecure(false);
         cookie.setPath("/");
         cookie.setMaxAge(3600); // 1시간
-        response.addHeader("Set-Cookie", String.format("accessToken=%s; Max-Age=3600; Path=/; HttpOnly; Secure; SameSite=None", jwt));
+        response.addCookie(cookie);
         return ResponseEntity.ok(new SuccessResponse<>(true, "로그인 성공", null));
     }
 

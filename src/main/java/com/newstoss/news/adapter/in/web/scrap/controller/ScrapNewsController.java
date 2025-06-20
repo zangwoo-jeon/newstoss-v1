@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.UUID;
 @Tag(name = "뉴스 스크랩 api", description = "뉴스 스크랩 (추가, 삭제, 조회)")
 @RequestMapping("/api/scrap")
-@CrossOrigin("*")
+//@CrossOrigin("*")
 @RestController
 @RequiredArgsConstructor
 public class ScrapNewsController {
