@@ -1,6 +1,7 @@
 package com.newstoss.news.application.news.v2.impl;
 
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.newstoss.news.adapter.in.web.news.dto.v2.*;
 import com.newstoss.news.adapter.in.web.news.dto.v2.Meta.IndustryListDTO;
 import com.newstoss.news.adapter.in.web.news.dto.v2.Meta.NewsMetaDataDTO;
@@ -50,5 +51,9 @@ public class NewsDTOv2Mapper {
         return mlList.stream()
                 .map(ml -> new IndustryListDTO(ml.getIndustryId(),ml.getIndustryId(), ml.getIndustryName())) // 필드명에 맞춰 작성
                 .toList();
+    }
+
+    public static RecommendNewsDTO mapToRecommend(MLRecommendNewsDTO ml) {
+        return new RecommendNewsDTO(ml.getNewsId(), ml.getWdate(), ml.getTitle(), ml.getImage(), ml.getPress(), ml.getImpactScore(), ml.getUrl()); // 필드명에 맞춰 작성
     }
 }

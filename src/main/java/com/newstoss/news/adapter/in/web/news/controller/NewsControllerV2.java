@@ -83,6 +83,13 @@ public class NewsControllerV2{
         return ResponseEntity.ok(new SuccessResponse<>(true, "과거 유사 뉴스 조회 성공", news));
     }
 
+    @Operation(summary = "맞춤 뉴스", description = "유저의 맞춤뉴스를 불러옵니다.")
+    @GetMapping("/recommend")
+    public ResponseEntity<SuccessResponse<Object>> recommend(@RequestParam UUID userId){
+        List<RecommendNewsDTO> news = newsServiceV2.recommedNews(userId);
+        return ResponseEntity.ok(new SuccessResponse<>(true, "과거 유사 뉴스 조회 성공", news));
+    }
+
     @Operation(summary = "뉴스 검색", description = "ML api를 통해 뉴스 검색을 합니다.")
     @GetMapping("/search")
     public ResponseEntity<SuccessResponse<Object>> newSearch(@RequestParam String search){
