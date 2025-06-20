@@ -19,10 +19,6 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @RequestMapping("/sse")
 @Slf4j
-@CrossOrigin(origins = {
-        "http://localhost:3000",
-        "https://news-toss.vercel.app"
-})
 @Tag(name = "sse 연결", description = "sse 연결 api")
 public class SseController {
 
