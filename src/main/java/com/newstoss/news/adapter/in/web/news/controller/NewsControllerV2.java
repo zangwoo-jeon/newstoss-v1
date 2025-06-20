@@ -2,6 +2,7 @@ package com.newstoss.news.adapter.in.web.news.controller;
 
 import com.newstoss.global.jwt.JwtProvider;
 import com.newstoss.global.response.SuccessResponse;
+import com.newstoss.member.domain.UserAccount;
 import com.newstoss.news.adapter.in.web.news.dto.v2.*;
 import com.newstoss.news.adapter.in.web.news.dto.v2.Meta.NewsMetaDataDTO;
 import com.newstoss.news.adapter.in.web.news.dto.v2.Meta.RelatedNewsDTOv2;
@@ -11,6 +12,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.Cookie;
@@ -21,7 +24,7 @@ import java.util.UUID;
 @Slf4j
 @Tag(name = "뉴스 API V2", description = "뉴스 관련 API V2")
 @RequestMapping("/api/news/v2")
-@CrossOrigin("*")
+//@CrossOrigin("*")
 @RestController
 @RequiredArgsConstructor
 public class NewsControllerV2{
@@ -38,44 +41,24 @@ public class NewsControllerV2{
     @Operation(summary = "뉴스 상세 조회", description = "특정 뉴스 ID에 해당하는 뉴스 상세 정보를 조회합니다.")
     @GetMapping("/detail")
     public ResponseEntity<SuccessResponse<Object>> newsdetail(
-            @RequestParam String newsId,
-            HttpServletRequest request
-    ){
-        Cookie[] cookies = request.getCookies();
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                log.info("쿠키 → {} = {}", cookie.getName(), cookie.getValue());
-            }
-        } else {
-            log.info("요청에 쿠키 없음");
-        }
-
+            @RequestParam String newsId
+    ) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        log.info("🔥 Controller authentication: {}", authentication);
+        log.info("🔥 Principal: {}", authentication.getPrincipal());
         UUID memberId = null;
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                if (cookie.getName().equals("accessToken")) {
-                    try {
-                        if (jwtProvider.validateToken(cookie.getValue())) {
-                            log.info("[newsdetail] Token is valid.");
-                            memberId = jwtProvider.getMemberId(cookie.getValue());
-                        } else {
-                            log.warn("[newsdetail] Received invalid or expired token.");
-                        }
-                    } catch (Exception e) {
-                        log.error("[newsdetail] Error processing token: {}", cookie.getValue(), e);
-                        // return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new SuccessResponse<>(false, "인증 토큰이 유효하지 않습니다.", null));
-                    }
-                }
-            }
-        }
 
-        log.info("[newsdetail] memberId: {}", memberId);
+        if (authentication != null && authentication.isAuthenticated() &&
+                authentication.getPrincipal() instanceof UserAccount userAccount) {
+            memberId = userAccount.getMemberId(); // ✅ 인증된 사용자만 추출
+            log.info("[newsdetail] 인증된 사용자 ID: {}", memberId);
+        } else {
+            log.info("[newsdetail] 비회원 요청");
+        }
 
         NewsDTOv2 detailNews = newsServiceV2.getDetailNews(newsId, memberId);
-
         return ResponseEntity.ok(new SuccessResponse<>(true, "뉴스 상세 조회 성공", detailNews));
     }
-
     @Operation(summary = "유사 뉴스 조회", description = "특정 뉴스와 유사한 과거 뉴스를 조회합니다.")
     @GetMapping("/related/news")
     public ResponseEntity<SuccessResponse<Object>> relatedNews(@RequestParam String newsId){

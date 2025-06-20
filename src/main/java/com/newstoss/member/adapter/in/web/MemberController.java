@@ -14,7 +14,7 @@ import java.util.UUID;
 
 
 @RequestMapping("/api/auth")
-@CrossOrigin("*")
+//@CrossOrigin("*")
 @RestController
 @RequiredArgsConstructor
 public class MemberController {
