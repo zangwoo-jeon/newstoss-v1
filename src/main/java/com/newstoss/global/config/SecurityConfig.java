@@ -13,6 +13,8 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 
+import java.util.Arrays;
+
 @RequiredArgsConstructor
 @Configuration
 public class SecurityConfig {
@@ -27,7 +29,10 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(cors -> cors.configurationSource(request -> {
                     CorsConfiguration config = new CorsConfiguration();
-                    config.addAllowedOrigin("https://news-toss.vercel.app"); // 프론트 주소
+                    config.setAllowedOrigins(Arrays.asList(
+                            "https://news-toss.vercel.app",
+                            "http://localhost:3000"
+                    ));
                     config.setAllowCredentials(true); // 🔥 쿠키 포함 허용
                     config.addAllowedHeader("*");
                     config.addAllowedMethod("*");
