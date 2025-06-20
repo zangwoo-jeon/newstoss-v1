@@ -24,7 +24,7 @@ public class AuthController {
         cookie.setSecure(true);
         cookie.setPath("/");
         cookie.setMaxAge(3600); // 1시간
-        response.addCookie(cookie);
+        response.addHeader("Set-Cookie", String.format("accessToken=%s; Max-Age=3600; Path=/; HttpOnly; Secure; SameSite=None", jwt));
         return ResponseEntity.ok(new SuccessResponse<>(true, "로그인 성공", null));
     }
 
