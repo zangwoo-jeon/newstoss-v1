@@ -28,7 +28,6 @@ public class JwtProvider {
 
         return Jwts.builder()
                 .setSubject("ACCESS_TOKEN")
-                .setSubject("ACCESS_TOKEN")
                 .claim("memberId", member.getMemberId())
                 .claim("memberName", member.getName())
                 .claim("phoneNumber", member.getPhoneNumber())
