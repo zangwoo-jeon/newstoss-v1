@@ -17,7 +17,7 @@ import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/sse")
+@RequestMapping("/api/sse")
 @Slf4j
 @Tag(name = "sse 연결", description = "sse 연결 api")
 public class SseController {

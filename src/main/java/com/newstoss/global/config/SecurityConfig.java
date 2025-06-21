@@ -53,7 +53,6 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/api/calen/**").permitAll()
                         .requestMatchers("/api/**").permitAll()
-                        .requestMatchers("/sse/stream", "/sse/stream/**").permitAll()
 
 
 
