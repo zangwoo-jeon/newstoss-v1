@@ -2,11 +2,14 @@ package com.newstoss.member.adapter.in.web;
 
 import com.newstoss.global.response.SuccessResponse;
 import com.newstoss.member.adapter.in.web.dto.requestDTO.DuplicateDTO;
+import com.newstoss.member.adapter.in.web.dto.requestDTO.InvestDto;
 import com.newstoss.member.adapter.in.web.dto.requestDTO.SignupRequestDTO;
 import com.newstoss.member.adapter.in.web.dto.requestDTO.WithdrawDTO;
 import com.newstoss.member.application.MemberService;
 import com.newstoss.member.domain.Member;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -43,9 +46,18 @@ public class MemberController {
         return ResponseEntity.ok(new SuccessResponse<>(true, "현재 보고 있는 관심 그룹 변경 완료", null));
     }
 
-    @GetMapping("/invest")
-    public ResponseEntity<SuccessResponse<Object>> invest(@RequestParam UUID memberId, @RequestParam Long invest_score){
-        memberService.invest(memberId,invest_score);
+    @PostMapping("/invest")
+    public ResponseEntity<SuccessResponse<Object>> invest(@RequestBody InvestDto investDto, HttpServletResponse response){
+        String jwt = memberService.invest(investDto.getMemberId(), investDto.getInvestScore());
+        ResponseCookie cookie = ResponseCookie.from("accessToken", jwt)
+                .httpOnly(true)
+                .secure(true)
+                .path("/")
+                .maxAge(3600)
+                .sameSite("None") // 핵심
+                .build();
+        response.setHeader("Set-Cookie", cookie.toString());
         return ResponseEntity.ok(new SuccessResponse<>(true, "멤버 투자 성향 수정 완료", null));
     }
 }
+
