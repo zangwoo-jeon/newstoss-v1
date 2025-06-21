@@ -41,8 +41,8 @@ public class SseController {
         return emitter;
     }
     @Operation(summary = "챗봇 연결", description = "SSE 방식으로 챗봇 응답을 수신합니다.")
-    @PostMapping(value = "/stream", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-    public SseEmitter stream(@RequestBody ChatMessage message) throws JsonProcessingException {
+    @GetMapping(value = "/stream", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    public SseEmitter stream(@RequestParam String message) throws JsonProcessingException {
         System.out.println("✅ /chat/stream 컨트롤러 진입");
         UUID clientId = UUID.randomUUID();
         log.info("{}",clientId);

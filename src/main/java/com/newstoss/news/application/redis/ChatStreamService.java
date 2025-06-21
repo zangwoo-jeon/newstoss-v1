@@ -17,14 +17,14 @@ public class ChatStreamService {
     private final MLNewsPortV2 mlNewsPortV2;
     private final ChatStreamEmitters emitters;
 
-    public SseEmitter handleStream(UUID clientId, ChatMessage message) throws JsonProcessingException {
+    public SseEmitter handleStream(UUID clientId, String message) throws JsonProcessingException {
         SseEmitter emitter = new SseEmitter(300_000L);
         emitter.onCompletion(() -> emitters.remove(clientId));
         emitter.onTimeout(() -> emitters.remove(clientId));
         emitter.onError((e) -> emitters.remove(clientId));
         emitters.add(clientId, emitter);
         String StringId = clientId.toString();
-        mlNewsPortV2.chat(StringId, message.getMessage());
+        mlNewsPortV2.chat(StringId, message);
         return emitter;
     }
 }
