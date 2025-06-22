@@ -35,7 +35,7 @@ public class ChatRedisSubscriber implements MessageListener {
     @PostConstruct
     public void initDispatcher() {
         Executors.newSingleThreadScheduledExecutor()
-                .scheduleAtFixedRate(this::dispatchMessages, 0, 100, TimeUnit.MILLISECONDS);
+                .scheduleAtFixedRate(this::dispatchMessages, 0, 10, TimeUnit.MILLISECONDS);
     }
 
     @Override
