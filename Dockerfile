@@ -8,7 +8,7 @@ COPY . .
 RUN gradle build -x test --no-daemon
 
 # 실행 스테이지
-FROM eclipse-temurin:17-jre-alpine
+FROM eclipse-temurin:17-jre
 WORKDIR /app
 
 # 보안을 위한 non-root 사용자 생성
