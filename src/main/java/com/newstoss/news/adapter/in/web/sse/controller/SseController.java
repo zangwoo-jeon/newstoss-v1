@@ -6,6 +6,7 @@ import com.newstoss.news.adapter.in.web.sse.emitter.NewsSseEmitters;
 import com.newstoss.news.application.redis.ChatStreamService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
@@ -24,6 +25,7 @@ public class SseController {
 
     private final ChatStreamService chatStreamService;
     private final NewsSseEmitters newsSseEmitters;
+
     @Operation(summary = "실시간 뉴스 연결", description = "SSE 방식으로 실시간 뉴스 데이터를 수신합니다.")
     @GetMapping(value = "realtime", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public SseEmitter stream() {
@@ -40,13 +42,26 @@ public class SseController {
         }
         return emitter;
     }
-    @Operation(summary = "챗봇 연결", description = "SSE 방식으로 챗봇 응답을 수신합니다.")
+
     @GetMapping(value = "/stream", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-    public SseEmitter stream(@RequestParam String message) throws JsonProcessingException {
+    public SseEmitter stream(@RequestParam String message, HttpServletResponse response) throws JsonProcessingException {
         System.out.println("✅ /chat/stream 컨트롤러 진입");
         UUID clientId = UUID.randomUUID();
-        log.info("{}",clientId);
+        log.info("{}", clientId);
         System.out.println("💡 요청으로 생성된 UUID: " + clientId);
+
+        // 🔹 여기서 SSE 관련 헤더 직접 지정
+        response.setHeader("Cache-Control", "no-cache");
+        response.setHeader("X-Accel-Buffering", "no"); // Nginx 안 쓰더라도 SSE 의도 명시
+        response.setHeader("Connection", "keep-alive");
+        response.setContentType("text/event-stream;charset=UTF-8");
+
+        try {
+            response.flushBuffer(); // 🔥 최초에 강제로 flush
+        } catch (IOException e) {
+            log.error("flush 실패", e);
+        }
+
         return chatStreamService.handleStream(clientId, message);
     }
 }
