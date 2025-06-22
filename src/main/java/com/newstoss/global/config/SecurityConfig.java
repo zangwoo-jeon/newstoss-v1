@@ -53,6 +53,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/api/calen/**").permitAll()
                         .requestMatchers("/api/**").permitAll()
+                        .requestMatchers("/actuator/prometheus").permitAll()
                         .anyRequest().authenticated() // 나머지는 인증 필요
                 )
                 .exceptionHandling(ex -> ex
