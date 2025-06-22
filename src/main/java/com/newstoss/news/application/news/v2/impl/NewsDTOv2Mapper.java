@@ -42,7 +42,7 @@ public class NewsDTOv2Mapper {
     private static List<RelatedStockDTOv2> mapToRelatedStockDTOs(List<MLRelatedStockDTOv2> mlList) {
         if (mlList == null) return List.of();
         return mlList.stream()
-                .map(ml -> new RelatedStockDTOv2(ml.getStockName(), ml.getStockId())) // 이름과 필드는 맞게 작성
+                .map(ml -> new RelatedStockDTOv2(ml.getStockId(), ml.getStockName())) // 이름과 필드는 맞게 작성
                 .toList();
     }
 
