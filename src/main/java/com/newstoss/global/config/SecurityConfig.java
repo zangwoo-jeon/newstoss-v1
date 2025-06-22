@@ -39,7 +39,8 @@ public class SecurityConfig {
                     CorsConfiguration config = new CorsConfiguration();
                     config.setAllowedOrigins(Arrays.asList(
                             "https://news-toss.vercel.app",
-                            "http://localhost:3000"
+                            "http://localhost:3000",
+                            "https://news-toss.click"
                     ));
                     config.setAllowCredentials(true); // 🔥 쿠키 포함 허용
                     config.addAllowedHeader("*");
