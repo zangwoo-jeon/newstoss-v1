@@ -101,6 +101,10 @@ public class ChatRedisSubscriber implements MessageListener {
         toRemove.forEach(buffer::remove);
     }
 
+    public void dispatchForClientImmediately(UUID clientId) {
+        clientDispatchExecutor.submit(() -> dispatchForClient(clientId));
+    }
+
     private void send(UUID clientId, ChatStreamResponse response, boolean late) {
         emitters.get(clientId).ifPresentOrElse(emitter -> {
             try {
