@@ -42,13 +42,13 @@ public class SseController {
         }
         return emitter;
     }
-
+    @Operation(summary = "챗봇 연결", description = "챗봇을 연결합니다.")
     @GetMapping(value = "/stream", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public SseEmitter stream(@RequestParam String message, HttpServletResponse response) throws JsonProcessingException {
-        System.out.println("✅ /chat/stream 컨트롤러 진입");
+        log.info("✅ /chat/stream 컨트롤러 진입");
         UUID clientId = UUID.randomUUID();
         log.info("{}", clientId);
-        System.out.println("💡 요청으로 생성된 UUID: " + clientId);
+        log.info("💡 요청으로 생성된 UUID:{} ", clientId);
 
         // 🔹 여기서 SSE 관련 헤더 직접 지정
         response.setHeader("Cache-Control", "no-cache");
