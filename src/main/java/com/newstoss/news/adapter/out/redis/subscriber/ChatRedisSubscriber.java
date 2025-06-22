@@ -104,11 +104,12 @@ public class ChatRedisSubscriber implements MessageListener {
     private void send(UUID clientId, ChatStreamResponse response, boolean late) {
         emitters.get(clientId).ifPresentOrElse(emitter -> {
             try {
-                emitter.send(SseEmitter.event().comment("ping"));
                 emitter.send(SseEmitter.event()
                         .name("chat")
-                        .data(response.getContent() + " ")
+                        .data(response.getContent())
                 );
+                emitter.send(SseEmitter.event().comment("flush"));
+
                 log.info("✅ SSE 메시지 전송: {}", response.getContent());
 
                 if (response.isLast()) {
