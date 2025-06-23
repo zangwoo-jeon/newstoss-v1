@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -17,9 +18,13 @@ public class MLRecommendNewsDTO {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime wdate;
     private String title;
+    private String summary;
     private String image;
     private String press;
-    @JsonProperty("impact_score")
-    private String impactScore;
     private String url;
+    @JsonProperty("click_score")
+    private String clickScore;
+    @JsonProperty("recommend_reasons")
+    private List<String> recommendReasons;
+
 }
