@@ -8,10 +8,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.connection.MessageListener;
 import org.springframework.stereotype.Component;
-import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import jakarta.annotation.PostConstruct;
-import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.*;
 
@@ -167,6 +165,11 @@ public class ChatRedisSubscriber implements MessageListener {
                     writer.write("event: chat\n");
                     writer.write("data: [DONE]\n\n");
                     writer.flush();
+                    try {
+                        writer.close(); // ✨ 연결 명시적으로 종료
+                    } catch (Exception closeEx) {
+                        log.warn("⚠️ writer.close() 중 오류: {}", closeEx.getMessage());
+                    }
                     emitters.removeWriter(clientId);
                     cleanup(clientId);
                 }
