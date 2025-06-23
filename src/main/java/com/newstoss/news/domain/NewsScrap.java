@@ -20,14 +20,13 @@ import java.util.UUID;
 )
 public class NewsScrap {
     @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID scrapNewsId;
     @ManyToOne(fetch = FetchType.LAZY)
     @BatchSize(size = 100)
     @JoinColumn(name = "member_id") // DB 컬럼명과 일치시켜야 함
     private Member member;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "news_id")
-    @BatchSize(size = 100)
-    private NewsEntity news;
+    @Column(name = "news_id")
+    private String newsId; // 외부 API의 news_id를 직접 저장
 }

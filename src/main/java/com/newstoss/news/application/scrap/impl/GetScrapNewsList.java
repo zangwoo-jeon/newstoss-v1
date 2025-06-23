@@ -1,13 +1,15 @@
 package com.newstoss.news.application.scrap.impl;
 
 import com.newstoss.news.adapter.in.web.news.dto.v2.NewsDTOv2;
-import com.newstoss.news.application.news.v2.impl.NewsDTOv2Mapper;
-import com.newstoss.news.application.news.v2.port.out.MLNewsPortV2;
+import com.newstoss.news.adapter.in.web.scrap.dto.ExternalNewsDTO;
 import com.newstoss.news.application.scrap.port.in.GetScrapNewsListUseCase;
 import com.newstoss.news.application.scrap.port.out.ScrapNewsPort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -16,17 +18,42 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class GetScrapNewsList implements GetScrapNewsListUseCase {
     private final ScrapNewsPort scrapNewsPort;
-    private final MLNewsPortV2 mlPort;
+    private final RestTemplate restTemplate;
+    private static final String EXTERNAL_API_BASE_URL = "http://3.37.207.16:8000/news/v2/";
+    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
 
     @Override
     public List<NewsDTOv2> exec(UUID memberId) {
         List<String> newsIds = scrapNewsPort.getAll(memberId);
         if (newsIds.isEmpty()) return List.of();
-//        parallelStream() 병렬처리 시 사용 고려 중
+        
         return newsIds.stream()
-                .map(mlPort::getDetailNews)
+                .map(this::getExternalNews)
                 .filter(Objects::nonNull)
-                .map(NewsDTOv2Mapper::from)
+                .map(this::convertToNewsDTOv2)
                 .toList();
+    }
+
+    private ExternalNewsDTO getExternalNews(String newsId) {
+        try {
+            String url = EXTERNAL_API_BASE_URL + newsId;
+            return restTemplate.getForObject(url, ExternalNewsDTO.class);
+        } catch (Exception e) {
+            // 외부 API 호출 실패 시 null 반환하여 필터링
+            return null;
+        }
+    }
+
+    private NewsDTOv2 convertToNewsDTOv2(ExternalNewsDTO externalNews) {
+        LocalDateTime wdate = LocalDateTime.parse(externalNews.getWdate(), DATE_FORMATTER);
+        return new NewsDTOv2(
+                externalNews.getNews_id(),
+                wdate,
+                externalNews.getTitle(),
+                externalNews.getArticle(),
+                externalNews.getUrl(),
+                externalNews.getPress(),
+                externalNews.getImage()
+        );
     }
 }
