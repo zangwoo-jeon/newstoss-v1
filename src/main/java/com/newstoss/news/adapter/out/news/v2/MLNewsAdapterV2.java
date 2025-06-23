@@ -17,7 +17,6 @@ import org.springframework.web.client.RestTemplate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
@@ -102,6 +101,11 @@ public class MLNewsAdapterV2 implements MLNewsPortV2 {
         return safeExchangeList(url, new ParameterizedTypeReference<>() {});
     }
 
+    @Override
+    public MLExternalDTO external(String newsId){
+        String url = BASE_URL + newsId + "/external";
+        return safeGetObject(url, MLExternalDTO.class);
+    }
     // 반환 값이 리스트고 응답 DTO랑 같을 경우
     private <T> List<T> safeExchangeList(String url, ParameterizedTypeReference<List<T>> typeRef) {
         try {
