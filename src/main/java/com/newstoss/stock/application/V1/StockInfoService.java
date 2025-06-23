@@ -50,7 +50,7 @@ public class StockInfoService implements GetStockInfoUseCase , GetStockPeriodUse
     @Override
     public List<KisPeriodStockDto> getDailyStockByPeriod (String stockCode) {
         List<KisPeriodStockDto> stockDailyPeriod = new ArrayList<>();
-        for (int i = 0; i < 20; i++) {
+        for (int i = 0; i < 10; i++) {
             String endDate = LocalDate.now().minusDays(i*100).format(DateTimeFormatter.ofPattern("yyyyMMdd"));
             String startDate = LocalDate.now().minusDays(i*100+100).format(DateTimeFormatter.ofPattern("yyyyMMdd"));
             stockDailyPeriod.addAll(stockInfoPort.getStockInfoByPeriod(stockCode, "D", startDate, endDate));
