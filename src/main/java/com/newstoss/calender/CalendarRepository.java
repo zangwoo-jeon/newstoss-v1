@@ -11,4 +11,10 @@ public interface CalendarRepository extends JpaRepository<Calendar, Long> {
 
     @Query("SELECT c FROM Calendar c WHERE YEAR(c.date) = :year AND MONTH(c.date) = :month AND DAY(c.date) = :day")
     List<Calendar> findByYearAndMonthAndDay(@Param("year") Integer year, @Param("month") Integer month, @Param("day") Integer day);
+
+    @Query("SELECT c FROM Calendar c WHERE YEAR(c.date) = :year AND MONTH(c.date) = :month AND c.market = :market")
+    List<Calendar> findByYearAndMonthAndMarket(@Param("year") Integer year, @Param("month") Integer month, @Param("market") String market);
+
+    @Query("SELECT c FROM Calendar c WHERE YEAR(c.date) = :year AND MONTH(c.date) = :month AND DAY(c.date) = :day AND c.market = :market")
+    List<Calendar> findByYearAndMonthAndDayAndMarket(@Param("year") Integer year, @Param("month") Integer month, @Param("day") Integer day, @Param("market") String market);
 }
