@@ -11,13 +11,7 @@ import java.time.format.DateTimeFormatter;
 @Entity
 @Getter
 @Table(
-        name = "stock_history",
-        indexes = {
-                @Index(name = "idx_stock_code", columnList = "stock_code"),
-                @Index(name = "idx_stock_code_date", columnList = "stock_code, date"),
-                @Index(name = "idx_stock_code_type_date", columnList = "stock_code, data_type, date")
-
-        }
+        name = "stock_history"
 )
 public class StockHistory extends BaseTimeEntity {
 
@@ -31,7 +25,7 @@ public class StockHistory extends BaseTimeEntity {
     @Column(name = "date", nullable = false)
     private LocalDate date;
 
-    @Column(name = "data_type")
+    @Column(name = "date_type")
     private String type;
 
     @Column(name = "open_price")
