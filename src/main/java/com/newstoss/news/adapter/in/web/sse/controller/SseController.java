@@ -43,33 +43,33 @@ public class SseController {
         }
         return emitter;
     }
-    @Operation(summary = "챗봇 연결", description = "챗봇을 연결합니다.")
-    @GetMapping(value = "/stream", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-    public SseEmitter stream(@RequestParam String message, HttpServletResponse response) throws JsonProcessingException {
-        log.info("✅ /chat/stream 컨트롤러 진입");
-        UUID clientId = UUID.randomUUID();
-        log.info("{}", clientId);
-        log.info("💡 요청으로 생성된 UUID:{} ", clientId);
-
-        // 🔹 여기서 SSE 관련 헤더 직접 지정
-        response.setHeader("Cache-Control", "no-cache");
-        response.setHeader("X-Accel-Buffering", "no"); // Nginx 안 쓰더라도 SSE 의도 명시
-        response.setHeader("Connection", "keep-alive");
-        response.setContentType("text/event-stream;charset=UTF-8");
-
-        try {
-            response.flushBuffer(); // 🔥 최초에 강제로 flush
-        } catch (IOException e) {
-            log.error("flush 실패", e);
-        }
-
-        return chatStreamService.handleStream(clientId, message);
-    }
-    @Operation(summary = "챗봇 연결222", description = "챗봇을 연결합니다222")
+//    @Operation(summary = "챗봇 연결", description = "챗봇을 연결합니다.")
+//    @GetMapping(value = "/stream", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+//    public SseEmitter stream(@RequestParam String message, HttpServletResponse response) throws JsonProcessingException {
+//        log.info("✅ /chat/stream 컨트롤러 진입");
+//        UUID clientId = UUID.randomUUID();
+//        log.info("{}", clientId);
+//        log.info("💡 요청으로 생성된 UUID:{} ", clientId);
+//
+//        // 🔹 여기서 SSE 관련 헤더 직접 지정
+//        response.setHeader("Cache-Control", "no-cache");
+//        response.setHeader("X-Accel-Buffering", "no"); // Nginx 안 쓰더라도 SSE 의도 명시
+//        response.setHeader("Connection", "keep-alive");
+//        response.setContentType("text/event-stream;charset=UTF-8");
+//
+//        try {
+//            response.flushBuffer(); // 🔥 최초에 강제로 flush
+//        } catch (IOException e) {
+//            log.error("flush 실패", e);
+//        }
+//
+//        return chatStreamService.handleStream(clientId, message);
+//    }
+    @Operation(summary = "챗봇 연결", description = "챗봇을 연결합니다")
     @GetMapping(value = "/stream/v2", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public void streamV2(@RequestParam String message, HttpServletResponse response) throws IOException {
         UUID clientId = UUID.randomUUID();
-        log.info("📡 [v2] Writer 기반 SSE 연결: {}", clientId);
+        log.info("📡 [v2] Writer 기반 SSE 연결 요청: {}", clientId);
 
         response.setContentType("text/event-stream;charset=UTF-8");
         response.setHeader("Cache-Control", "no-cache");

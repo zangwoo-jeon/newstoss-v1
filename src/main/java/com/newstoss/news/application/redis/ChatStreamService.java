@@ -22,17 +22,17 @@ public class ChatStreamService {
     private final ChatStreamEmitters emitters;
     private final ChatRedisSubscriber subscriber;
 
-    public SseEmitter handleStream(UUID clientId, String message) throws JsonProcessingException {
-        SseEmitter emitter = new SseEmitter(300_000L);
-        emitter.onCompletion(() -> emitters.remove(clientId));
-        emitter.onTimeout(() -> emitters.remove(clientId));
-        emitter.onError((e) -> emitters.remove(clientId));
-        emitters.add(clientId, emitter);
-        String StringId = clientId.toString();
-        subscriber.dispatchForClientImmediately(clientId);
-        mlNewsPortV2.chat(StringId, message);
-        return emitter;
-    }
+//    public SseEmitter handleStream(UUID clientId, String message) throws JsonProcessingException {
+//        SseEmitter emitter = new SseEmitter(300_000L);
+//        emitter.onCompletion(() -> emitters.remove(clientId));
+//        emitter.onTimeout(() -> emitters.remove(clientId));
+//        emitter.onError((e) -> emitters.remove(clientId));
+//        emitters.add(clientId, emitter);
+//        String StringId = clientId.toString();
+//        subscriber.dispatchForClientImmediately(clientId);
+//        mlNewsPortV2.chat(StringId, message);
+//        return emitter;
+//    }
 
     public void registerWriter(UUID clientId, PrintWriter writer) {
         emitters.addWriter(clientId, writer);
