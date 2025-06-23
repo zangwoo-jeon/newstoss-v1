@@ -114,4 +114,11 @@ public class NewsControllerV2{
         List<NewsDTOv2> news = newsServiceV2.stockNews(stockNewsDTO);
         return ResponseEntity.ok(new SuccessResponse<>(true, "메타데이터 조회 성공", news));
     }
+
+    @Operation(summary = "뉴스 external 조회", description = "뉴스 external를 조회합니다.")
+    @GetMapping("/external")
+    public ResponseEntity<SuccessResponse<Object>> external(@RequestParam String newsId){
+        ExternalDTO news = newsServiceV2.extenal(newsId);
+        return ResponseEntity.ok(new SuccessResponse<>(true, "외부변수 조회성공", news));
+    }
 }
