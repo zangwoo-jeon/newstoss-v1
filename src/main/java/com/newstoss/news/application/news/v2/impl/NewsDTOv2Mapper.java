@@ -42,7 +42,7 @@ public class NewsDTOv2Mapper {
     private static List<RelatedStockDTOv2> mapToRelatedStockDTOs(List<MLRelatedStockDTOv2> mlList) {
         if (mlList == null) return List.of();
         return mlList.stream()
-                .map(ml -> new RelatedStockDTOv2(ml.getStockName(), ml.getStockId())) // 이름과 필드는 맞게 작성
+                .map(ml -> new RelatedStockDTOv2(ml.getStockId(), ml.getStockName())) // 이름과 필드는 맞게 작성
                 .toList();
     }
 
@@ -55,5 +55,17 @@ public class NewsDTOv2Mapper {
 
     public static RecommendNewsDTO mapToRecommend(MLRecommendNewsDTO ml) {
         return new RecommendNewsDTO(ml.getNewsId(), ml.getWdate(), ml.getTitle(), ml.getImage(), ml.getPress(), ml.getImpactScore(), ml.getUrl()); // 필드명에 맞춰 작성
+    }
+
+    public static ExternalDTO extenal(MLExternalDTO mlexternal){
+        return new ExternalDTO(mlexternal.getNewsId(), mlexternal.getDMinus5DateClose(), mlexternal.getDMinus5DateVolume(),
+                mlexternal.getDMinus5DateForeign(), mlexternal.getDMinus5DateInstitution(), mlexternal.getDMinus5DateIndividual(),
+                mlexternal.getDMinus4DateClose(), mlexternal.getDMinus4DateVolume(), mlexternal.getDMinus4DateForeign(), mlexternal.getDMinus4DateInstitution(),
+                mlexternal.getDMinus4DateIndividual(), mlexternal.getDMinus3DateClose(), mlexternal.getDMinus3DateVolume(), mlexternal.getDMinus3DateForeign(),
+                mlexternal.getDMinus3DateInstitution(), mlexternal.getDMinus3DateIndividual(), mlexternal.getDMinus2DateClose(), mlexternal.getDMinus2DateVolume(),
+                mlexternal.getDMinus2DateForeign(), mlexternal.getDMinus2DateInstitution(), mlexternal.getDMinus2DateIndividual(), mlexternal.getDMinus1DateClose(),
+                mlexternal.getDMinus1DateVolume(), mlexternal.getDMinus1DateForeign(), mlexternal.getDMinus1DateInstitution(),
+                mlexternal.getDMinus1DateIndividual(), mlexternal.getDPlus1DateClose(), mlexternal.getDPlus2DateClose(), mlexternal.getDMinus3DateClose(),
+                mlexternal.getDPlus4DateClose(), mlexternal.getDPlus5DateClose(), mlexternal.getFx(), mlexternal.getBond10y(), mlexternal.getBaseRate());
     }
 }

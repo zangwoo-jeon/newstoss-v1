@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
@@ -23,6 +24,13 @@ public class SecurityConfig {
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
 
+
+
+    @Bean
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        return web -> web.ignoring().requestMatchers("/actuator/prometheus");
+    }
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
@@ -31,7 +39,8 @@ public class SecurityConfig {
                     CorsConfiguration config = new CorsConfiguration();
                     config.setAllowedOrigins(Arrays.asList(
                             "https://news-toss.vercel.app",
-                            "http://localhost:3000"
+                            "http://localhost:3000",
+                            "https://news-toss.click"
                     ));
                     config.setAllowCredentials(true); // 🔥 쿠키 포함 허용
                     config.addAllowedHeader("*");
@@ -49,16 +58,10 @@ public class SecurityConfig {
                         .requestMatchers("/api/v2/**").permitAll()
                         .requestMatchers("/api/favorite/**").permitAll()
                         .requestMatchers("/api/scrap/**").permitAll()
-                        .requestMatchers("/sse/**").permitAll()
+                        .requestMatchers("/api/sse/**").permitAll()
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/api/calen/**").permitAll()
                         .requestMatchers("/api/**").permitAll()
-                        .requestMatchers("/sse/stream", "/sse/stream/**").permitAll()
-
-
-
-//                        .requestMatchers("/**").permitAll() // 로그인, 회원가입은 인증 제외
-//                        .requestMatchers("/api/auth/login", "/api/auth/register").permitAll() // 로그인, 회원가입은 인증 제외
                         .anyRequest().authenticated() // 나머지는 인증 필요
                 )
                 .exceptionHandling(ex -> ex

@@ -22,7 +22,7 @@ public class NewsRedisSubscriber implements MessageListener {
         try {
             // Redis 메시지 → 문자열
             String msg = new String(message.getBody());
-
+            log.info("실시간 수집 뉴스 : {}",msg);
             // JSON → DTO 역직렬화
             RealTimeNewsDTO dto = objectMapper.readValue(msg, RealTimeNewsDTO.class);
 

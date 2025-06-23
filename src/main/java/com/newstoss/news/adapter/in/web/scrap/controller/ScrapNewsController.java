@@ -23,7 +23,7 @@ public class ScrapNewsController {
 
     @Operation(summary = "스크랩 추가", description = "뉴스 스크랩을 추가합니다.")
     @PostMapping
-    public ResponseEntity<SuccessResponse<Object>> scrap(@RequestBody ScrapDTO scrapDTO) {
+    public ResponseEntity<SuccessResponse<Object>> addScrap(@RequestBody ScrapDTO scrapDTO) {
         NewsScrap scrapNews = scrapService.scrap(scrapDTO);
         return ResponseEntity.ok(new SuccessResponse<>(true, "뉴스 스크랩 성공", null));
     }

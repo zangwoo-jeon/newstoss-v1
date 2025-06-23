@@ -18,8 +18,12 @@ public class RealTimeNewsDTO {
     private LocalDateTime wdate;
     private String title;
     private String article;
-    private String url;
     private String press;
+    private String url;
     private String image;
     private double impact_score;
+    @JsonProperty("news_count_total")
+    private String newsCountTotal;
+    @JsonProperty("news_count_today")
+    private String newsCountToday;
 }
