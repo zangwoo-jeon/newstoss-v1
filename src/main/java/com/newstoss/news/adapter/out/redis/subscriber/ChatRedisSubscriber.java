@@ -34,6 +34,29 @@ public class ChatRedisSubscriber implements MessageListener {
     public void initDispatcher() {
         Executors.newSingleThreadScheduledExecutor()
                 .scheduleAtFixedRate(this::dispatchMessages, 0, 10, TimeUnit.MILLISECONDS);
+
+        Executors.newSingleThreadScheduledExecutor()
+                .scheduleAtFixedRate(this::sendPingToActiveWriters, 0, 1, TimeUnit.SECONDS);
+
+    }
+
+    private void sendPingToActiveWriters() {
+        Set<UUID> writerIds = emitters.getWriterMap().keySet(); // ChatStreamEmitters 내부에서 writerMap 접근 제공 필요
+
+        for (UUID clientId : writerIds) {
+            emitters.getWriter(clientId).ifPresent(writer -> {
+                try {
+                    writer.write("event: ping\n");
+                    writer.write("data: {}\n\n");
+                    writer.flush();
+                    log.debug("📡 Ping 전송: {}", clientId);
+                } catch (Exception e) {
+                    log.warn("⚠️ Ping 전송 실패 → 연결 제거: {}", clientId);
+                    emitters.removeWriter(clientId);
+                    cleanup(clientId);
+                }
+            });
+        }
     }
 
     @Override
@@ -121,6 +144,49 @@ public class ChatRedisSubscriber implements MessageListener {
         clientDispatchExecutor.submit(() -> dispatchForClient(clientId));
     }
 
+    private void sendByWriter(UUID clientId, ChatStreamResponse response, boolean late) {
+        emitters.getWriter(clientId).ifPresent(writer -> {
+            try {
+                writer.write("event: chat\n");
+                writer.write("data: " + response.getContent() + "\n\n");
+                writer.flush();
+                log.info("🖋️ Writer 메시지 전송: {}", response.getContent());
+
+                if (writer.checkError()) {
+                    log.warn("❌ Writer 상태 오류 발생 → 마지막 메시지 전송 못함: clientId={}", clientId);
+                    emitters.removeWriter(clientId);
+                    cleanup(clientId);
+                    return;
+                }
+
+                if (response.isLast()) {
+                    try {
+                        writer.write("event: chat\n");
+                        writer.write("data: [DONE]\n\n");
+                        writer.flush();
+                        log.info("✅ [DONE] 전송 완료: {}", clientId);
+                    } catch (Exception e) {
+                        log.warn("❌ [DONE] 전송 실패: {}", e.getMessage());
+                    } finally {
+                        emitters.removeWriter(clientId);
+                        cleanup(clientId);
+                    }
+                }
+            } catch (Exception e) {
+                log.warn("❌ Writer 전송 실패: {}", e.getMessage());
+                emitters.removeWriter(clientId);
+                cleanup(clientId);
+            }
+        });
+    }
+    private void cleanup(UUID clientId) {
+//        emitters.remove(clientId);
+        emitters.removeWriter(clientId);
+        pendingBuffer.remove(clientId);
+        indexTimestamps.remove(clientId);
+        lastSentIndex.remove(clientId);
+    }
+
 //    private void send(UUID clientId, ChatStreamResponse response, boolean late) {
 //        emitters.get(clientId).ifPresentOrElse(emitter -> {
 //            try {
@@ -153,43 +219,4 @@ public class ChatRedisSubscriber implements MessageListener {
 //        }, () -> log.warn("⚠️ emitter 없음: {}", clientId));
 //    }
     //--------------------------------------------------------------------
-    private void sendByWriter(UUID clientId, ChatStreamResponse response, boolean late) {
-        emitters.getWriter(clientId).ifPresent(writer -> {
-            try {
-                writer.write("event: chat\n");
-                writer.write("data: " + response.getContent() + "\n\n");
-                writer.flush();
-                log.info("🖋️ Writer 메시지 전송: {}", response.getContent());
-
-                if (response.isLast()) {
-                    writer.write("event: chat\n");
-                    writer.write("data: " + response.getContent() + "\n\n");
-                    writer.flush();
-                    log.info("🖋️ Writer 메시지 전송: {}", response.getContent());
-
-                    writer.write("event: chat\n");
-                    writer.write("data: [DONE]\n\n");
-                    writer.flush();
-                    try {
-                        writer.close(); // ✨ 연결 명시적으로 종료
-                    } catch (Exception closeEx) {
-                        log.warn("⚠️ writer.close() 중 오류: {}", closeEx.getMessage());
-                    }
-                    emitters.removeWriter(clientId);
-                    cleanup(clientId);
-                }
-            } catch (Exception e) {
-                log.warn("❌ Writer 전송 실패: {}", e.getMessage());
-                emitters.removeWriter(clientId);
-                cleanup(clientId);
-            }
-        });
-    }
-    private void cleanup(UUID clientId) {
-//        emitters.remove(clientId);
-        emitters.removeWriter(clientId);
-        pendingBuffer.remove(clientId);
-        indexTimestamps.remove(clientId);
-        lastSentIndex.remove(clientId);
-    }
 }
