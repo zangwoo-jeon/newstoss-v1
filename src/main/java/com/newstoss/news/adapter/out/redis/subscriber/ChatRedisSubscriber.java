@@ -163,6 +163,11 @@ public class ChatRedisSubscriber implements MessageListener {
 
                 if (response.isLast()) {
                     writer.write("event: chat\n");
+                    writer.write("data: " + response.getContent() + "\n\n");
+                    writer.flush();
+                    log.info("🖋️ Writer 메시지 전송: {}", response.getContent());
+
+                    writer.write("event: chat\n");
                     writer.write("data: [DONE]\n\n");
                     writer.flush();
                     try {
