@@ -3,7 +3,9 @@ package com.newstoss.stock.entity;
 import com.newstoss.global.auditing.BaseTimeEntity;
 import com.newstoss.stock.adapter.outbound.kis.dto.KisPeriodStockDto;
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -13,6 +15,7 @@ import java.time.format.DateTimeFormatter;
 @Table(
         name = "stock_history"
 )
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class StockHistory extends BaseTimeEntity {
 
     @Id
