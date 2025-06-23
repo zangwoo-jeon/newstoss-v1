@@ -178,7 +178,7 @@ public class ChatRedisSubscriber implements MessageListener {
         });
     }
     private void cleanup(UUID clientId) {
-        emitters.remove(clientId);
+//        emitters.remove(clientId);
         emitters.removeWriter(clientId);
         pendingBuffer.remove(clientId);
         indexTimestamps.remove(clientId);
