@@ -12,7 +12,7 @@ FROM eclipse-temurin:17-jre
 WORKDIR /app
 
 # 보안을 위한 non-root 사용자 생성
-RUN addgroup -S spring && adduser -S spring -G spring
+RUN groupadd -r spring && useradd -r -g spring spring
 
 # Logback이 사용할 로그 디렉토리 생성 및 권한 설정
 # WORKDIR 이후, USER spring:spring 이전에 추가
