@@ -84,8 +84,13 @@ public class ChatRedisSubscriber implements MessageListener {
 
         while (buffer.containsKey(expectedIndex)) {
             ChatStreamResponse msg = buffer.remove(expectedIndex);
-            send(clientId, msg, false);
-            log.info("✅ SSE 메시지 전송: {}", msg);
+            if (emitters.get(clientId).isPresent()) {
+                send(clientId, msg, false); // SseEmitter 방식
+                log.info("✅ SSE Emitter 메시지 전송: {}", msg);
+            } else if (emitters.getWriter(clientId).isPresent()) {
+                sendByWriter(clientId, msg, false); // ✨ Writer 방식 추가
+                log.info("✅ Writer SSE 메시지 전송: {}", msg);
+            }
             lastSentIndex.put(clientId, expectedIndex);
             expectedIndex++;
         }
@@ -93,12 +98,20 @@ public class ChatRedisSubscriber implements MessageListener {
         List<Integer> toRemove = new ArrayList<>();
         for (Map.Entry<Integer, ChatStreamResponse> entry : buffer.entrySet()) {
             if (entry.getKey() < lastSentIndex.get(clientId)) {
-                send(clientId, entry.getValue(), true);
-                log.info("✅ SSE 지연 메시지 전송: {}", entry.getValue());
+                ChatStreamResponse delayedMsg = entry.getValue();
+                if (delayedMsg == null) continue;
+
+                if (emitters.get(clientId).isPresent()) {
+                    send(clientId, delayedMsg, true); // emitter 방식
+                    log.info("✅ SSE 지연 메시지 전송 (Emitter): {}", delayedMsg);
+                } else if (emitters.getWriter(clientId).isPresent()) {
+                    sendByWriter(clientId, delayedMsg, true); // writer 방식
+                    log.info("✅ SSE 지연 메시지 전송 (Writer): {}", delayedMsg);
+                }
+
                 toRemove.add(entry.getKey());
             }
         }
-        toRemove.forEach(buffer::remove);
     }
 
     public void dispatchForClientImmediately(UUID clientId) {
@@ -135,5 +148,35 @@ public class ChatRedisSubscriber implements MessageListener {
                 log.warn("❌ SSE 전송 실패: {}", e.getMessage());
             }
         }, () -> log.warn("⚠️ emitter 없음: {}", clientId));
+    }
+    //--------------------------------------------------------------------
+    private void sendByWriter(UUID clientId, ChatStreamResponse response, boolean late) {
+        emitters.getWriter(clientId).ifPresent(writer -> {
+            try {
+                writer.write("event: chat\n");
+                writer.write("data: " + response.getContent() + "\n\n");
+                writer.flush();
+                log.info("🖋️ Writer 메시지 전송: {}", response.getContent());
+
+                if (response.isLast()) {
+                    writer.write("event: chat\n");
+                    writer.write("data: [DONE]\n\n");
+                    writer.flush();
+                    emitters.removeWriter(clientId);
+                    cleanup(clientId);
+                }
+            } catch (Exception e) {
+                log.warn("❌ Writer 전송 실패: {}", e.getMessage());
+                emitters.removeWriter(clientId);
+                cleanup(clientId);
+            }
+        });
+    }
+    private void cleanup(UUID clientId) {
+        emitters.remove(clientId);
+        emitters.removeWriter(clientId);
+        pendingBuffer.remove(clientId);
+        indexTimestamps.remove(clientId);
+        lastSentIndex.remove(clientId);
     }
 }

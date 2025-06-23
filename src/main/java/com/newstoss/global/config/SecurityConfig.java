@@ -58,7 +58,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/v2/**").permitAll()
                         .requestMatchers("/api/favorite/**").permitAll()
                         .requestMatchers("/api/scrap/**").permitAll()
-                        .requestMatchers("/sse/**").permitAll()
+                        .requestMatchers("/api/sse/**").permitAll()
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/api/calen/**").permitAll()
                         .requestMatchers("/api/**").permitAll()
