@@ -54,7 +54,7 @@ public class NewsDTOv2Mapper {
     }
 
     public static RecommendNewsDTO mapToRecommend(MLRecommendNewsDTO ml) {
-        return new RecommendNewsDTO(ml.getNewsId(), ml.getWdate(), ml.getTitle(), ml.getImage(), ml.getPress(), ml.getImpactScore(), ml.getUrl()); // 필드명에 맞춰 작성
+        return new RecommendNewsDTO(ml.getNewsId(), ml.getWdate(), ml.getTitle(), ml.getSummary(), ml.getImage(), ml.getPress(), ml.getUrl(), ml.getClickScore() ,ml.getRecommendReasons()); // 필드명에 맞춰 작성
     }
 
     public static ExternalDTO extenal(MLExternalDTO mlexternal){
