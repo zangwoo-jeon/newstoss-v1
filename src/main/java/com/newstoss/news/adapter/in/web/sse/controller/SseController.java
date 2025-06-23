@@ -6,6 +6,8 @@ import com.newstoss.news.adapter.in.web.sse.emitter.NewsSseEmitters;
 import com.newstoss.news.application.redis.ChatStreamService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.AsyncContext;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -67,7 +69,7 @@ public class SseController {
 //    }
     @Operation(summary = "챗봇 연결", description = "챗봇을 연결합니다")
     @GetMapping(value = "/stream/v2", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-    public void streamV2(@RequestParam String message, HttpServletResponse response) throws IOException {
+    public void streamV2(@RequestParam String message, HttpServletRequest request, HttpServletResponse response) throws IOException {
         UUID clientId = UUID.randomUUID();
         log.info("📡 [v2] Writer 기반 SSE 연결 요청: {}", clientId);
 
@@ -75,6 +77,9 @@ public class SseController {
         response.setHeader("Cache-Control", "no-cache");
         response.setHeader("Connection", "keep-alive");
         response.setHeader("X-Accel-Buffering", "no");
+
+        AsyncContext asyncContext = request.startAsync();
+        asyncContext.setTimeout(0);
 
         PrintWriter writer = response.getWriter();
         chatStreamService.registerWriter(clientId, writer); // writer 등록

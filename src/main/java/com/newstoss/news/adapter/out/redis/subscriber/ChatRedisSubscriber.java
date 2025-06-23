@@ -167,9 +167,11 @@ public class ChatRedisSubscriber implements MessageListener {
                         log.info("✅ [DONE] 전송 완료: {}", clientId);
                     } catch (Exception e) {
                         log.warn("❌ [DONE] 전송 실패: {}", e.getMessage());
+                    } finally {
+                        Thread.sleep(100); // 혹시 flush를 기다리는 시간
+                        emitters.removeWriter(clientId);
+                        cleanup(clientId);
                     }
-                    emitters.removeWriter(clientId);
-                    cleanup(clientId);
                 }
             } catch (Exception e) {
                 log.warn("❌ Writer 전송 실패: {}", e.getMessage());
