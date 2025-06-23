@@ -112,7 +112,11 @@ public class ChatRedisSubscriber implements MessageListener {
                         .name("chat")
                         .data(response.getContent())
                 );
-                emitter.send(SseEmitter.event().comment("flush"));
+                emitter.send(SseEmitter.event()
+                        .name("dummy")
+                        .data(UUID.randomUUID().toString())
+                );
+//                emitter.send(SseEmitter.event().comment(""));
 
                 log.info("✅ SSE 메시지 전송: {}", response.getContent());
 
