@@ -14,7 +14,7 @@ public class ChatStreamEmitters {
 //    private final Map<UUID, SseEmitter> emitters = new ConcurrentHashMap<>();
     private final Map<UUID, PrintWriter> writers = new ConcurrentHashMap<>();
 
-//    public void add(UUID uuid, SseEmitter emitter) {
+    //    public void add(UUID uuid, SseEmitter emitter) {
 //        emitters.put(uuid, emitter);
 //    }
 //
@@ -36,5 +36,8 @@ public class ChatStreamEmitters {
 
     public void removeWriter(UUID uuid) {
         writers.remove(uuid);
+    }
+    public Map<UUID, PrintWriter> getWriterMap() {
+        return writers;
     }
 }
