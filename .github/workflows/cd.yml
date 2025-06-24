@@ -72,17 +72,17 @@ jobs:
             aws configure set default.region ${{ secrets.AWS_REGION }}
 
             ECR_REGISTRY="${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com"
-            ECR_REPOSITORY="newstoss/repo" 
+            ECR_REPOSITORY="${{ secrets.ECR_REPOSITORY_NAME }}"
 
             IMAGE_TAG="${{ github.event.workflow_run.head_sha }}"
             FULL_IMAGE_URI="${ECR_REGISTRY}/${ECR_REPOSITORY}:${IMAGE_TAG}"
 
-            CONTAINER_NAME="newstoss-app" 
+            CONTAINER_NAME="newstoss-test-app" 
             HOST_APP_PORT=8080 
             CONTAINER_APP_PORT=8080 
 
             PG_CONTAINER_NAME="my-postgres" 
-            DOCKER_NETWORK_NAME="my-app-network"
+            DOCKER_NETWORK_NAME="${{ secrets.DOCKER_NETWORK_NAMES }}"
 
             echo "Creating Docker network if not exists..."
             if ! docker network ls | grep -q ${DOCKER_NETWORK_NAME}; then
@@ -106,7 +106,7 @@ jobs:
               docker rm ${CONTAINER_NAME} -f || true
               echo "Existing container forcefully stopped and removed."
             fi
-            
+
             echo "Creating host directories for logs and setting permissions..."
             sudo mkdir -p /home/ubuntu/newstoss/logs /home/ubuntu/newstoss/newsLogs
             sudo chmod -R 777 /home/ubuntu/newstoss/logs /home/ubuntu/newstoss/newsLogs
@@ -122,7 +122,7 @@ jobs:
               -e SPRING_DATASOURCE_USERNAME="${{ secrets.SPRING_DATASOURCE_USERNAME }}" \
               -e SPRING_DATASOURCE_PASSWORD="${{ secrets.SPRING_DATASOURCE_PASSWORD }}" \
               -e SPRING_PROFILES_ACTIVE=prod \
-              -e SPRING_DATA_REDIS_HOST=100.77.211.56 \
+              -e SPRING_DATA_REDIS_HOST=100.91.4.35 \
               -e SPRING_DATA_REDIS_PORT=6379 \
               -e SPRING_DATA_REDIS_PASSWORD="${{ secrets.REDIS_PASSWORD }}" \
               -e SPRING_MAIN_ALLOW_BEAN_DEFINITION_OVERRIDING=true \
