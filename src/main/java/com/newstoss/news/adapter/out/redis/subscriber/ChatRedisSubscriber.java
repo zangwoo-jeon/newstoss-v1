@@ -149,6 +149,8 @@ public class ChatRedisSubscriber implements MessageListener {
             try {
 
                 String jsonData = objectMapper.writeValueAsString(response.getContent());
+                log.info("raw ml response : {}",response.getContent());
+                log.info("json ml response : {}",jsonData);
                 writer.write("event: chat\n");
                 writer.write("data: " + jsonData + "\n\n");
                 writer.flush();
