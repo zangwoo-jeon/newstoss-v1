@@ -1,11 +1,12 @@
 package com.newstoss.stock.adapter.inbound.api.v1.kis;
 
 import com.newstoss.global.response.SuccessResponse;
-import com.newstoss.stock.adapter.inbound.dto.response.IndicesResponseDto;
+import com.newstoss.stock.adapter.inbound.dto.response.v1.IndicesResponseDto;
 import com.newstoss.stock.adapter.outbound.kis.dto.*;
-import com.newstoss.stock.application.port.in.GetIndiceUseCase;
-import com.newstoss.stock.application.port.in.GetPopularStockUseCase;
-import com.newstoss.stock.application.port.in.GetStockInfoUseCase;
+import com.newstoss.stock.application.port.in.v1.GetIndiceUseCase;
+import com.newstoss.stock.application.port.in.v1.GetPopularStockUseCase;
+import com.newstoss.stock.application.port.in.v1.GetStockInfoUseCase;
+import com.newstoss.stock.application.port.in.v1.GetStockPeriodUseCase;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -27,6 +28,7 @@ public class StockKisController {
     private final GetPopularStockUseCase getPopularStockUseCase;
     private final GetIndiceUseCase indiceUseCase;
     private final GetStockInfoUseCase getStockInfoUseCase;
+    private final GetStockPeriodUseCase getStockPeriodUseCase;
 
     // 주요 지수 일자별 조회
     @Operation(summary = "주요 지수 일자별 조회",
@@ -64,7 +66,6 @@ public class StockKisController {
             @ApiResponse(responseCode = "200", description = "주식 가격 조회 성공",
                     content = @Content(schema = @Schema(implementation = KisPeriodStockDto.class)))
             })
-
     @GetMapping("/{stockCode}")
     public ResponseEntity<?> StockPrice(@PathVariable String stockCode,
                                            @RequestParam(required = false) String period) {
@@ -72,7 +73,7 @@ public class StockKisController {
             String price = stockInfoUseCase.getStockPrice(stockCode);
             return ResponseEntity.ok(new SuccessResponse<>(true, "주식 가격 조회 성공", price));
         } else {
-            List<KisPeriodStockDto> stockInfoByPeriod = getStockInfoUseCase.getStockInfoByPeriod(stockCode, period);
+            List<KisPeriodStockDto> stockInfoByPeriod = getStockPeriodUseCase.getStockInfoByPeriod(stockCode, period);
             return ResponseEntity.ok(new SuccessResponse<>(true, "주식 기간별 가격 조회 성공", stockInfoByPeriod));
         }
 

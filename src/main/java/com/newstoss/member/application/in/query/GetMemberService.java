@@ -8,6 +8,7 @@ import com.newstoss.member.application.out.MemberQueryPort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -28,5 +29,10 @@ public class GetMemberService implements GetMemberInfoUseCase{
     @Override
     public MemberInfoDto getMemberInfo(UUID memberId) {
         return memberQueryPort.findMemberInfo(memberId);
+    }
+
+    @Override
+    public List<MemberInfoDto> getAllMembersInfo() {
+        return memberQueryPort.findMemberInfos();
     }
 }

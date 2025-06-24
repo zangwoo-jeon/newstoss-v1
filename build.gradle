@@ -25,6 +25,7 @@ repositories {
 
 dependencies {
     implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.9.0'
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-web'
@@ -38,7 +39,6 @@ dependencies {
     implementation 'com.opencsv:opencsv:5.7.1'
     implementation 'org.codehaus.janino:janino:3.1.9'
 
-    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'com.h2database:h2'

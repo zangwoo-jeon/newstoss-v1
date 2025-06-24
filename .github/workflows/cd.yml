@@ -106,6 +106,10 @@ jobs:
               docker rm ${CONTAINER_NAME} -f || true
               echo "Existing container forcefully stopped and removed."
             fi
+            
+            echo "Creating host directories for logs and setting permissions..."
+            sudo mkdir -p /home/ubuntu/newstoss/logs /home/ubuntu/newstoss/newsLogs
+            sudo chmod -R 777 /home/ubuntu/newstoss/logs /home/ubuntu/newstoss/newsLogs
 
             echo "Running new container ${CONTAINER_NAME}..."
             docker run -d \
@@ -113,6 +117,7 @@ jobs:
               --name ${CONTAINER_NAME} \
               --network ${DOCKER_NETWORK_NAME} \
               -v /home/ubuntu/newstoss/logs:/logs \
+              -v /home/ubuntu/newstoss/newsLogs:/newsLogs \
               -e SPRING_DATASOURCE_URL="${{ secrets.SPRING_DATASOURCE_URL }}" \
               -e SPRING_DATASOURCE_USERNAME="${{ secrets.SPRING_DATASOURCE_USERNAME }}" \
               -e SPRING_DATASOURCE_PASSWORD="${{ secrets.SPRING_DATASOURCE_PASSWORD }}" \
@@ -133,6 +138,7 @@ jobs:
               -e MANAGEMENT_INFO_OS_ENABLED="${{ secrets.MANAGEMENT_INFO_OS_ENABLED }}" \
               -e JWT_SECRET="${{ secrets.JWT_SECRET }}" \
               -e SERVER_TOMCAT_MBEANREGISTRY_ENABLED=true \
+              -e SERVER_FORWARD-HEADERS-STRATEGY=native \
               -e INIT_ENABLED=false \
               ${FULL_IMAGE_URI} || { echo "Docker run failed!"; exit 1; }
 

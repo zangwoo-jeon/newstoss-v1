@@ -1,8 +1,8 @@
 package com.newstoss.stock.adapter.inbound.api.v1;
 
 import com.newstoss.global.response.SuccessResponse;
-import com.newstoss.stock.adapter.inbound.dto.response.FxResponseDto;
-import com.newstoss.stock.application.port.in.GetFxInfoUseCase;
+import com.newstoss.stock.adapter.inbound.dto.response.v1.FxResponseDto;
+import com.newstoss.stock.application.port.in.v1.GetFxInfoUseCase;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;

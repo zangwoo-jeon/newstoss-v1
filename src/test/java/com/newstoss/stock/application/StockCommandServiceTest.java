@@ -1,5 +1,6 @@
 package com.newstoss.stock.application;
 
+import com.newstoss.stock.application.V1.StockCommandService;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

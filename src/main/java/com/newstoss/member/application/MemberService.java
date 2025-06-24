@@ -46,7 +46,7 @@ public class MemberService {
         fgOffsetService.exec(memberId,fgOffset);
     }
 
-    public void invest(UUID memberId, Long invest_score){
-        investScoreService.exec(memberId,invest_score);
+    public String invest(UUID memberId, Long invest_score){
+        return investScoreService.exec(memberId,invest_score);
     }
 }

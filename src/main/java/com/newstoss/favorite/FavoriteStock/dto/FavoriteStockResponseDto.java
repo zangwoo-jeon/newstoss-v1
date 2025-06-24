@@ -1,6 +1,6 @@
 package com.newstoss.favorite.FavoriteStock.dto;
 
-import com.newstoss.stock.adapter.inbound.dto.response.SearchResponseDto;
+import com.newstoss.stock.adapter.inbound.dto.response.v1.SearchResponseDto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
