@@ -147,8 +147,10 @@ public class ChatRedisSubscriber implements MessageListener {
     private void sendByWriter(UUID clientId, ChatStreamResponse response, boolean late) {
         emitters.getWriter(clientId).ifPresent(writer -> {
             try {
+
+                String jsonData = objectMapper.writeValueAsString(response.getContent());
                 writer.write("event: chat\n");
-                writer.write("data: " + response.getContent() + "\n\n");
+                writer.write("data: " + jsonData + "\n\n");
                 writer.flush();
                 log.info("🖋️ Writer 메시지 전송: {}", response.getContent());
 
@@ -162,7 +164,7 @@ public class ChatRedisSubscriber implements MessageListener {
                 if (response.isLast()) {
                     try {
                         writer.write("event: chat\n");
-                        writer.write("data: [DONE]\n\n");
+                        writer.write("data: \"[DONE]\"\n\n");
                         writer.flush();
                         log.info("✅ [DONE] 전송 완료: {}", clientId);
                     } catch (Exception e) {
