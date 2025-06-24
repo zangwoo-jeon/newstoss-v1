@@ -106,7 +106,7 @@ jobs:
               docker rm ${CONTAINER_NAME} -f || true
               echo "Existing container forcefully stopped and removed."
             fi
-            
+
             echo "Creating host directories for logs and setting permissions..."
             sudo mkdir -p /home/ubuntu/newstoss/logs /home/ubuntu/newstoss/newsLogs
             sudo chmod -R 777 /home/ubuntu/newstoss/logs /home/ubuntu/newstoss/newsLogs
