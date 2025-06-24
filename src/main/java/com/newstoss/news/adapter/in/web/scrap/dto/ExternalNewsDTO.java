@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ExternalNewsDTO {
-    //d
     private String news_id;
     private String wdate;
     private String title;
