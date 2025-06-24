@@ -1,11 +1,10 @@
 package com.newstoss.stock.application;
 
-import com.newstoss.stock.adapter.inbound.dto.response.FxResponseDto;
+import com.newstoss.stock.adapter.inbound.dto.response.v1.FxResponseDto;
+import com.newstoss.stock.application.V1.FxInfoService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class FxInfoServiceTest {

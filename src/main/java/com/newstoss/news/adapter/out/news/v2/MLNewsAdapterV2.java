@@ -2,12 +2,9 @@ package com.newstoss.news.adapter.out.news.v2;
 
 import com.newstoss.global.errorcode.NewsErrorCode;
 import com.newstoss.global.handler.CustomException;
-import com.newstoss.news.adapter.in.web.news.dto.common.GetAllNewsDTO;
+import com.newstoss.news.adapter.in.web.news.dto.v2.GetAllNewsDTO;
 import com.newstoss.news.adapter.in.web.sse.dto.ChatStreamRequest;
-import com.newstoss.news.adapter.out.news.dto.v2.MLHighlightNewsDTOv2;
-import com.newstoss.news.adapter.out.news.dto.v2.MLNewsDTOv2;
-import com.newstoss.news.adapter.out.news.dto.v2.MLNewsMataDataDTOv2;
-import com.newstoss.news.adapter.out.news.dto.v2.MLRelatedNewsDTOv2;
+import com.newstoss.news.adapter.out.news.dto.v2.*;
 import com.newstoss.news.application.news.v2.port.out.MLNewsPortV2;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +17,6 @@ import org.springframework.web.client.RestTemplate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
@@ -29,11 +25,11 @@ public class MLNewsAdapterV2 implements MLNewsPortV2 {
     private final RestTemplate restTemplate;
     private static final String BASE_URL = "http://3.37.207.16:8000/news/v2/";
 
-    @Override
-    public List<MLNewsDTOv2> getRealTimeNews() {
-        String url = BASE_URL + "?skip=0&limit=10";
-        return safeExchangeList(url, new ParameterizedTypeReference<>() {});
-    }
+//    @Override
+//    public List<MLNewsDTOv2> getRealTimeNews() {
+//        String url = BASE_URL + "?skip=0&limit=10";
+//        return safeExchangeList(url, new ParameterizedTypeReference<>() {});
+//    }
 
     @Override
     public MLNewsDTOv2 getDetailNews(String newsId) {
@@ -76,7 +72,7 @@ public class MLNewsAdapterV2 implements MLNewsPortV2 {
     }
 
     @Override
-    public String chat(String clientId, String question) {
+    public void chat(String clientId, String question) {
         ChatStreamRequest request = new ChatStreamRequest(clientId, question);
         String url = "http://15.165.211.100:8000/news/chat/stream";
 
@@ -85,9 +81,31 @@ public class MLNewsAdapterV2 implements MLNewsPortV2 {
 
         HttpEntity<ChatStreamRequest> entity = new HttpEntity<>(request, headers);
 
-        return restTemplate.postForObject(url, entity, String.class);
+        try {
+            restTemplate.postForEntity(url, entity, Void.class); // 응답을 기다리지 않음
+        } catch (Exception e) {
+            log.error("❌ ML 서버 요청 실패 - clientId: {}, question: {}", clientId, question, e);
+        }
     }
 
+    @Override
+    public List<MLNewsDTOv2> stockToNews(int skip, int limit, String stock_code) {
+        String url = BASE_URL + "?skip="+skip+"&limit="+limit+"&stock_list="+stock_code;
+
+        return safeExchangeList(url, new ParameterizedTypeReference<>() {});
+    }
+
+    @Override
+    public List<MLRecommendNewsDTO> recommendNews(String memberId) {
+        String url = BASE_URL + "recommend" + "?user_id="+memberId;
+        return safeExchangeList(url, new ParameterizedTypeReference<>() {});
+    }
+
+    @Override
+    public MLExternalDTO external(String newsId){
+        String url = BASE_URL + newsId + "/external";
+        return safeGetObject(url, MLExternalDTO.class);
+    }
     // 반환 값이 리스트고 응답 DTO랑 같을 경우
     private <T> List<T> safeExchangeList(String url, ParameterizedTypeReference<List<T>> typeRef) {
         try {

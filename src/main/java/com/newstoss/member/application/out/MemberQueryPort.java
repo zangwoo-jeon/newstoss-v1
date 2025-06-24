@@ -13,4 +13,5 @@ public interface MemberQueryPort {
     Optional<Member> findByAccount(String account);
     List<Member> findAll();
     MemberInfoDto findMemberInfo(UUID memberId);
+    List<MemberInfoDto> findMemberInfos();
 }

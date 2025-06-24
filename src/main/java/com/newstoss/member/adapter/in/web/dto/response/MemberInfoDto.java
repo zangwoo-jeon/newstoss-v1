@@ -8,11 +8,15 @@ import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Data
 @NoArgsConstructor
 @Schema(description = "유저 정보 조회 DTO")
 public class MemberInfoDto {
+
+    @Schema(description = "유저 ID")
+    private UUID memberId;
 
     @Schema(description = "유저 이름", example = "test")
     private String username;

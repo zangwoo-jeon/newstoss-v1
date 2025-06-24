@@ -2,16 +2,12 @@ package com.newstoss.stock.adapter.inbound.api.v1;
 
 import com.newstoss.global.response.SuccessResponse;
 import com.newstoss.stock.adapter.inbound.dto.request.StockCountRequestDto;
-import com.newstoss.stock.adapter.inbound.dto.response.CategoriesResponseDto;
-import com.newstoss.stock.adapter.inbound.dto.response.CategoryPageResponseDto;
-import com.newstoss.stock.adapter.inbound.dto.response.CategoryStockResponseDto;
-import com.newstoss.stock.adapter.inbound.dto.response.SearchResponseDto;
-import com.newstoss.stock.adapter.outbound.kis.dto.KisStockDto;
-import com.newstoss.stock.application.port.in.GetCategoryUseCase;
-import com.newstoss.stock.application.port.in.GetStockInfoUseCase;
-import com.newstoss.stock.application.port.in.SearchStockUseCase;
-import com.newstoss.stock.application.port.in.UpdateStockSearchCount;
-import com.newstoss.stock.entity.Stock;
+import com.newstoss.stock.adapter.inbound.dto.response.v1.CategoriesResponseDto;
+import com.newstoss.stock.adapter.inbound.dto.response.v1.CategoryPageResponseDto;
+import com.newstoss.stock.adapter.inbound.dto.response.v1.SearchResponseDto;
+import com.newstoss.stock.application.port.in.v1.GetCategoryUseCase;
+import com.newstoss.stock.application.port.in.v1.SearchStockUseCase;
+import com.newstoss.stock.application.port.in.v1.UpdateStockSearchCount;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -19,7 +15,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,9 +26,11 @@ import java.util.List;
 @Slf4j
 @Tag(name = "주식 API", description = "주식 관련 API")
 public class StockApiController {
+
+//    @Qualifier("StockQueryServiceV1")
     private final GetCategoryUseCase getCategoryUseCase;
+//    @Qualifier("StockQueryServiceV1")
     private final SearchStockUseCase searchStockUseCase;
-    private final GetStockInfoUseCase getStockInfoUseCase;
     private final UpdateStockSearchCount updateStockSearchCount;
     @Operation(
             summary = "카테고리 조회",

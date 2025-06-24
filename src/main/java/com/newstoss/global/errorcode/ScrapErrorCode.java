@@ -7,8 +7,8 @@ import org.springframework.http.HttpStatus;
 @AllArgsConstructor
 public enum ScrapErrorCode implements ErrorCode{
     DUPLICATE_SCRAP(HttpStatus.BAD_REQUEST, false, "SCRAP-001", "이미 스크랩한 뉴스입니다."),
-    MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, false, "SCRAP-001", "이미 스크랩한 뉴스입니다."),
-    NEWS_NOT_FOUND(HttpStatus.NOT_FOUND, false, "SCRAP-001", "이미 스크랩한 뉴스입니다.");
+    MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, false, "SCRAP-001", "없는 멤버입니다."),
+    NEWS_NOT_FOUND(HttpStatus.NOT_FOUND, false, "SCRAP-001", "없는 뉴스입니다.");
 
     private final HttpStatus httpStatus;
     private final boolean isSuccess;

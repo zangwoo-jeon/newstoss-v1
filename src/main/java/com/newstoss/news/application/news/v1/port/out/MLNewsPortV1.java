@@ -1,6 +1,6 @@
 package com.newstoss.news.application.news.v1.port.out;
 
-import com.newstoss.news.adapter.in.web.news.dto.common.GetAllNewsDTO;
+import com.newstoss.news.adapter.in.web.news.dto.v2.GetAllNewsDTO;
 import com.newstoss.news.adapter.out.news.dto.v1.MLRelatedNewsDTOv1;
 import com.newstoss.news.adapter.out.news.dto.v1.MLRelatedReportDTOv1;
 import com.newstoss.news.adapter.out.news.dto.v1.MLRelatedStockDTOv1;

@@ -28,7 +28,6 @@ public class JwtProvider {
 
         return Jwts.builder()
                 .setSubject("ACCESS_TOKEN")
-                .setSubject("ACCESS_TOKEN")
                 .claim("memberId", member.getMemberId())
                 .claim("memberName", member.getName())
                 .claim("phoneNumber", member.getPhoneNumber())
@@ -50,19 +49,10 @@ public class JwtProvider {
                     .build()
                     .parseClaimsJws(token);
             return true;
-        } catch (ExpiredJwtException e) {
-            throw new CustomException(JwtErrorCode.EXPIRED_TOKEN);
-        } catch (UnsupportedJwtException e) {
-            throw new CustomException(JwtErrorCode.UNSUPPORTED_TOKEN);
-        } catch (MalformedJwtException e) {
-            throw new CustomException(JwtErrorCode.MALFORMED_TOKEN);
-        } catch (SecurityException e) {
-            throw new CustomException(JwtErrorCode.INVALID_TOKEN);
-        } catch (IllegalArgumentException e) {
-            throw new CustomException(JwtErrorCode.MISSING_TOKEN);
+        } catch (JwtException | IllegalArgumentException e) {
+            return false;
         }
     }
-
     public UUID getMemberId(String token) {
         Claims claims = Jwts.parserBuilder()
                 .setSigningKey(secretKey)
