@@ -127,6 +127,7 @@ public class ChatRedisSubscriber implements MessageListener {
                 ChatStreamResponse delayedMsg = entry.getValue();
                 if (delayedMsg == null) continue;
 
+                
 //                if (emitters.get(clientId).isPresent()) {
 //                    send(clientId, delayedMsg, true); // emitter 방식
 //                    log.info("✅ SSE 지연 메시지 전송 (Emitter): {}", delayedMsg);
