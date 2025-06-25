@@ -15,7 +15,7 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
-public class HighlightNewsCacheImpl implements HighlightNewsCachePort {
+public class HighlightNewsCache implements HighlightNewsCachePort {
 
     private final StringRedisTemplate redisTemplate;
     private final ObjectMapper objectMapper;
