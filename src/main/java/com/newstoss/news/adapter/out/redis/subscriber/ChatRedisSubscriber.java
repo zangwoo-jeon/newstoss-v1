@@ -28,7 +28,7 @@ public class ChatRedisSubscriber implements MessageListener {
     private static final long TIMEOUT_MS = 1000; // 1초
 
     // 사용자별 전송 병렬화를 위한 스레드풀
-    private final ExecutorService clientDispatchExecutor = Executors.newFixedThreadPool(10);
+    private final ExecutorService clientDispatchExecutor = Executors.newFixedThreadPool(100);
 
     @PostConstruct
     public void initDispatcher() {
@@ -149,8 +149,8 @@ public class ChatRedisSubscriber implements MessageListener {
             try {
 
                 String jsonData = objectMapper.writeValueAsString(response.getContent());
-                log.info("raw ml response : {}",response.getContent());
-                log.info("json ml response : {}",jsonData);
+//                log.info("raw ml response : {}",response.getContent());
+//                log.info("json ml response : {}",jsonData);
                 writer.write("event: chat\n");
                 writer.write("data: " + jsonData + "\n\n");
                 writer.flush();
