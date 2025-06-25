@@ -121,4 +121,11 @@ public class NewsControllerV2{
         ExternalDTO news = newsServiceV2.extenal(newsId);
         return ResponseEntity.ok(new SuccessResponse<>(true, "외부변수 조회성공", news));
     }
+
+    @Operation(summary = "뉴스 개수 조회", description = "뉴스 개수를 조회합니다.")
+    @GetMapping("/count")
+    public ResponseEntity<SuccessResponse<Object>> count(){
+        CountDTO count = newsServiceV2.count();
+        return ResponseEntity.ok(new SuccessResponse<>(true, "뉴스 갯수 조회 성공", count));
+    }
 }

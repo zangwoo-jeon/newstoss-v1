@@ -24,4 +24,6 @@ public class NewsDTOv2 {
     private String image;
     @JsonProperty("stock_list")
     private List<RelatedStockDTOv2> stock;
+    @JsonProperty("impact_score")
+    private double impactScore;
 }

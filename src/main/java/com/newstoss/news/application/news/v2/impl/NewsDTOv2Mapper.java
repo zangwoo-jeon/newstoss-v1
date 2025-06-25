@@ -14,7 +14,7 @@ import java.util.List;
 
 public class NewsDTOv2Mapper {
     public static NewsDTOv2 from(MLNewsDTOv2 ml) {
-        return new NewsDTOv2(ml.getNewsId(),  LocalDateTime.parse(ml.getWdate()), ml.getTitle(), ml.getArticle(), ml.getUrl(), ml.getPress(), ml.getImage(), mapToRelatedStockDTOs(ml.getStock()) );
+        return new NewsDTOv2(ml.getNewsId(),  LocalDateTime.parse(ml.getWdate()), ml.getTitle(), ml.getArticle(), ml.getUrl(), ml.getPress(), ml.getImage(), mapToRelatedStockDTOs(ml.getStock()), ml.getImpactScore() );
     }
 
 

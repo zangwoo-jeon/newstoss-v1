@@ -8,23 +8,30 @@ import com.newstoss.news.adapter.out.news.dto.v2.*;
 import com.newstoss.news.application.news.v2.port.out.MLNewsPortV2;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
+
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 @Component
-@RequiredArgsConstructor
 @Slf4j
 public class MLNewsAdapterV2 implements MLNewsPortV2 {
+
     private final RestTemplate restTemplate;
+
+    public MLNewsAdapterV2(@Qualifier("mlRestTemplate") RestTemplate restTemplate) {
+        this.restTemplate = restTemplate;
+    }
     private static final String BASE_URL = "http://3.37.207.16:8000/news/v2/";
 
 //    @Override
@@ -73,6 +80,14 @@ public class MLNewsAdapterV2 implements MLNewsPortV2 {
         return safeExchangeList(url, new ParameterizedTypeReference<>() {});
     }
 
+    @Override
+    public MLNewsCountDTO count() {
+        String url = BASE_URL + "/count";
+        return safeGetObject(url, MLNewsCountDTO.class);
+    }
+
+
+    @Async("mlTaskExecutor")
     @Override
     public void chat(String clientId, String question) {
         ChatStreamRequest request = new ChatStreamRequest(clientId, question);

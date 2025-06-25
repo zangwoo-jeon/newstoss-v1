@@ -71,7 +71,7 @@ public class SseController {
     @GetMapping(value = "/stream/v2", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public void streamV2(@RequestParam String message, HttpServletRequest request, HttpServletResponse response) throws IOException {
         UUID clientId = UUID.randomUUID();
-        log.info("📡 [v2] Writer 기반 SSE 연결 요청: {}", clientId);
+        log.info("📡  Writer 기반 SSE 연결 요청: {}", clientId);
 
         response.setContentType("text/event-stream;charset=UTF-8");
         response.setHeader("Cache-Control", "no-cache");
@@ -84,7 +84,7 @@ public class SseController {
         PrintWriter writer = response.getWriter();
         chatStreamService.registerWriter(clientId, writer); // writer 등록
         chatStreamService.sendToML(clientId, message);      // ML 호출 (Redis 발행)
-        log.info("📡 ML에 요청 보냄 : clientId={}, time={}", clientId, System.currentTimeMillis());
+        log.info("📡 ML에 챗봇 요청 보냄 : clientId={}, time={}", clientId, System.currentTimeMillis());
 
     }
 
