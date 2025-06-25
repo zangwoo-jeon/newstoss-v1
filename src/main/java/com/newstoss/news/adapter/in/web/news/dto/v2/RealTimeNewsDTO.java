@@ -2,6 +2,7 @@ package com.newstoss.news.adapter.in.web.news.dto.v2;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.newstoss.news.adapter.in.web.news.dto.v2.Meta.RelatedStockDTOv2;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,6 +19,8 @@ public class RealTimeNewsDTO {
     private LocalDateTime wdate;
     private String title;
     private String article;
+    private String summary;
+    private RelatedStockDTOv2 stockDTOv2;
     private String press;
     private String url;
     private String image;
@@ -27,8 +30,4 @@ public class RealTimeNewsDTO {
     private String newsCountTotal;
     @JsonProperty("news_count_today")
     private String newsCountToday;
-    @JsonProperty("stock_id")
-    private String stockId;
-    @JsonProperty("stock_name")
-    private String stockName;
 }
