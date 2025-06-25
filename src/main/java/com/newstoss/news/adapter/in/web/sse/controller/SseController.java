@@ -84,6 +84,8 @@ public class SseController {
         PrintWriter writer = response.getWriter();
         chatStreamService.registerWriter(clientId, writer); // writer 등록
         chatStreamService.sendToML(clientId, message);      // ML 호출 (Redis 발행)
+        log.info("📡 [SSE] Redis 응답 수신: clientId={}, time={}", clientId, System.currentTimeMillis());
+
     }
 
 }
