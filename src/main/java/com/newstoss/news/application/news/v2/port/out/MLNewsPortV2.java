@@ -29,4 +29,6 @@ public interface MLNewsPortV2 {
     List<MLRecommendNewsDTO> recommendNews(String memberId);
 
     MLExternalDTO external(String newsId);
+
+    MLNewsCountDTO count();
 }

@@ -79,6 +79,14 @@ public class MLNewsAdapterV2 implements MLNewsPortV2 {
         String url = BASE_URL + "/?skip=0&limit=10&title="+searchNews;
         return safeExchangeList(url, new ParameterizedTypeReference<>() {});
     }
+
+    @Override
+    public MLNewsCountDTO count() {
+        String url = BASE_URL + "/count";
+        return safeGetObject(url, MLNewsCountDTO.class);
+    }
+
+
     @Async("mlTaskExecutor")
     @Override
     public void chat(String clientId, String question) {

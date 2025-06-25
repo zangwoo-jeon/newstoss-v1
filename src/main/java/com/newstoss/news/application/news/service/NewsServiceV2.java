@@ -26,6 +26,7 @@ public class NewsServiceV2 {
     private final GetStockToNewsUseCase getStockToNewsUseCase;
     private final GetRecommendNewsUseCase getRecommendNewsUseCase;
     private final GetExternalUseCaseV2 getExternalUseCaseV2;
+    private final GetNewsCountUseCaseV2 getNewsCountUseCaseV2;
 
 //    public List<NewsDTOv2> getRealTimeNews(){
 //        return getRealTimeNews.exec();
@@ -57,4 +58,6 @@ public class NewsServiceV2 {
     public List<RecommendNewsDTO> recommedNews(UUID memberId) { return getRecommendNewsUseCase.exec(memberId); }
 
     public ExternalDTO extenal(String newsId){ return getExternalUseCaseV2.exec(newsId); }
+
+    public CountDTO count(){return getNewsCountUseCaseV2.exec(); }
 }

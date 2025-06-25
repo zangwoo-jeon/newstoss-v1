@@ -23,4 +23,6 @@ public class MLNewsDTOv2 {
     private String image;
     @JsonProperty("stock_list")
     private List<MLRelatedStockDTOv2> stock;
+    @JsonProperty("impact_score")
+    private double impactScore;
 }
