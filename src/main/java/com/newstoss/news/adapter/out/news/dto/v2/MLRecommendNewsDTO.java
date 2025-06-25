@@ -26,5 +26,7 @@ public class MLRecommendNewsDTO {
     private String clickScore;
     @JsonProperty("recommend_reasons")
     private List<String> recommendReasons;
+    @JsonProperty("stock_list")
+    private List<MLRelatedStockDTOv2> stock;
 
 }

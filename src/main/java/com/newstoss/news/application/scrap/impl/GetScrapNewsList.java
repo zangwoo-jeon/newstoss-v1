@@ -2,6 +2,8 @@ package com.newstoss.news.application.scrap.impl;
 
 import com.newstoss.news.adapter.in.web.news.dto.v2.NewsDTOv2;
 import com.newstoss.news.adapter.in.web.scrap.dto.ExternalNewsDTO;
+import com.newstoss.news.adapter.out.news.dto.v2.MLNewsDTOv2;
+import com.newstoss.news.application.news.v2.impl.NewsDTOv2Mapper;
 import com.newstoss.news.application.scrap.port.in.GetScrapNewsListUseCase;
 import com.newstoss.news.application.scrap.port.out.ScrapNewsPort;
 import lombok.RequiredArgsConstructor;
@@ -34,26 +36,17 @@ public class GetScrapNewsList implements GetScrapNewsListUseCase {
                 .toList();
     }
 
-    private ExternalNewsDTO getExternalNews(String newsId) {
+    private MLNewsDTOv2 getExternalNews(String newsId) {
         try {
             String url = EXTERNAL_API_BASE_URL + newsId;
-            return restTemplate.getForObject(url, ExternalNewsDTO.class);
+            return restTemplate.getForObject(url, MLNewsDTOv2.class);
         } catch (Exception e) {
             // 외부 API 호출 실패 시 null 반환하여 필터링
             return null;
         }
     }
 
-    private NewsDTOv2 convertToNewsDTOv2(ExternalNewsDTO externalNews) {
-        LocalDateTime wdate = LocalDateTime.parse(externalNews.getWdate(), DATE_FORMATTER);
-        return new NewsDTOv2(
-                externalNews.getNews_id(),
-                wdate,
-                externalNews.getTitle(),
-                externalNews.getArticle(),
-                externalNews.getUrl(),
-                externalNews.getPress(),
-                externalNews.getImage()
-        );
+    private NewsDTOv2 convertToNewsDTOv2(MLNewsDTOv2 mlNewsDTOv2) {
+        return NewsDTOv2Mapper.from(mlNewsDTOv2);
     }
 }
