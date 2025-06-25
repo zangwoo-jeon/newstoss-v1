@@ -1,5 +1,6 @@
 package com.newstoss.calender;
 
+import com.newstoss.global.response.SuccessResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -16,32 +17,21 @@ import java.util.List;
 public class CalendarController {
    private final CalendarRepository calendarRepository;
 
+   //캘린더 조회
    @GetMapping("")
    @Operation(summary = "캘린더 조회", description = "연도와 달로 IR을 조회합니다. 뒤에 day를 붙히면 해당 날짜의 IR을 조회합니다. market 파라미터로 코스피, 코스닥(한글로 쳐야됨) 필터링 가능합니다.")
-   public ResponseEntity<List<Calendar>> getMonthCalen(
+   public ResponseEntity<SuccessResponse<List<Calendar>>> getMonthCalen(
            @RequestParam Integer year,
            @RequestParam Integer month,
-           @RequestParam(required = false) String market,
            @RequestParam(required = false) Integer day
    ) {
-       if (day == null) {
-           // day가 없는 경우
-           if (market == null || market.isEmpty()) {
-               // market이 비어있으면 전체 조회
-               return ResponseEntity.ok(calendarRepository.findByYearAndMonth(year, month));
-           } else {
-               // market이 있으면 해당 market만 조회
-               return ResponseEntity.ok(calendarRepository.findByYearAndMonthAndMarket(year, month, market));
-           }
-       } else {
-           // day가 있는 경우
-           if (market == null || market.isEmpty()) {
-               // market이 비어있으면 전체 조회
-               return ResponseEntity.ok(calendarRepository.findByYearAndMonthAndDay(year, month, day));
-           } else {
-               // market이 있으면 해당 market만 조회
-               return ResponseEntity.ok(calendarRepository.findByYearAndMonthAndDayAndMarket(year, month, day, market));
-           }
-       }
+        if(day == null){
+            List<Calendar> result = calendarRepository.findByYearAndMonth(year, month);
+            return ResponseEntity.ok(new SuccessResponse<>(true, "캘린더 조회 성공", result));
+        }
+        else {
+            List<Calendar> result = calendarRepository.findByYearAndMonthAndDay(year, month, day);
+            return ResponseEntity.ok(new SuccessResponse<>(true, "캘린더 조회 성공", result));
+        }
    }
 }
