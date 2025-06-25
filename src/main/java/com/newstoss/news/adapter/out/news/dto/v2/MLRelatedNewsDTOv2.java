@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -20,4 +21,6 @@ public class MLRelatedNewsDTOv2 {
     private String image;
     private String summary;
     private double similarity;
+    @JsonProperty("stock_list")
+    private List<MLRelatedStockDTOv2> stock;
 }

@@ -2,6 +2,7 @@ package com.newstoss.news.adapter.in.web.news.dto.v2;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.newstoss.news.adapter.in.web.news.dto.v2.Meta.RelatedStockDTOv2;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -26,4 +27,6 @@ public class RecommendNewsDTO {
     private String clickScore;
     @JsonProperty("recommend_reasons")
     private List<String> recommendReasons;
+    @JsonProperty("stock_list")
+    private List<RelatedStockDTOv2> stock;
 }

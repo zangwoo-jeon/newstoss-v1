@@ -14,8 +14,9 @@ import java.util.List;
 
 public class NewsDTOv2Mapper {
     public static NewsDTOv2 from(MLNewsDTOv2 ml) {
-        return new NewsDTOv2(ml.getNewsId(),  LocalDateTime.parse(ml.getWdate()), ml.getTitle(), ml.getArticle(), ml.getUrl(), ml.getPress(), ml.getImage());
+        return new NewsDTOv2(ml.getNewsId(),  LocalDateTime.parse(ml.getWdate()), ml.getTitle(), ml.getArticle(), ml.getUrl(), ml.getPress(), ml.getImage(), mapToRelatedStockDTOs(ml.getStock()) );
     }
+
 
     public static RelatedNewsDTOv2 from(MLRelatedNewsDTOv2 ml) {
         return new RelatedNewsDTOv2(
@@ -26,7 +27,8 @@ public class NewsDTOv2Mapper {
                 ml.getUrl(),
                 ml.getImage(),
                 ml.getSummary(),
-                ml.getSimilarity()
+                ml.getSimilarity(),
+                mapToRelatedStockDTOs(ml.getStock())
         );
     }
 
@@ -36,7 +38,7 @@ public class NewsDTOv2Mapper {
     }
 
     public static HighlightNewsDTO from (MLHighlightNewsDTOv2 ml){
-        return new HighlightNewsDTO(ml.getNewsId(), LocalDateTime.parse(ml.getWdate()), ml.getTitle(), ml.getImage(), ml.getPress(), ml.getSummary(), ml.getImpactScore());
+        return new HighlightNewsDTO(ml.getNewsId(), LocalDateTime.parse(ml.getWdate()), ml.getTitle(), ml.getImage(), ml.getPress(), ml.getSummary(), ml.getImpactScore(), ml.getUrl(), mapToRelatedStockDTOs(ml.getStock()));
     }
 
     private static List<RelatedStockDTOv2> mapToRelatedStockDTOs(List<MLRelatedStockDTOv2> mlList) {
@@ -54,7 +56,7 @@ public class NewsDTOv2Mapper {
     }
 
     public static RecommendNewsDTO mapToRecommend(MLRecommendNewsDTO ml) {
-        return new RecommendNewsDTO(ml.getNewsId(), ml.getWdate(), ml.getTitle(), ml.getSummary(), ml.getImage(), ml.getPress(), ml.getUrl(), ml.getClickScore() ,ml.getRecommendReasons()); // 필드명에 맞춰 작성
+        return new RecommendNewsDTO(ml.getNewsId(), ml.getWdate(), ml.getTitle(), ml.getSummary(), ml.getImage(), ml.getPress(), ml.getUrl(), ml.getClickScore() ,ml.getRecommendReasons(), mapToRelatedStockDTOs(ml.getStock())); // 필드명에 맞춰 작성
     }
 
     public static ExternalDTO extenal(MLExternalDTO mlexternal){

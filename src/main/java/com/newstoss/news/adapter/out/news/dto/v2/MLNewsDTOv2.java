@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -20,4 +21,6 @@ public class MLNewsDTOv2 {
     private String url;
     private String press;
     private String image;
+    @JsonProperty("stock_list")
+    private List<MLRelatedStockDTOv2> stock;
 }
