@@ -21,9 +21,14 @@ public class RealTimeNewsDTO {
     private String press;
     private String url;
     private String image;
-    private double impact_score;
+    @JsonProperty("impact_score")
+    private double impactScore;
     @JsonProperty("news_count_total")
     private String newsCountTotal;
     @JsonProperty("news_count_today")
     private String newsCountToday;
+    @JsonProperty("stock_id")
+    private String stockId;
+    @JsonProperty("stock_name")
+    private String stockName;
 }
