@@ -30,8 +30,8 @@ public class NewsServiceV2 {
 //        return getRealTimeNews.exec();
 //    }
 
-    public NewsDTOv2 getDetailNews(String newsId, UUID memberId){
-        return getDetailNews.exec(newsId,memberId);
+    public NewsDTOv2 getDetailNews(String newsId){
+        return getDetailNews.exec(newsId);
     }
 
     public List<RelatedNewsDTOv2> getRelatedNews(String newsId) {
