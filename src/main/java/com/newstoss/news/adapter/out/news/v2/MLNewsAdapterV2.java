@@ -12,6 +12,8 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpServerErrorException;
+import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDateTime;
@@ -83,8 +85,25 @@ public class MLNewsAdapterV2 implements MLNewsPortV2 {
 
         try {
             restTemplate.postForEntity(url, entity, Void.class); // 응답을 기다리지 않음
-        } catch (Exception e) {
-            log.error("❌ ML 서버 요청 실패 - clientId: {}, question: {}", clientId, question, e);
+        }     // 👉 커넥션 수 부족 / 풀 고갈 등
+        catch (ResourceAccessException e) {
+            if (e.getCause() instanceof java.net.ConnectException) {
+                log.error("❌ [커넥션 실패] ML 서버에 연결할 수 없음 - clientId={}, {}", clientId, e.getMessage());
+            } else if (e.getCause() instanceof java.net.SocketTimeoutException) {
+                log.error("❌ [ML 응답 대기 중 타임아웃] clientId={} - {}", clientId, e.getMessage());
+            } else {
+                log.error("❌ [리소스 접근 예외] clientId={} - {}", clientId, e.getMessage());
+            }
+        }
+
+        // 👉 4xx or 5xx 응답
+        catch (HttpClientErrorException | HttpServerErrorException e) {
+            log.error("❌ [ML 서버 응답 오류] 상태코드={} clientId={} - 응답본문={}", e.getStatusCode(), clientId, e.getResponseBodyAsString());
+        }
+
+        // 👉 그 외 예외
+        catch (Exception e) {
+            log.error("❌ [기타 예외] ML 요청 중 알 수 없는 오류 발생 - clientId={}", clientId, e);
         }
     }
 
