@@ -20,7 +20,7 @@ public class RealTimeNewsDTO {
     private String title;
     private String article;
     private String summary;
-    private RelatedStockDTOv2 stockDTOv2;
+    private RelatedStockDTOv2 stock;
     private String press;
     private String url;
     private String image;
