@@ -116,9 +116,9 @@ public class MLNewsAdapterV2 implements MLNewsPortV2 {
     }
 
     @Override
-    public List<MLRecommendNewsDTO> recommendNews(String memberId) {
+    public MLRecommendNewsDTO recommendNews(String memberId) {
         String url = BASE_URL + "recommend" + "?user_id="+memberId;
-        return safeExchangeList(url, new ParameterizedTypeReference<>() {});
+        return safeGetObject(url, MLRecommendNewsDTO.class);
     }
 
     @Override
