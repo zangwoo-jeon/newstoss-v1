@@ -43,20 +43,7 @@ public class NewsControllerV2{
     public ResponseEntity<SuccessResponse<Object>> newsdetail(
             @RequestParam String newsId
     ) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        log.info("🔥 Controller authentication: {}", authentication);
-        log.info("🔥 Principal: {}", authentication.getPrincipal());
-        UUID memberId = null;
-
-        if (authentication != null && authentication.isAuthenticated() &&
-                authentication.getPrincipal() instanceof UserAccount userAccount) {
-            memberId = userAccount.getMemberId(); // ✅ 인증된 사용자만 추출
-            log.info("[newsdetail] 인증된 사용자 ID: {}", memberId);
-        } else {
-            log.info("[newsdetail] 비회원 요청");
-        }
-
-        NewsDTOv2 detailNews = newsServiceV2.getDetailNews(newsId, memberId);
+        NewsDTOv2 detailNews = newsServiceV2.getDetailNews(newsId);
         return ResponseEntity.ok(new SuccessResponse<>(true, "뉴스 상세 조회 성공", detailNews));
     }
     @Operation(summary = "유사 뉴스 조회", description = "특정 뉴스와 유사한 과거 뉴스를 조회합니다.")
