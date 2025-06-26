@@ -104,7 +104,6 @@ public class MLNewsAdapterV2 implements MLNewsPortV2 {
                 .bodyValue(request)
                 .retrieve()
                 .toBodilessEntity()
-                .doOnSuccess(response -> log.info("✅ [ML 응답 성공] clientId={}", clientId))
                 .doOnError(error -> log.error("❌ [ML 응답 실패] clientId={} - {}", clientId, error.getMessage()))
                 .subscribe();  // 비동기 실행
     }
