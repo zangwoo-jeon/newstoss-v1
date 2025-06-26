@@ -1,7 +1,6 @@
 package com.newstoss.news.application.news.v2.impl;
 
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.newstoss.news.adapter.in.web.news.dto.v2.*;
 import com.newstoss.news.adapter.in.web.news.dto.v2.Meta.IndustryListDTO;
 import com.newstoss.news.adapter.in.web.news.dto.v2.Meta.NewsMetaDataDTO;
@@ -56,8 +55,17 @@ public class NewsDTOv2Mapper {
     }
 
     public static RecommendNewsDTO mapToRecommend(MLRecommendNewsDTO ml) {
-        return new RecommendNewsDTO(ml.getNewsId(), ml.getWdate(), ml.getTitle(), ml.getSummary(), ml.getImage(), ml.getPress(), ml.getUrl(), ml.getClickScore() ,ml.getRecommendReasons(), mapToRelatedStockDTOs(ml.getStock())); // 필드명에 맞춰 작성
+        return new RecommendNewsDTO(ml.getUserClickCount(),
+                ml.isUseOtherUser(), ml.getOtherUserData(),mapRecommendNews(ml.getNewsData())); // 필드명에 맞춰 작성
     }
+
+    private static List<RecommendNewsDateDTO> mapRecommendNews(List<MLRecommendNewsDataDTO> ml){
+        return ml.stream()
+                .map(news -> new RecommendNewsDateDTO(news.getNewsId(), news.getWdate(), news.getTitle(), news.getSummary(),
+                        news.getImage(),news.getPress(), news.getUrl(),news.getClickScore(),news.getRecommendReasons(),mapToRelatedStockDTOs(news.getStock())))
+                .toList();
+    }
+
 
     public static ExternalDTO extenal(MLExternalDTO mlexternal){
         return new ExternalDTO(mlexternal.getNewsId(), mlexternal.getDMinus5DateClose(), mlexternal.getDMinus5DateVolume(),

@@ -55,7 +55,7 @@ public class NewsServiceV2 {
 
     public List<NewsDTOv2> stockNews(StockNewsDTO stockNewsDTO) { return getStockToNewsUseCase.exec(stockNewsDTO); }
 
-    public List<RecommendNewsDTO> recommedNews(UUID memberId) { return getRecommendNewsUseCase.exec(memberId); }
+    public RecommendNewsDTO recommedNews(UUID memberId) { return getRecommendNewsUseCase.exec(memberId); }
 
     public ExternalDTO extenal(String newsId){ return getExternalUseCaseV2.exec(newsId); }
 

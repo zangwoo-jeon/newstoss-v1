@@ -2,7 +2,6 @@ package com.newstoss.news.adapter.in.web.news.controller;
 
 import com.newstoss.global.jwt.JwtProvider;
 import com.newstoss.global.response.SuccessResponse;
-import com.newstoss.member.domain.UserAccount;
 import com.newstoss.news.adapter.in.web.news.dto.v2.*;
 import com.newstoss.news.adapter.in.web.news.dto.v2.Meta.NewsMetaDataDTO;
 import com.newstoss.news.adapter.in.web.news.dto.v2.Meta.RelatedNewsDTOv2;
@@ -12,11 +11,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.Cookie;
 
 import java.util.List;
 import java.util.UUID;
@@ -56,7 +51,7 @@ public class NewsControllerV2{
     @Operation(summary = "맞춤 뉴스", description = "유저의 맞춤뉴스를 불러옵니다.")
     @GetMapping("/recommend")
     public ResponseEntity<SuccessResponse<Object>> recommend(@RequestParam UUID userId){
-        List<RecommendNewsDTO> news = newsServiceV2.recommedNews(userId);
+        RecommendNewsDTO news = newsServiceV2.recommedNews(userId);
         return ResponseEntity.ok(new SuccessResponse<>(true, "과거 유사 뉴스 조회 성공", news));
     }
 
