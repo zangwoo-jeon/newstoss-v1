@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -20,7 +21,8 @@ public class RealTimeNewsDTO {
     private String title;
     private String article;
     private String summary;
-    private RelatedStockDTOv2 stock;
+    @JsonProperty("stock_list")
+    private List<RelatedStockDTOv2> stock;
     private String press;
     private String url;
     private String image;
