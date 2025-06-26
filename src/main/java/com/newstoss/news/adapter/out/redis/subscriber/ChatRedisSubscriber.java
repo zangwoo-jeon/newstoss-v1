@@ -64,7 +64,12 @@ public class ChatRedisSubscriber implements MessageListener {
         String rawMessage = new String(message.getBody());
         try {
             ChatStreamResponse response = objectMapper.readValue(rawMessage, ChatStreamResponse.class);
-            
+
+            if (response.getIndex() == 0) {
+                log.info("📥 [첫 메세지 수신] clientId={} index=0 시간 = {}", response.getClientId(), System.currentTimeMillis());
+            }
+
+
             if (response.getClientId() == null || response.getContent() == null || response.getIndex() == null) {
                 log.warn("❌ 필수값 누락: {}", rawMessage);
                 return;
