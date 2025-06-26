@@ -64,12 +64,7 @@ public class ChatRedisSubscriber implements MessageListener {
         String rawMessage = new String(message.getBody());
         try {
             ChatStreamResponse response = objectMapper.readValue(rawMessage, ChatStreamResponse.class);
-
-            if (response.getIndex() == 0) {
-                log.info("📥 [1️⃣ Redis 수신] clientId={} index=0 시간 = {}", response.getClientId(), System.currentTimeMillis());
-            }
-
-
+            
             if (response.getClientId() == null || response.getContent() == null || response.getIndex() == null) {
                 log.warn("❌ 필수값 누락: {}", rawMessage);
                 return;
@@ -115,7 +110,6 @@ public class ChatRedisSubscriber implements MessageListener {
 //            }
             if (emitters.getWriter(clientId).isPresent()) {
                 sendByWriter(clientId, msg, false); // ✨ Writer 방식 추가
-//                log.info("✅ Writer SSE 메시지 전송: {}", msg);
             }
             lastSentIndex.put(clientId, expectedIndex);
             expectedIndex++;
@@ -153,7 +147,7 @@ public class ChatRedisSubscriber implements MessageListener {
         emitters.getWriter(clientId).ifPresent(writer -> {
             try {
                 if (response.getIndex() == 0) {
-                    log.info("✅ [3️⃣ Writer 첫 메세지 전송 완료] clientId={}, index=0, time={}", clientId, System.currentTimeMillis());
+                    log.info("clientId={}, ✅ [첫 메세지 전송 완료], time={}", clientId, System.currentTimeMillis());
                 }
                 String jsonData = objectMapper.writeValueAsString(response.getContent());
 //                log.info("raw ml response : {}",response.getContent());
@@ -175,8 +169,7 @@ public class ChatRedisSubscriber implements MessageListener {
                         writer.write("event: chat\n");
                         writer.write("data: \"[DONE]\"\n\n");
                         writer.flush();
-                        log.info("✅ [3️⃣ Writer 전송 완료] clientId={}, index={}, time={}", clientId, response.getIndex(), System.currentTimeMillis());
-//                        log.info("✅ [DONE] 전송 완료: {}", clientId);
+                        log.info("✅ [[DONE] 전송 완료] clientId={}, index={}, time={}", clientId, response.getIndex(), System.currentTimeMillis());
                     } catch (Exception e) {
                         log.warn("❌ [DONE] 전송 실패: {}", e.getMessage());
                     } finally {
