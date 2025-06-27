@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 import java.util.List;
 import java.util.Optional;
@@ -15,7 +16,7 @@ import java.util.UUID;
 @RequestMapping("/api/favorite")
 @RequiredArgsConstructor
 //@CrossOrigin("*")
-@Tag(name = "관심 그룹 API", description = "관심 그룹룹 관련 API")
+@Tag(name = "관심 그룹 API", description = "관심 그룹 관련 API")
 public class FavoriteController {
 
     private final FavoriteService favoriteService;
