@@ -21,6 +21,7 @@ public class SignupService {
     private final ApplicationEventPublisher publisher;
 
     public Member exec(SignupRequestDTO signupRequestDTO){
+
         String passwordHash = passwordEncoder.encode(signupRequestDTO.getPassword());
 
         Member member = Member.builder()
