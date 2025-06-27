@@ -51,18 +51,12 @@ public class SecurityConfig {
                         .frameOptions(HeadersConfigurer.FrameOptionsConfig::disable)
                 )
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/h2-console/**", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
-                        .requestMatchers("/api/news/v2/**").permitAll()
-                        .requestMatchers("/api/newsLogs/**").permitAll()
-                        .requestMatchers("/api/v1/**").permitAll()
-                        .requestMatchers("/api/v2/**").permitAll()
-                        .requestMatchers("/api/favorite/**").permitAll()
-                        .requestMatchers("/api/scrap/**").permitAll()
-                        .requestMatchers("/api/sse/**").permitAll()
-                        .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers("/api/calen/**").permitAll()
-                        .requestMatchers("/api/**").permitAll()
-                        .anyRequest().authenticated() // 나머지는 인증 필요
+                        .requestMatchers(
+                                "/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html"
+                        ).permitAll()
+                        .requestMatchers("/api/portfolio/**").authenticated()
+                        .requestMatchers("/api/news/v2/recommend/**").authenticated() // 🔐 로그인 필요
+                        .anyRequest().permitAll()                             // 그 외는 모두 허용
                 )
                 .exceptionHandling(ex -> ex
                         .authenticationEntryPoint(jwtAuthenticationEntryPoint) // 401
