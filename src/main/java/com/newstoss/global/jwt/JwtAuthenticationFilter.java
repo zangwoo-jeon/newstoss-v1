@@ -1,13 +1,8 @@
 package com.newstoss.global.jwt;
 
-import com.newstoss.global.errorcode.JwtErrorCode;
 import com.newstoss.global.handler.CustomException;
-import com.newstoss.member.application.in.query.GetMemberService;
-import com.newstoss.member.domain.Member;
-import com.newstoss.member.domain.UserAccount;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.NonNull;
@@ -16,13 +11,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
+import org.w3c.dom.stylesheets.LinkStyle;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -32,66 +26,55 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    private final JwtProvider jwtProvider;
-    private final GetMemberService getMemberService;
+    private final JwtResolver jwtResolver;
+
+    // ✅ JWT 검사가 필요한 경로만 지정
+    private static final List<String> JWT_REQUIRED_PATHS = List.of(
+            "/api/sse/**",
+            "/api/news/v2/**",
+            "/api/v1/portfolios/**",
+            "/api/news/v2/recommend/**",
+            "/api/scrap/**"
+    );
 
     @Override
-    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-        return new AntPathMatcher().match("/api/sse/**", request.getRequestURI());
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+        String uri = request.getRequestURI();
+        AntPathMatcher matcher = new AntPathMatcher();
+        return JWT_REQUIRED_PATHS.stream().noneMatch(pattern -> matcher.match(pattern, uri));
     }
+
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request,
                                     @NonNull HttpServletResponse response,
                                     @NonNull FilterChain filterChain)
             throws ServletException, IOException {
-        String uri = request.getRequestURI();
 
-        String token = extractTokenFromCookie(request);
-
-        if (token != null && jwtProvider.validateToken(token)) {
-            UUID memberId = jwtProvider.getMemberId(token);
-            Member member = getMemberService.findById(memberId);
-            UserAccount userAccount = new UserAccount(
-                member.getMemberId(),
-                member.getAccount(),
-                member.getPassword(),
-                List.of(new SimpleGrantedAuthority("ROLE_USER"))
-            );
-            Authentication authentication =
-                    new UsernamePasswordAuthenticationToken(userAccount, null, userAccount.getAuthorities());
-            log.info("[JwtAuthenticationFilter] principal: {}", authentication.getPrincipal());
-            log.info("[JwtAuthenticationFilter] principal class: {}", authentication.getPrincipal() != null ? authentication.getPrincipal().getClass() : "null");
+        try {
+            UUID memberId = jwtResolver.extractMemberId(request);
+            Authentication authentication = new UsernamePasswordAuthenticationToken(memberId, null, null);
             SecurityContextHolder.getContext().setAuthentication(authentication);
+            log.info("✅ 로그인 사용자: {}", memberId);
+        } catch (CustomException e) {
+            // ❗ news/sse는 비회원 허용하므로, 로그만 찍고 필터 통과
+            if (isOptionalJwtRequest(request)) {
+                log.info("❗ 비회원 요청: {}", e.getMessage());
+            } else {
+                // 🔐 포트폴리오는 필수 → 예외를 그대로 던짐 (Spring이 401/403 처리)
+                throw e;
+            }
         }
 
         filterChain.doFilter(request, response);
     }
 
-    private String extractTokenFromCookie(HttpServletRequest request) {
-        if (request.getCookies() == null) return null;
-
-        for (Cookie cookie : request.getCookies()) {
-            if ("accessToken".equals(cookie.getName())) {
-                return cookie.getValue();
-            }
-        }
-        return null;
-    }
-
-    public UUID extractMemberIdFromToken(HttpServletRequest request) {
-        Cookie[] cookies = request.getCookies();
-        if (cookies == null) throw new CustomException(JwtErrorCode.MISSING_TOKEN);
-
-        String token = Arrays.stream(cookies)
-                .filter(c -> "accessToken".equals(c.getName()))
-                .findFirst()
-                .map(Cookie::getValue)
-                .orElseThrow(() -> new CustomException(JwtErrorCode.MISSING_TOKEN));
-
-        jwtProvider.validateToken(token);
-
-        return jwtProvider.getMemberId(token);
+    private boolean isOptionalJwtRequest(HttpServletRequest request) {
+        String uri = request.getRequestURI();
+        AntPathMatcher matcher = new AntPathMatcher();
+        return matcher.match("/api/sse/**", uri)
+                || (matcher.match("/api/news/v2/**", uri) && !matcher.match("/api/news/v2/recommend/**", uri));
     }
 }
+
 
 

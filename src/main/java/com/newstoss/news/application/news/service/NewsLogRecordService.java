@@ -1,6 +1,7 @@
 package com.newstoss.news.application.news.service;
 
 import com.newstoss.global.jwt.JwtProvider;
+import com.newstoss.global.jwt.JwtResolver;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -15,13 +16,12 @@ import java.util.UUID;
 public class NewsLogRecordService {
     private static final Logger log = LoggerFactory.getLogger("com.newstoss.news.application.news.v2.impl.ml");
 
-    private final JwtProvider jwtProvider;
+    private final JwtResolver jwtResolver;
 
     public void recordNewsLog(String newsId, HttpServletRequest request) {
         try {
-            String token = extractTokenFromCookie(request);
-            if (token != null && jwtProvider.validateToken(token)) {
-                UUID memberId = jwtProvider.getMemberId(token);
+            UUID memberId = jwtResolver.extractMemberId(request);
+            if (memberId != null) {
                 log.info("[memberId : {}] [newsId : {}]", memberId, newsId);
             } else {
                 log.info("[memberId : anonymous] [newsId : {}]", newsId);
@@ -31,15 +31,4 @@ public class NewsLogRecordService {
         }
     }
 
-    // 쿠키에서 토큰 추출하는 헬퍼 메서드
-    private String extractTokenFromCookie(HttpServletRequest request) {
-        if (request.getCookies() == null) return null;
-
-        for (Cookie cookie : request.getCookies()) {
-            if ("accessToken".equals(cookie.getName())) {
-                return cookie.getValue();
-            }
-        }
-        return null;
-    }
 } 

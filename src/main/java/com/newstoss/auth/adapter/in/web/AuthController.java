@@ -2,8 +2,11 @@ package com.newstoss.auth.adapter.in.web;
 
 import com.newstoss.auth.adapter.in.web.dto.requestDTO.LoginDTO;
 import com.newstoss.auth.application.AuthService;
+import com.newstoss.global.jwt.JwtResolver;
 import com.newstoss.global.response.SuccessResponse;
+import com.zaxxer.hikari.util.SuspendResumeLock;
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseCookie;
@@ -16,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class AuthController {
     private final AuthService authService;
+    private final JwtResolver jwtResolver;
 
     @PostMapping("/login")
     public ResponseEntity<SuccessResponse<Object>> login(@RequestBody LoginDTO request, HttpServletResponse response) {
@@ -38,5 +42,19 @@ public class AuthController {
         cookie.setPath("/");
         response.addCookie(cookie);
         return ResponseEntity.ok().build();
+    }
+    
+    @GetMapping("/refresh")
+    public ResponseEntity<SuccessResponse<Object>> refresh(HttpServletResponse response, HttpServletRequest request) {
+        String token = authService.token(request);
+        ResponseCookie cookie = ResponseCookie.from("accessToken", token)
+                .httpOnly(true)
+                .secure(true)
+                .path("/")
+                .maxAge(3600)
+                .sameSite("None") // 핵심
+                .build();
+        response.setHeader("Set-Cookie", cookie.toString());
+        return ResponseEntity.ok(new SuccessResponse<>(true, "토큰 재발급 성공", token));
     }
 }
