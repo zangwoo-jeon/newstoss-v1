@@ -8,6 +8,7 @@ import com.newstoss.member.adapter.in.web.dto.requestDTO.WithdrawDTO;
 import com.newstoss.member.application.MemberService;
 import com.newstoss.member.domain.Member;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +24,7 @@ import java.util.UUID;
 public class MemberController {
     private final MemberService memberService;
     @PostMapping("/register")
-    public ResponseEntity<SuccessResponse<Object>> signup(@RequestBody SignupRequestDTO requestDTO){
+    public ResponseEntity<SuccessResponse<Object>> signup(@Valid @RequestBody SignupRequestDTO requestDTO){
         Member member= memberService.signup(requestDTO);
         return ResponseEntity.ok(new SuccessResponse<>(true, "회원가입 성공", null));
     }
