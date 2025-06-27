@@ -15,6 +15,7 @@ import java.util.UUID;
 @RequestMapping("/api/favorite")
 @RequiredArgsConstructor
 //@CrossOrigin("*")
+@Tag(name = "관심 그룹 API", description = "관심 그룹룹 관련 API")
 public class FavoriteController {
 
     private final FavoriteService favoriteService;

@@ -14,6 +14,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/calen")
 @RequiredArgsConstructor
+@Tag(name = "IR 일정 캘린더 API", description = "IR 일정 캘린더 관련 API")
 public class CalendarController {
    private final CalendarRepository calendarRepository;
 
