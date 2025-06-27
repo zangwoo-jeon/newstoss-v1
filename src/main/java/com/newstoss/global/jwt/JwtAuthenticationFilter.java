@@ -54,13 +54,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             UUID memberId = jwtResolver.extractMemberId(request);
             Authentication authentication = new UsernamePasswordAuthenticationToken(memberId, null, null);
             SecurityContextHolder.getContext().setAuthentication(authentication);
-            log.info("✅ 로그인 사용자: {}", memberId);
         } catch (CustomException e) {
             // ❗ news/sse는 비회원 허용하므로, 로그만 찍고 필터 통과
-            if (isOptionalJwtRequest(request)) {
-                log.info("❗ 비회원 요청: {}", e.getMessage());
-            } else {
-                // 🔐 포트폴리오는 필수 → 예외를 그대로 던짐 (Spring이 401/403 처리)
+            if (! isOptionalJwtRequest(request)) {
                 throw e;
             }
         }
