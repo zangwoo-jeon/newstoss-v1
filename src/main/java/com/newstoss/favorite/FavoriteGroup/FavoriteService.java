@@ -18,7 +18,7 @@ public class FavoriteService {
     private final FavoriteStockRepository favoriteStockRepository;
 
     public List<Favorite> getFavoritesByMemberId(UUID memberId) {
-        return favoriteRepository.findByMemberId(memberId);
+        return favoriteRepository.findByMemberIdOrderByGroupSequenceAsc(memberId);
     }
 
     @Transactional

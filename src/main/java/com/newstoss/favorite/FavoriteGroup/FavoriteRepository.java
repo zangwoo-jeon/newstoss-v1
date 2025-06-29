@@ -3,6 +3,7 @@ package com.newstoss.favorite.FavoriteGroup;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,4 +25,7 @@ public interface FavoriteRepository extends JpaRepository<Favorite, UUID> {
 
     @Query("SELECT MAX(f.groupSequence) FROM Favorite f WHERE f.memberId = :memberId")
     Integer findMaxGroupSequenceByMemberId(UUID memberId);
+
+    @Query("SELECT f FROM Favorite f WHERE f.memberId = :memberId ORDER BY f.groupSequence ASC")
+    List<Favorite> findByMemberIdOrderByGroupSequenceAsc(@Param("memberId") UUID memberId);
 }

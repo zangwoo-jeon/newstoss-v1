@@ -32,7 +32,6 @@ public class FavoriteStock {
         FavoriteStock favoriteStock = new FavoriteStock();
         favoriteStock.favorite = favorite;
         favoriteStock.stock = stock;
-        favorite.getFavoriteStocks().add(favoriteStock);
         return favoriteStock;
     }
 }
