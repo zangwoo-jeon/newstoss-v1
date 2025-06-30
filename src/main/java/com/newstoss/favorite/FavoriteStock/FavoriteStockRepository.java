@@ -34,4 +34,8 @@ public interface FavoriteStockRepository extends JpaRepository<FavoriteStock, Lo
     @Modifying
     @Query("UPDATE FavoriteStock fs SET fs.stockSequence = fs.stockSequence + 1 WHERE fs.favorite = :favorite AND fs.stockSequence BETWEEN :start AND :end")
     void incrementStockSequenceBetween(@Param("favorite") Favorite favorite, @Param("start") Integer start, @Param("end") Integer end);
+
+    @Modifying
+    @Query("DELETE FROM FavoriteStock fs WHERE fs.favorite.groupId = :groupId")
+    void deleteByFavoriteGroupId(@Param("groupId") UUID groupId);
 }
