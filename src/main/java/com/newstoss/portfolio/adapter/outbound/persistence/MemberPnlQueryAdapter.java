@@ -64,7 +64,7 @@ public class MemberPnlQueryAdapter implements GetMemberPnlPeriodPort , GetMember
 
     @Override
     public Long monthlyMemberPnlAcc(UUID memberId) {
-        LocalDate end = LocalDate.now().minusDays(1);
+        LocalDate end = LocalDate.now();
         LocalDate start = end.withDayOfMonth(1);
         Long acc = repository.findAccByMemberIdAndDateBetween(memberId, start, end);
         if (acc == null) {
