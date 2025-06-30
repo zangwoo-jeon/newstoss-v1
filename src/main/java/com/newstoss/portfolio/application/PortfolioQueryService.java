@@ -34,14 +34,28 @@ public class PortfolioQueryService implements GetPortfolioStockUseCase {
 
         List<PortfolioStocksResponseDto> dtos = portfolioStocks.stream()
                 .map(portfolioStock -> {
-                    PortfolioStocksResponseDto dto = new PortfolioStocksResponseDto(portfolioStock);
-                    KisStockDto stockInfo = stockInfoPort.getStockInfo(portfolioStock.getStock().getStockCode());
-                    int price = Integer.parseInt(stockInfo.getPrice());
-                    int count = portfolioStock.getStockCount();
-                    dto.updatePrices(price,((long) (price - portfolioStock.getEntryPrice()) * count),((double) (price - portfolioStock.getEntryPrice()) / portfolioStock.getEntryPrice()) * 100);
-                    return dto;
+                    KisStockDto stockDto = stockInfoPort.getStockInfo(portfolioStock.getStockCode());
+                    return getDto(portfolioStock, stockDto);
                 }).toList();
         return new PortfolioDailyPnlResponseDto(dtos);
+    }
+
+    private static PortfolioStocksResponseDto getDto(PortfolioStock portfolioStock, KisStockDto stockDto) {
+        int avgEntryPrice = portfolioStock.getEntryPrice();
+        int totalCount = portfolioStock.getStockCount();
+        int price = Integer.parseInt(stockDto.getPrice());
+        long unrealizedPnl = (long) (price - avgEntryPrice) * totalCount;
+        double returnRate = ((double)(price - avgEntryPrice)) / avgEntryPrice;
+        return new PortfolioStocksResponseDto(
+                portfolioStock.getStockName(),
+                portfolioStock.getStockImage(),
+                portfolioStock.getStockCode(),
+                portfolioStock.getStockCount(),
+                portfolioStock.getEntryPrice(),
+                price,
+                unrealizedPnl,
+                returnRate
+        );
     }
 
 }

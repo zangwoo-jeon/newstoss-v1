@@ -68,7 +68,7 @@ public class JpaMemberInfoRepositoryImpl implements JpaMemberInfoRepository {
         dto.setInvestScore(tuple.get(member.investScore));
 
         List<MemberStockDto> list = queryFactory
-                .select(new QMemberStockDto(portfolioStock.stock.stockCode, portfolioStock.stock.name ,
+                .select(new QMemberStockDto(portfolioStock.stockCode, portfolioStock.stockName ,
                         portfolioStock.unrealizedPnl))
                 .from(portfolioStock)
                 .where(portfolioStock.memberId.eq(memberId))

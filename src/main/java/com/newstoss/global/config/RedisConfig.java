@@ -1,5 +1,11 @@
 package com.newstoss.global.config;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.jsontype.impl.LaissezFaireSubTypeValidator;
 import com.newstoss.global.kis.dto.KisApiRequestDto;
 import com.newstoss.news.adapter.out.redis.subscriber.ChatRedisSubscriber;
 import com.newstoss.news.adapter.out.redis.subscriber.NewsRedisSubscriber;
@@ -16,6 +22,7 @@ import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
+import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.data.redis.stream.StreamMessageListenerContainer;
 
@@ -29,7 +36,7 @@ import com.newstoss.stock.application.V2.KisStreamListener;
 @Slf4j
 public class RedisConfig {
 
-    private final NewsRedisSubscriber subscriber;
+//    private final NewsRedisSubscriber subscriber;
 
     @Bean
     public RedisMessageListenerContainer redisContainer(
@@ -54,20 +61,36 @@ public class RedisConfig {
     }
 
     @Bean
+    public ObjectMapper redisObjectMapper() {
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.findAndRegisterModules();
+        objectMapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
+        objectMapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
+//        objectMapper.activateDefaultTyping(
+//                LaissezFaireSubTypeValidator.instance,
+//                ObjectMapper.DefaultTyping.NON_FINAL,
+//                JsonTypeInfo.As.PROPERTY
+//        );
+        return objectMapper;
+    }
+
+    @Bean
     @Primary
-    public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory connectionFactory) {
+    public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory connectionFactory,
+                                                       ObjectMapper redisObjectMapper) {
         RedisTemplate<String, Object> template = new RedisTemplate<>();
         template.setConnectionFactory(connectionFactory);
 
-        // key serializer: 일반 String
         template.setKeySerializer(new StringRedisSerializer());
         template.setHashKeySerializer(new StringRedisSerializer());
 
-        // value serializer: JSON (객체 저장 시)
-        template.setValueSerializer(new GenericJackson2JsonRedisSerializer());
-        template.setHashValueSerializer(new GenericJackson2JsonRedisSerializer());
+        Jackson2JsonRedisSerializer<Object> serializer =
+                new Jackson2JsonRedisSerializer<>(redisObjectMapper, Object.class);
 
+        template.setValueSerializer(serializer);
+        template.setHashValueSerializer(serializer);
         template.afterPropertiesSet();
+
         return template;
     }
 //
@@ -79,31 +102,31 @@ public class RedisConfig {
 //        return template;
 //    }
 
-    @Bean
-    public StreamMessageListenerContainer<String, MapRecord<String,Object,Object>> streamMessageListenerContainer(
-            RedisConnectionFactory redisConnectionFactory,
-            KisStreamListener consumer // 등록할 핸들러 주입
-    ) {
-
-        StreamMessageListenerContainer.StreamMessageListenerContainerOptions<String, MapRecord<String, Object, Object>> options =
-                StreamMessageListenerContainer.StreamMessageListenerContainerOptions.builder()
-                        .pollTimeout(Duration.ofSeconds(1))
-                        .batchSize(20)
-                        .keySerializer(new StringRedisSerializer())
-                        .hashKeySerializer(new StringRedisSerializer())
-                        .hashValueSerializer(new GenericJackson2JsonRedisSerializer()) // Jackson 기반 JSON 직렬화
-                        .build();
-
-        StreamMessageListenerContainer<String, MapRecord<String,Object,Object>> container =
-                StreamMessageListenerContainer.create(redisConnectionFactory, options);
-
-        container.receive(
-                Consumer.from("kis-group", "worker-1"),
-                StreamOffset.create("kis-api-request", ReadOffset.lastConsumed()),
-                consumer // KisApiStreamConsumer가 StreamListener 구현해야 함
-        );
-
-        container.start();
-        return container;
-    }
+//    @Bean
+//    public StreamMessageListenerContainer<String, MapRecord<String,Object,Object>> streamMessageListenerContainer(
+//            RedisConnectionFactory redisConnectionFactory,
+//            KisStreamListener consumer // 등록할 핸들러 주입
+//    ) {
+//
+//        StreamMessageListenerContainer.StreamMessageListenerContainerOptions<String, MapRecord<String, Object, Object>> options =
+//                StreamMessageListenerContainer.StreamMessageListenerContainerOptions.builder()
+//                        .pollTimeout(Duration.ofSeconds(1))
+//                        .batchSize(20)
+//                        .keySerializer(new StringRedisSerializer())
+//                        .hashKeySerializer(new StringRedisSerializer())
+//                        .hashValueSerializer(new GenericJackson2JsonRedisSerializer()) // Jackson 기반 JSON 직렬화
+//                        .build();
+//
+//        StreamMessageListenerContainer<String, MapRecord<String,Object,Object>> container =
+//                StreamMessageListenerContainer.create(redisConnectionFactory, options);
+//
+//        container.receive(
+//                Consumer.from("kis-group", "worker-1"),
+//                StreamOffset.create("kis-api-request", ReadOffset.lastConsumed()),
+//                consumer // KisApiStreamConsumer가 StreamListener 구현해야 함
+//        );
+//
+//        container.start();
+//        return container;
+//    }
 }
