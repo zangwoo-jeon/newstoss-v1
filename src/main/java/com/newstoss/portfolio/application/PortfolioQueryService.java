@@ -11,6 +11,7 @@ import com.newstoss.portfolio.entity.PortfolioStock;
 import com.newstoss.stock.adapter.outbound.kis.dto.KisStockDto;
 import com.newstoss.stock.application.port.out.kis.StockInfoPort;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,6 +21,7 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
+@Slf4j
 public class PortfolioQueryService implements GetPortfolioStockUseCase {
 
     private final GetPortfolioStocksPort getPortfolioStocksPort;
@@ -29,7 +31,8 @@ public class PortfolioQueryService implements GetPortfolioStockUseCase {
     public PortfolioDailyPnlResponseDto getPortfolioStocks(UUID memberId) {
         List<PortfolioStock> portfolioStocks = getPortfolioStocksPort.getPortfolioStocks(memberId);
         if (portfolioStocks.isEmpty()) {
-            throw new CustomException(PortfolioErrorCode.PORTFOLIO_NOT_FOUND);
+            log.info("포트폴리오가 비었습니다.");
+            return null;
         }
 
         List<PortfolioStocksResponseDto> dtos = portfolioStocks.stream()
