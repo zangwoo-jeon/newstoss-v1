@@ -1,5 +1,6 @@
 package com.newstoss.portfolio.adapter.inbound.web.dto.response;
 
+import com.newstoss.portfolio.adapter.inbound.web.dto.MemberPnlDto;
 import com.newstoss.portfolio.entity.MemberPnl;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
@@ -17,10 +18,10 @@ import java.util.List;
 public class MemberPnlPeriodResponseDto {
 
     @Schema(description = "손익 이력")
-    private List<MemberPnl> pnlHistory; // 손익 이력
+    private List<MemberPnlDto> pnlHistory; // 손익 이력
 
     @Schema(description = "과거 자산", example = "100000")
-    private Long PeriodAsset; // 과거 자산
+    private Long periodAsset; // 과거 자산
 
 
 

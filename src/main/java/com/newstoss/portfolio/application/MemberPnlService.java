@@ -3,6 +3,7 @@ package com.newstoss.portfolio.application;
 import com.newstoss.global.errorcode.MemberPnlErrorCode;
 import com.newstoss.global.handler.CustomException;
 import com.newstoss.member.domain.event.MemberSignUpEvent;
+import com.newstoss.portfolio.adapter.inbound.web.dto.MemberPnlDto;
 import com.newstoss.portfolio.adapter.inbound.web.dto.response.MemberPnlPeriodResponseDto;
 import com.newstoss.portfolio.application.port.in.GetMemberPnlAccUseCase;
 import com.newstoss.portfolio.application.port.in.GetMemberPnlPeriodUseCase;
@@ -40,13 +41,19 @@ public class MemberPnlService implements GetMemberPnlPeriodUseCase , GetMemberPn
         }
 
         List<MemberPnl> memberPnlList = getMemberPnlPeriodPort.getMemberPnlDaily(memberId, startDate, endDate);
+        List<MemberPnlDto> list = memberPnlList.stream()
+                .map(p -> new MemberPnlDto(
+                        p.getDate(),
+                        p.getPnl(),
+                        p.getAsset()
+                )).toList();
 
         Long prevAsset = getMemberPnlPort.getMemberPnl(memberId, startDate)
                 .map(MemberPnl::getAsset)
                 .orElse(0L);
 
         return new MemberPnlPeriodResponseDto(
-                memberPnlList,
+                list,
                 prevAsset
         );
     }
