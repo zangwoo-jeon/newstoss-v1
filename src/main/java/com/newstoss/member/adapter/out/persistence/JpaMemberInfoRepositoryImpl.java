@@ -32,8 +32,9 @@ public class JpaMemberInfoRepositoryImpl implements JpaMemberInfoRepository {
         Tuple result = queryFactory
                 .select(member.name, member.investScore , memberPnl.asset)
                 .from(member)
-                .join(memberPnl).on(memberPnl.memberId.eq(member.memberId))
-                .where(member.memberId.eq(id), memberPnl.date.eq(LocalDate.now()))
+                .leftJoin(memberPnl).on(memberPnl.memberId.eq(member.memberId)
+                .and(memberPnl.date.eq(LocalDate.now())))
+                .where(member.memberId.eq(id))
                 .fetchOne();
 
         if (result == null) return null;
@@ -45,10 +46,10 @@ public class JpaMemberInfoRepositoryImpl implements JpaMemberInfoRepository {
     public List<MemberInfoDto> findMemberInfos() {
         List<MemberInfoDto> dtos = new ArrayList<>();
         List<Tuple> result = queryFactory
-                .select(member.memberId,member.name, member.investScore, memberPnl.asset)
+                .select(member.memberId, member.name, member.investScore, memberPnl.asset)
                 .from(member)
-                .join(memberPnl).on(memberPnl.memberId.eq(member.memberId))
-                .where(memberPnl.date.eq(LocalDate.now()))
+                .leftJoin(memberPnl).on(memberPnl.memberId.eq(member.memberId)
+                        .and(memberPnl.date.eq(LocalDate.now())))
                 .fetch();
         if (result.isEmpty()) return dtos;
         for (Tuple tuple : result) {
@@ -63,7 +64,7 @@ public class JpaMemberInfoRepositoryImpl implements JpaMemberInfoRepository {
         MemberInfoDto dto = new MemberInfoDto();
         dto.setMemberId(memberId);
         dto.setUsername(tuple.get(member.name));
-        dto.setAsset(tuple.get(memberPnl.asset));
+        dto.setAsset(tuple.get(memberPnl.asset) != null ? tuple.get(memberPnl.asset) : 0L);
         dto.setInvestScore(tuple.get(member.investScore));
 
         List<MemberStockDto> list = queryFactory
