@@ -32,8 +32,9 @@ public class JpaMemberInfoRepositoryImpl implements JpaMemberInfoRepository {
         Tuple result = queryFactory
                 .select(member.name, member.investScore , memberPnl.asset)
                 .from(member)
-                .join(memberPnl).on(memberPnl.memberId.eq(member.memberId))
-                .where(member.memberId.eq(id), memberPnl.date.eq(LocalDate.now()))
+                .leftJoin(memberPnl).on(memberPnl.memberId.eq(member.memberId)
+                .and(memberPnl.date.eq(LocalDate.now())))
+                .where(member.memberId.eq(id))
                 .fetchOne();
 
         if (result == null) return null;
