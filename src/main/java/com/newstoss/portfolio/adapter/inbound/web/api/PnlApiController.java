@@ -52,7 +52,7 @@ public class PnlApiController {
             }
     )
     @Parameter(name = "period" , example = "D , W , M , 3M , Y")
-    @GetMapping("{memberId}")
+    @GetMapping("/{memberId}")
     public ResponseEntity<?> getMemberPnlPeriod(@PathVariable("memberId") UUID memberId,
                                                 @RequestParam String period) {
         log.info("getMemberPnlPeriod called");
