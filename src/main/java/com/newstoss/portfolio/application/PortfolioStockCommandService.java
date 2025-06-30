@@ -55,7 +55,7 @@ public class PortfolioStockCommandService implements CreatePortfolioStockUseCase
         double returnRate = ((double)(price - avgEntryPrice)) / avgEntryPrice * 100.0;
 
         return new PortfolioStocksResponseDto(
-                stockDto.getStockName(), stockDto.getStockImage(), stockDto.getStockCode(), stockCount, entryPrice, price,
+                stockDto.getStockName(), stockDto.getStockImage(), stockDto.getStockCode(), totalCount, avgEntryPrice, price,
                 unrealizedPnl, returnRate);
     }
 
@@ -78,7 +78,7 @@ public class PortfolioStockCommandService implements CreatePortfolioStockUseCase
             int entryPrice = portfolioStock.getEntryPrice();
             double returnRate = ((double)(price - entryPrice)) / entryPrice * 100.0;
             dto = new PortfolioStocksResponseDto(
-                    stockInfo.getStockName(), stockInfo.getStockImage(), stockInfo.getStockCode(), stockCount, entryPrice, price,
+                    stockInfo.getStockName(), stockInfo.getStockImage(), stockInfo.getStockCode(), totalCount, entryPrice, price,
                     (long) (price - entryPrice) * totalCount,returnRate
             );
         }
