@@ -38,7 +38,7 @@ public class PortfolioStockCommandService implements CreatePortfolioStockUseCase
         createPortfolioStockPort.savePortfolio(memberId,portfolio,stockDto,stockCount,entryPrice,stockDto.getStockImage());
         int price = Integer.parseInt(stockDto.getPrice());
         return new PortfolioStocksResponseDto(
-                stockDto.getStockName(),stockDto.getStockImage(),stockDto.getStockCode(),stockCount,entryPrice,price,(long)(price - entryPrice) * stockCount, (double) ((price - entryPrice) / entryPrice)
+                stockDto.getStockName(),stockDto.getStockImage(),stockDto.getStockCode(),stockCount,entryPrice,price,(long)(price - entryPrice) * stockCount, ((double)(price - entryPrice)) / entryPrice *100.0
         );
     }
 
@@ -52,7 +52,7 @@ public class PortfolioStockCommandService implements CreatePortfolioStockUseCase
         int totalCount = portfolioStock.getStockCount();
 
         long unrealizedPnl = (long) (price - avgEntryPrice) * totalCount;
-        double returnRate = ((double)(price - avgEntryPrice)) / avgEntryPrice;
+        double returnRate = ((double)(price - avgEntryPrice)) / avgEntryPrice * 100.0;
 
         return new PortfolioStocksResponseDto(
                 stockDto.getStockName(), stockDto.getStockImage(), stockDto.getStockCode(), stockCount, entryPrice, price,
@@ -76,7 +76,7 @@ public class PortfolioStockCommandService implements CreatePortfolioStockUseCase
         } else {
             Integer totalCount = portfolioStock.getStockCount();
             int entryPrice = portfolioStock.getEntryPrice();
-            double returnRate = ((double)(price - entryPrice)) / entryPrice;
+            double returnRate = ((double)(price - entryPrice)) / entryPrice * 100.0;
             dto = new PortfolioStocksResponseDto(
                     stockInfo.getStockName(), stockInfo.getStockImage(), stockInfo.getStockCode(), stockCount, entryPrice, price,
                     (long) (price - entryPrice) * totalCount,returnRate

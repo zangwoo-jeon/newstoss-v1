@@ -48,7 +48,7 @@ public class PortfolioQueryService implements GetPortfolioStockUseCase {
         int totalCount = portfolioStock.getStockCount();
         int price = Integer.parseInt(stockDto.getPrice());
         long unrealizedPnl = (long) (price - avgEntryPrice) * totalCount;
-        double returnRate = ((double)(price - avgEntryPrice)) / avgEntryPrice;
+        double returnRate = ((double)(price - avgEntryPrice)) / avgEntryPrice * 100.0;
         return new PortfolioStocksResponseDto(
                 portfolioStock.getStockName(),
                 portfolioStock.getStockImage(),
