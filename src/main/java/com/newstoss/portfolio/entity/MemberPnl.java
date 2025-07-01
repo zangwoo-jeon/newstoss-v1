@@ -14,7 +14,7 @@ import static lombok.AccessLevel.*;
 @Entity
 @Getter
 @NoArgsConstructor(access = PROTECTED)
-@Table(name = "member_pnl", schema = "test_schema")
+@Table(name = "member_pnl")
 public class MemberPnl extends BaseTimeEntity {
     @Id @GeneratedValue(strategy = IDENTITY)
     private Long id;

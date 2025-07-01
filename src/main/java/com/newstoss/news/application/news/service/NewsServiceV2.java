@@ -26,13 +26,14 @@ public class NewsServiceV2 {
     private final GetStockToNewsUseCase getStockToNewsUseCase;
     private final GetRecommendNewsUseCase getRecommendNewsUseCase;
     private final GetExternalUseCaseV2 getExternalUseCaseV2;
+    private final GetNewsCountUseCaseV2 getNewsCountUseCaseV2;
 
 //    public List<NewsDTOv2> getRealTimeNews(){
 //        return getRealTimeNews.exec();
 //    }
 
-    public NewsDTOv2 getDetailNews(String newsId, UUID memberId){
-        return getDetailNews.exec(newsId,memberId);
+    public NewsDTOv2 getDetailNews(String newsId){
+        return getDetailNews.exec(newsId);
     }
 
     public List<RelatedNewsDTOv2> getRelatedNews(String newsId) {
@@ -54,7 +55,9 @@ public class NewsServiceV2 {
 
     public List<NewsDTOv2> stockNews(StockNewsDTO stockNewsDTO) { return getStockToNewsUseCase.exec(stockNewsDTO); }
 
-    public List<RecommendNewsDTO> recommedNews(UUID memberId) { return getRecommendNewsUseCase.exec(memberId); }
+    public RecommendNewsDTO recommedNews(UUID memberId) { return getRecommendNewsUseCase.exec(memberId); }
 
     public ExternalDTO extenal(String newsId){ return getExternalUseCaseV2.exec(newsId); }
+
+    public CountDTO count(){return getNewsCountUseCaseV2.exec(); }
 }

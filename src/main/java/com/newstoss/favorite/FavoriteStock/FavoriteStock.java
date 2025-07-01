@@ -1,7 +1,6 @@
 package com.newstoss.favorite.FavoriteStock;
 
 import com.newstoss.favorite.FavoriteGroup.Favorite;
-import com.newstoss.stock.entity.Stock;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,17 +20,16 @@ public class FavoriteStock {
     @JoinColumn(name = "group_id", nullable = false)
     private Favorite favorite;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "stock_id")
-    private Stock stock;
+    @Column(name = "stock_code", nullable = false)
+    private String stockCode;
 
     private Integer stockSequence;
 
     //== 생성 메서드 ==//
-    public static FavoriteStock createFavoriteStock(Favorite favorite, Stock stock) {
+    public static FavoriteStock createFavoriteStock(Favorite favorite, String stockCode) {
         FavoriteStock favoriteStock = new FavoriteStock();
         favoriteStock.favorite = favorite;
-        favoriteStock.stock = stock;
+        favoriteStock.stockCode = stockCode;
         return favoriteStock;
     }
 }

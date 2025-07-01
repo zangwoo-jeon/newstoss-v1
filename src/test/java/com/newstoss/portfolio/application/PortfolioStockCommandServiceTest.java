@@ -59,7 +59,7 @@ class PortfolioStockCommandServiceTest {
                 .build();
         MemberPnl memberPnl = MemberPnl.createMemberPnl(uuid, 0L, LocalDate.now(), 0L);
         memberRepository.save(member);
-        portfolioRepo.save(Portfolio.createPortfolio(uuid, 0L,0L));
+        portfolioRepo.save(Portfolio.createPortfolio(uuid, 0L,0L, 0L));
         memberPnlCommandAdapter.create(memberPnl);
     }
 
@@ -109,7 +109,7 @@ class PortfolioStockCommandServiceTest {
                 () -> new RuntimeException("Stock not found")
         );
         Portfolio portfolio = portfolioRepo.findByMemberId(id).get();
-        PortfolioStock portfolioStock = PortfolioStock.createPortfolio(id,portfolio, stock, 10, 50000);
+        PortfolioStock portfolioStock = PortfolioStock.createPortfolio(id,portfolio, stock, 10,10, 50000);
         portfolioRepository.save(portfolioStock);
         //when
         portfolioCommandService.addPortfolio(id, "005930", 10, 60000);

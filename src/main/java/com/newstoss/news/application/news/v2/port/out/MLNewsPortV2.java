@@ -26,7 +26,9 @@ public interface MLNewsPortV2 {
 
     List<MLNewsDTOv2> stockToNews(int skip, int limit, String stock_code);
 
-    List<MLRecommendNewsDTO> recommendNews(String memberId);
+    MLRecommendNewsDTO recommendNews(String memberId);
 
     MLExternalDTO external(String newsId);
+
+    MLNewsCountDTO count();
 }

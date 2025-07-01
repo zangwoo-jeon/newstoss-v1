@@ -40,7 +40,7 @@ public class PortfolioApiController {
             responses = {
                     @ApiResponse(
                             responseCode = "200",
-                            description = "포트폴리오 손익 기간 조회 성공",
+                            description = "포트폴리오 손익 기간 생성 성공",
                             content = @Content(
                                     mediaType = "application/json",
                                     schema = @Schema(implementation = PortfolioStocksResponseDto.class)
@@ -56,7 +56,7 @@ public class PortfolioApiController {
                     )
             }
     )
-    @PostMapping("{memberId}")
+    @PostMapping("/{memberId}")
     public ResponseEntity<?> createPortfolio(@PathVariable("memberId") UUID memberId,
                                              @RequestBody CreatePortfolioRequestDto dto) {
         PortfolioStocksResponseDto portfolio = createPortfolio.createPortfolioStock(memberId, dto.getStockCode(), dto.getStockCount(), dto.getEntryPrice());
@@ -118,7 +118,7 @@ public class PortfolioApiController {
                     ),
             }
     )
-    @GetMapping("{memberId}")
+    @GetMapping("/{memberId}")
     public ResponseEntity<?> getPortfolios(@PathVariable("memberId") UUID memberId) {
         log.info("Get portfolios for member {}", memberId);
         PortfolioDailyPnlResponseDto portfolioDto = getPortfolioStockUseCase.getPortfolioStocks(memberId);

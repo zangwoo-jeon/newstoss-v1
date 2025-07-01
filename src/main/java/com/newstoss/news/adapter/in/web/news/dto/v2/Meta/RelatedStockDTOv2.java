@@ -11,5 +11,6 @@ import lombok.NoArgsConstructor;
 public class RelatedStockDTOv2 {
     @JsonProperty("stock_id")
     private String stockId;
+    @JsonProperty("stock_name")
     private String stockName;
 }

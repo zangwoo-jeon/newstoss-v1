@@ -2,11 +2,13 @@ package com.newstoss.portfolio.adapter.inbound.web.dto.response;
 
 import com.newstoss.portfolio.entity.PortfolioStock;
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 @Schema(
     description = "유저의 포트폴리오에 포함된 주식 목록 응답 DTO",
     title = "포트폴리오 주식 목록 응답 DTO")
@@ -35,15 +37,6 @@ public class PortfolioStocksResponseDto {
     @Schema(description = "손익률", example = "20.0")
     private Double profitLossRate;
 
-
-
-    public PortfolioStocksResponseDto(PortfolioStock portfolioStock) {
-        this.stockName = portfolioStock.getStock().getName();
-        this.stockImage = portfolioStock.getStock().getStockImage();
-        this.stockCode = portfolioStock.getStock().getStockCode();
-        this.stockCount = portfolioStock.getStockCount();
-        this.entryPrice = portfolioStock.getEntryPrice();
-    }
 
     public void updatePrices(Integer currentPrice, Long profitLoss , Double profitLossRate) {
         this.currentPrice = currentPrice;

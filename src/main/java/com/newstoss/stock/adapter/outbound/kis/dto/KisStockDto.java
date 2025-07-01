@@ -15,6 +15,15 @@ public class KisStockDto {
     @JsonProperty("stck_prpr")
     private String price;
 
+    @JsonProperty("stck_hgpr")
+    private String highPrice;
+
+    @JsonProperty("stck_lwpr")
+    private String lowPrice;
+
+    @JsonProperty("stck_oprc")
+    private String openPrice;
+
     @JsonProperty("rprs_mrkt_kor_name")
     private String marketName;
 
@@ -29,6 +38,9 @@ public class KisStockDto {
 
     @JsonProperty("acml_vol")
     private String volume;
+
+    @JsonProperty("acml_tr_pbmn")
+    private String volumeValue;
 
     @JsonProperty("hts_avls")
     private String capital;

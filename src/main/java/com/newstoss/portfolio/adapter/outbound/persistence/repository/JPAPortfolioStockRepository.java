@@ -10,10 +10,10 @@ import java.util.UUID;
 
 public interface JPAPortfolioStockRepository extends JpaRepository<PortfolioStock, Long> {
 
-    @Query("SELECT p FROM PortfolioStock p join fetch p.stock s WHERE p.memberId = :memberId AND s.stockCode = :stockCode")
+    @Query("SELECT p FROM PortfolioStock p WHERE p.memberId = :memberId AND p.stockCode = :stockCode")
     Optional<PortfolioStock> findByMemberIdAndStockCode(UUID memberId, String stockCode);
 
-    @Query("SELECT p FROM PortfolioStock p join fetch p.stock s WHERE p.memberId = :memberId")
+    @Query("SELECT p FROM PortfolioStock p WHERE p.memberId = :memberId")
     List<PortfolioStock> findByMemberId(UUID memberId);
 
 }

@@ -1,7 +1,6 @@
 package com.newstoss.news.application.news.v2.impl;
 
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.newstoss.news.adapter.in.web.news.dto.v2.*;
 import com.newstoss.news.adapter.in.web.news.dto.v2.Meta.IndustryListDTO;
 import com.newstoss.news.adapter.in.web.news.dto.v2.Meta.NewsMetaDataDTO;
@@ -14,8 +13,9 @@ import java.util.List;
 
 public class NewsDTOv2Mapper {
     public static NewsDTOv2 from(MLNewsDTOv2 ml) {
-        return new NewsDTOv2(ml.getNewsId(),  LocalDateTime.parse(ml.getWdate()), ml.getTitle(), ml.getArticle(), ml.getUrl(), ml.getPress(), ml.getImage());
+        return new NewsDTOv2(ml.getNewsId(),  LocalDateTime.parse(ml.getWdate()), ml.getTitle(), ml.getArticle(), ml.getUrl(), ml.getPress(), ml.getImage(), mapToRelatedStockDTOs(ml.getStock()), ml.getImpactScore() );
     }
+
 
     public static RelatedNewsDTOv2 from(MLRelatedNewsDTOv2 ml) {
         return new RelatedNewsDTOv2(
@@ -26,7 +26,8 @@ public class NewsDTOv2Mapper {
                 ml.getUrl(),
                 ml.getImage(),
                 ml.getSummary(),
-                ml.getSimilarity()
+                ml.getSimilarity(),
+                mapToRelatedStockDTOs(ml.getStock())
         );
     }
 
@@ -36,7 +37,7 @@ public class NewsDTOv2Mapper {
     }
 
     public static HighlightNewsDTO from (MLHighlightNewsDTOv2 ml){
-        return new HighlightNewsDTO(ml.getNewsId(), LocalDateTime.parse(ml.getWdate()), ml.getTitle(), ml.getImage(), ml.getPress(), ml.getSummary(), ml.getImpactScore());
+        return new HighlightNewsDTO(ml.getNewsId(), LocalDateTime.parse(ml.getWdate()), ml.getTitle(), ml.getImage(), ml.getPress(), ml.getSummary(), ml.getImpactScore(), ml.getUrl(), mapToRelatedStockDTOs(ml.getStock()));
     }
 
     private static List<RelatedStockDTOv2> mapToRelatedStockDTOs(List<MLRelatedStockDTOv2> mlList) {
@@ -54,8 +55,17 @@ public class NewsDTOv2Mapper {
     }
 
     public static RecommendNewsDTO mapToRecommend(MLRecommendNewsDTO ml) {
-        return new RecommendNewsDTO(ml.getNewsId(), ml.getWdate(), ml.getTitle(), ml.getSummary(), ml.getImage(), ml.getPress(), ml.getUrl(), ml.getClickScore() ,ml.getRecommendReasons()); // 필드명에 맞춰 작성
+        return new RecommendNewsDTO(ml.getUserClickCount(),
+                ml.isUseOtherUser(), ml.getOtherUserData(),mapRecommendNews(ml.getNewsData())); // 필드명에 맞춰 작성
     }
+
+    private static List<RecommendNewsDateDTO> mapRecommendNews(List<MLRecommendNewsDataDTO> ml){
+        return ml.stream()
+                .map(news -> new RecommendNewsDateDTO(news.getNewsId(), news.getWdate(), news.getTitle(), news.getSummary(),
+                        news.getImage(),news.getPress(), news.getUrl(),news.getClickScore(),news.getRecommendReasons(),mapToRelatedStockDTOs(news.getStock())))
+                .toList();
+    }
+
 
     public static ExternalDTO extenal(MLExternalDTO mlexternal){
         return new ExternalDTO(mlexternal.getNewsId(), mlexternal.getDMinus5DateClose(), mlexternal.getDMinus5DateVolume(),

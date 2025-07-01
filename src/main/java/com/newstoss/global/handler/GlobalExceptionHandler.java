@@ -2,13 +2,16 @@ package com.newstoss.global.handler;
 
 import com.newstoss.global.response.ResponseErrorEntity;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.client.HttpServerErrorException;
 
 import java.io.IOException;
+import java.util.HashMap;
 
 @RestControllerAdvice
 @Slf4j
@@ -59,5 +62,23 @@ public class GlobalExceptionHandler {
             }
         }
         return false;
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ResponseErrorEntity> handleValidationExceptions(MethodArgumentNotValidException ex) {
+        String message = ex.getBindingResult().getFieldErrors().stream()
+                .findFirst()
+                .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                .orElse("요청값이 유효하지 않습니다.");
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(ResponseErrorEntity.builder()
+                        .status(HttpStatus.BAD_REQUEST.value())
+                        .isSuccess(false)
+                        .name("ValidationException")
+                        .code("VALIDATION_ERROR")
+                        .message(message) // ✅ 여기에 첫 번째 오류 메시지만 전달
+                        .build());
     }
 }

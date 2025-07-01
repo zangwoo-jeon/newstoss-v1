@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -18,4 +20,7 @@ public class MLHighlightNewsDTOv2 {
     private String summary;
     @JsonProperty("impact_score")
     private double impactScore;
+    private String url;
+    @JsonProperty("stock_list")
+    private List<MLRelatedStockDTOv2> stock;
 }
