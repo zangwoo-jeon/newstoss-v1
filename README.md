@@ -1,6 +1,6 @@
 # 📖 주식 정보, 맞춤형 투자 기업 분석 플랫폼
 
-![alt text](1.png)
+![alt text](/readme_picture/1.png)
 
 ## 시작하기
 
@@ -20,7 +20,7 @@
 
 <br />
 
-![alt text](2.webp)
+![alt text](/readme_picture/2.webp)
 
 <br />
 
@@ -28,7 +28,7 @@
 
 <br />
 
-![alt text](3.webp)
+![alt text](/readme_picture/3.webp)
 
 ## 팀원 구성
 
