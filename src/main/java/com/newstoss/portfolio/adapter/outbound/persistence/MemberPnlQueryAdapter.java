@@ -68,7 +68,7 @@ public class MemberPnlQueryAdapter implements GetMemberPnlPeriodPort , GetMember
         LocalDate start = end.withDayOfMonth(1);
         Long acc = repository.findAccByMemberIdAndDateBetween(memberId, start, end);
         if (acc == null) {
-            throw new CustomException(MemberPnlErrorCode.MEMBER_PNL_NOT_FOUND);
+            acc = 0L;
         }
         return acc;
     }
