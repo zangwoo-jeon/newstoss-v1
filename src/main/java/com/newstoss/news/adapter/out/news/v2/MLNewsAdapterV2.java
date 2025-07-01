@@ -8,21 +8,37 @@ import com.newstoss.news.adapter.out.news.dto.v2.*;
 import com.newstoss.news.application.news.v2.port.out.MLNewsPortV2;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpServerErrorException;
+import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.reactive.function.client.WebClient;
+
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 @Component
-@RequiredArgsConstructor
 @Slf4j
 public class MLNewsAdapterV2 implements MLNewsPortV2 {
+
     private final RestTemplate restTemplate;
+    private final WebClient mlWebClient;
+
+    public MLNewsAdapterV2(
+            RestTemplate restTemplate,
+            @Qualifier("mlWebClient") WebClient mlWebClient
+    ) {
+        this.restTemplate = restTemplate;
+        this.mlWebClient = mlWebClient;
+    }
+
     private static final String BASE_URL = "http://3.37.207.16:8000/news/v2/";
 
 //    @Override
@@ -72,20 +88,24 @@ public class MLNewsAdapterV2 implements MLNewsPortV2 {
     }
 
     @Override
+    public MLNewsCountDTO count() {
+        String url = BASE_URL + "/count";
+        return safeGetObject(url, MLNewsCountDTO.class);
+    }
+
+
+//    @Async("mlTaskExecutor")
+    @Override
     public void chat(String clientId, String question) {
         ChatStreamRequest request = new ChatStreamRequest(clientId, question);
-        String url = "http://15.165.211.100:8000/news/chat/stream";
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-
-        HttpEntity<ChatStreamRequest> entity = new HttpEntity<>(request, headers);
-
-        try {
-            restTemplate.postForEntity(url, entity, Void.class); // 응답을 기다리지 않음
-        } catch (Exception e) {
-            log.error("❌ ML 서버 요청 실패 - clientId: {}, question: {}", clientId, question, e);
-        }
+        mlWebClient.post()
+                .uri("/news/chat/stream")  // BASE_URL 생략 가능
+                .bodyValue(request)
+                .retrieve()
+                .toBodilessEntity()
+                .doOnError(error -> log.error("❌ [ML 응답 실패] clientId={} - {}", clientId, error.getMessage()))
+                .subscribe();  // 비동기 실행
     }
 
     @Override
@@ -96,9 +116,9 @@ public class MLNewsAdapterV2 implements MLNewsPortV2 {
     }
 
     @Override
-    public List<MLRecommendNewsDTO> recommendNews(String memberId) {
+    public MLRecommendNewsDTO recommendNews(String memberId) {
         String url = BASE_URL + "recommend" + "?user_id="+memberId;
-        return safeExchangeList(url, new ParameterizedTypeReference<>() {});
+        return safeGetObject(url, MLRecommendNewsDTO.class);
     }
 
     @Override

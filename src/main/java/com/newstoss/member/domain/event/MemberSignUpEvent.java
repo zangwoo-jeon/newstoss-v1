@@ -1,4 +1,4 @@
-package com.newstoss.member.domain;
+package com.newstoss.member.domain.event;
 
 import java.util.UUID;
 

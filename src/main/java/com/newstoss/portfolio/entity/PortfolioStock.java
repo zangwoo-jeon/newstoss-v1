@@ -3,6 +3,7 @@ package com.newstoss.portfolio.entity;
 import com.newstoss.global.auditing.BaseTimeEntity;
 import com.newstoss.global.errorcode.PortfolioErrorCode;
 import com.newstoss.global.handler.CustomException;
+import com.newstoss.portfolio.adapter.inbound.web.dto.redis.StockDto;
 import com.newstoss.stock.entity.Stock;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -14,7 +15,7 @@ import java.util.UUID;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "portfolio_stock", schema = "test_schema")
+@Table(name = "portfolio_stock")
 public class PortfolioStock extends BaseTimeEntity {
     @Id
     @GeneratedValue
@@ -28,9 +29,17 @@ public class PortfolioStock extends BaseTimeEntity {
     @Column(name = "member_id", nullable = false)
     private UUID memberId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "stock_id")
-    private Stock stock;
+    @Column(name = "stock_code")
+    private String stockCode;
+
+    @Column(name = "stock_price")
+    private String stockPrice;
+
+    @Column(name = "stock_name")
+    private String stockName;
+
+    @Column(name = "stock_image")
+    private String stockImage;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "portfolio_id")
@@ -43,15 +52,19 @@ public class PortfolioStock extends BaseTimeEntity {
     private Long realizedPnl;
 
     //== 생성 메서드 ==//
-    public static PortfolioStock createPortfolio(UUID memberId,Portfolio portfolio , Stock stock, Integer stockCount, Integer entryPrice) {
+    public static PortfolioStock createPortfolio(UUID memberId, Portfolio portfolio , StockDto dto, Integer stockCount, Integer entryPrice,
+                                                 String stockImage) {
         PortfolioStock portfolioStock = new PortfolioStock();
         portfolioStock.memberId = memberId;
         portfolioStock.setPortfolio(portfolio);
-        portfolioStock.setPortfolioStock(stock);
+        portfolioStock.stockCode = dto.getStockCode();
+        portfolioStock.stockPrice = dto.getPrice();
+        portfolioStock.stockName = dto.getStockName();
         portfolioStock.stockCount = stockCount;
         portfolioStock.entryPrice = entryPrice;
         portfolioStock.realizedPnl =0L;
         portfolioStock.unrealizedPnl =0L;
+        portfolioStock.stockImage = stockImage;
         return portfolioStock;
     }
 
@@ -101,10 +114,6 @@ public class PortfolioStock extends BaseTimeEntity {
 
 
     //== 연관관계 메서드==//
-
-    public void setPortfolioStock(Stock stock) {
-        this.stock = stock;
-    }
 
     public void setPortfolio( Portfolio portfolio) {
         this.portfolio = portfolio;

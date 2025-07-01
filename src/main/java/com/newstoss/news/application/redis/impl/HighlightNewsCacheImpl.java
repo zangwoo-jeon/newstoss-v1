@@ -14,7 +14,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class HighlightNewsCacheService implements HighlightNewsCacheUseCase {
+public class HighlightNewsCacheImpl implements HighlightNewsCacheUseCase {
 
     private final GetHighlightNewsUseCase getHighlightNewsUseCase;
     private final MatchNewsWithRelatedUseCase<HighlightNewsDTO>  matchUseCase;

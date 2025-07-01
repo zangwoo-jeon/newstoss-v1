@@ -4,13 +4,12 @@ import com.newstoss.member.adapter.in.web.dto.requestDTO.SignupRequestDTO;
 import com.newstoss.member.domain.Address;
 import com.newstoss.member.domain.Member;
 import com.newstoss.member.application.out.MemberCommandPort;
-import com.newstoss.member.domain.MemberSignUpEvent;
+import com.newstoss.member.domain.event.MemberSignUpEvent;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.UUID;
 
 @Service
@@ -21,6 +20,7 @@ public class SignupService {
     private final ApplicationEventPublisher publisher;
 
     public Member exec(SignupRequestDTO signupRequestDTO){
+
         String passwordHash = passwordEncoder.encode(signupRequestDTO.getPassword());
 
         Member member = Member.builder()

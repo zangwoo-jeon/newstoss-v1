@@ -13,7 +13,7 @@ import java.util.UUID;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "portfolio", schema = "test_schema")
+@Table(name = "portfolio")
 public class Portfolio extends BaseTimeEntity {
 
     @Id
@@ -21,8 +21,8 @@ public class Portfolio extends BaseTimeEntity {
     @Column(name = "portfolio_id")
     private Long id;
 
-    @Column(name = "pnl")
-    private Long pnl;
+    private Long unrealized_pnl;
+    private Long realized_pnl;
 
     @Column(name = "asset")
     private Long asset;
@@ -34,9 +34,10 @@ public class Portfolio extends BaseTimeEntity {
     private List<PortfolioStock> portfolioStocks = new ArrayList<>();
 
     //== 생성 메서드 ==//
-    public static Portfolio createPortfolio(UUID memberId, Long pnl, Long asset) {
+    public static Portfolio createPortfolio(UUID memberId, Long unrealized_pnl, Long realized_pnl, Long asset) {
         Portfolio portfolio = new Portfolio();
-        portfolio.pnl = pnl;
+        portfolio.realized_pnl = realized_pnl;
+        portfolio.unrealized_pnl = unrealized_pnl;
         portfolio.asset = asset;
         portfolio.memberId = memberId;
         return portfolio;
@@ -45,9 +46,6 @@ public class Portfolio extends BaseTimeEntity {
     //== 연관 관계 메서드 ==//
     public void addPortfolioStock(PortfolioStock portfolioStock) {
         this.portfolioStocks.add(portfolioStock);
-        if (portfolioStock.getPortfolio() != null) {
-            portfolioStock.setPortfolio(this);
-        }
     }
 
     //== 비즈니스 메서드 ==//
@@ -59,8 +57,11 @@ public class Portfolio extends BaseTimeEntity {
     public void updateAsset(Long asset) {
         this.asset += asset;
     }
-    public void updatePnl(Long pnl) {
-        this.pnl += pnl;
+    public void initUnrealizedPnl(Long pnl) {
+        this.unrealized_pnl = pnl;
+    }
+    public void updateRealizedPnl(Long pnl) {
+        this.realized_pnl += pnl;
     }
     public void removePortfolioStock(PortfolioStock portfolioStock) {
         portfolioStocks.remove(portfolioStock);

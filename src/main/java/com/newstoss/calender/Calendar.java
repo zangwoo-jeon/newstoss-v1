@@ -7,7 +7,6 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 
 @Entity
 @Table(name = "calendar")
@@ -19,10 +18,7 @@ public class Calendar {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long irId;
-    private String companyName;
-    private String title;
-    private String place;
+    private String companyEventName;
     private LocalDate date;
-    private LocalTime time;
-    private String market;
+    private String category;
 }

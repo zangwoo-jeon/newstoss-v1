@@ -1,5 +1,6 @@
 package com.newstoss.portfolio.application.port.out;
 
+import com.newstoss.portfolio.adapter.inbound.web.dto.redis.StockDto;
 import com.newstoss.portfolio.entity.Portfolio;
 import com.newstoss.portfolio.entity.PortfolioStock;
 import com.newstoss.stock.entity.Stock;
@@ -15,5 +16,5 @@ public interface CreatePortfolioStockPort {
      * @param entryPrice 진입 가격
      * @return 생성된 포트폴리오 ID
      */
-    PortfolioStock savePortfolio(UUID memberId, Portfolio portfolio, Stock stock, Integer stockCount, Integer entryPrice);
+    PortfolioStock savePortfolio(UUID memberId, Portfolio portfolio, StockDto dto, Integer stockCount, Integer entryPrice, String stockImage);
 }

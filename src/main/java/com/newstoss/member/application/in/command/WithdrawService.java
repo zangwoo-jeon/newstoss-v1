@@ -8,6 +8,7 @@ import com.newstoss.member.application.out.MemberQueryPort;
 import com.newstoss.portfolio.application.port.out.DeleteMemberPnlPort;
 import com.newstoss.portfolio.application.port.out.DeleteMemberPortfolioPort;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -20,6 +21,7 @@ public class WithdrawService {
     private final MemberQueryPort memberQueryPort;
     private final DeleteMemberPnlPort deleteMemberPnlPort;
     private final DeleteMemberPortfolioPort deleteMemberPortfolioPort;
+    private final ApplicationEventPublisher publisher;
 
     public boolean exec(UUID memberId){
         Optional<Member> member = memberQueryPort.findById(memberId);
@@ -27,8 +29,7 @@ public class WithdrawService {
             throw new CustomException(UserErrorCode.USER_NOT_FOUND);
         }
         memberCommandPort.deleteById(memberId);
-        deleteMemberPnlPort.deleteMemberPnl(memberId); //멤버와 관련된 pnl 삭제
-        deleteMemberPortfolioPort.deletePortfolio(memberId); //멤버와 관련된 포트폴리오 삭제
+        publisher.publishEvent(memberId);
         return true;
     }
 }

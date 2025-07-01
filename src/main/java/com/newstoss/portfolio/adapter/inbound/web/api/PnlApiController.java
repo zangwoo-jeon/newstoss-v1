@@ -5,7 +5,6 @@ import com.newstoss.portfolio.adapter.inbound.web.dto.MemberPnlAccResponseDto;
 import com.newstoss.portfolio.adapter.inbound.web.dto.response.MemberPnlPeriodResponseDto;
 import com.newstoss.portfolio.application.port.in.GetMemberPnlAccUseCase;
 import com.newstoss.portfolio.application.port.in.GetMemberPnlPeriodUseCase;
-import com.newstoss.portfolio.application.port.in.UpdateMemberPnlUseCase;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -29,7 +28,6 @@ public class PnlApiController {
     private final GetMemberPnlPeriodUseCase memberPnlPeriodUseCase;
     private final GetMemberPnlPeriodUseCase getMemberPnlPeriodUseCase;
     private final GetMemberPnlAccUseCase getMemberPnlAccUseCase;
-    private final UpdateMemberPnlUseCase updateMemberPnlUseCase;
     @Operation(
             summary = "포트폴리오 손익 기간 조회",
             description = "특정 사용자의 포트폴리오 손익을 특정 기간 동안 조회합니다. " +
@@ -54,7 +52,7 @@ public class PnlApiController {
             }
     )
     @Parameter(name = "period" , example = "D , W , M , 3M , Y")
-    @GetMapping("{memberId}")
+    @GetMapping("/{memberId}")
     public ResponseEntity<?> getMemberPnlPeriod(@PathVariable("memberId") UUID memberId,
                                                 @RequestParam String period) {
         log.info("getMemberPnlPeriod called");
@@ -64,8 +62,7 @@ public class PnlApiController {
     @Operation(
             summary = "포트폴리오 손익 기간 조회",
             description = "특정 사용자의 포트폴리오 손익을 특정 기간 동안 조회합니다. " +
-                    "기간은 일별, 월별 등의 형식으로 입력받습니다.<br>" +
-                    "이 api 부터 조회해야합니다.",
+                    "기간은 일별, 월별 등의 형식으로 입력받습니다.<br>",
             responses = {
                     @ApiResponse(
                             responseCode = "200",
@@ -85,12 +82,11 @@ public class PnlApiController {
                     )
             }
     )
-    @Parameter(name = "period", example = "Today , M , Total")
+    @Parameter(name = "period", example = "Today, M , Total")
     @GetMapping("/pnl/{memberId}")
     public ResponseEntity<?> getMemberPnl(@PathVariable("memberId") UUID memberId,
                                           @RequestParam String period) {
         log.info("getMemberPnl called for memberId: {}", memberId);
-        updateMemberPnlUseCase.updateTodayPnl(memberId);
         Long acc = getMemberPnlAccUseCase.getMemberPnlAcc(memberId, period);
         MemberPnlAccResponseDto dto = new MemberPnlAccResponseDto(acc);
         return ResponseEntity.ok(new SuccessResponse<>(true, "포트폴리오 손익 조회 성공",dto));

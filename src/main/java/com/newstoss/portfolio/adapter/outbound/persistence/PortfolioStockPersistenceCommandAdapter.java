@@ -1,5 +1,6 @@
 package com.newstoss.portfolio.adapter.outbound.persistence;
 
+import com.newstoss.portfolio.adapter.inbound.web.dto.redis.StockDto;
 import com.newstoss.portfolio.adapter.outbound.persistence.repository.JPAPortfolioStockRepository;
 import com.newstoss.portfolio.application.port.out.CreatePortfolioStockPort;
 import com.newstoss.portfolio.application.port.out.DeleteMemberPortfolioPort;
@@ -16,9 +17,10 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class PortfolioStockPersistenceCommandAdapter implements CreatePortfolioStockPort, DeleteMemberPortfolioPort {
     private final JPAPortfolioStockRepository portfolioRepository;
+
     @Override
-    public PortfolioStock savePortfolio(UUID memberId, Portfolio portfolio, Stock stock, Integer stockCount, Integer entryPrice) {
-        return portfolioRepository.save(PortfolioStock.createPortfolio(memberId,portfolio, stock, stockCount, entryPrice));
+    public PortfolioStock savePortfolio(UUID memberId, Portfolio portfolio, StockDto dto, Integer stockCount, Integer entryPrice, String stockImage) {
+        return portfolioRepository.save(PortfolioStock.createPortfolio(memberId,portfolio, dto, stockCount, entryPrice, stockImage));
     }
 
     @Override

@@ -2,11 +2,11 @@ package com.newstoss.portfolio.application;
 
 import com.newstoss.global.errorcode.MemberPnlErrorCode;
 import com.newstoss.global.handler.CustomException;
-import com.newstoss.member.domain.MemberSignUpEvent;
+import com.newstoss.member.domain.event.MemberSignUpEvent;
+import com.newstoss.portfolio.adapter.inbound.web.dto.MemberPnlDto;
 import com.newstoss.portfolio.adapter.inbound.web.dto.response.MemberPnlPeriodResponseDto;
 import com.newstoss.portfolio.application.port.in.GetMemberPnlAccUseCase;
 import com.newstoss.portfolio.application.port.in.GetMemberPnlPeriodUseCase;
-import com.newstoss.portfolio.application.port.in.UpdateMemberPnlUseCase;
 import com.newstoss.portfolio.application.port.out.CreateMemberPnlPort;
 import com.newstoss.portfolio.application.port.out.GetMemberPnlPeriodPort;
 import com.newstoss.portfolio.application.port.out.GetMemberPnlPort;
@@ -24,7 +24,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class MemberPnlService implements GetMemberPnlPeriodUseCase , GetMemberPnlAccUseCase , UpdateMemberPnlUseCase {
+public class MemberPnlService implements GetMemberPnlPeriodUseCase , GetMemberPnlAccUseCase {
 
     private final GetMemberPnlPeriodPort getMemberPnlPeriodPort;
     private final GetMemberPnlPort getMemberPnlPort;
@@ -41,20 +41,20 @@ public class MemberPnlService implements GetMemberPnlPeriodUseCase , GetMemberPn
         }
 
         List<MemberPnl> memberPnlList = getMemberPnlPeriodPort.getMemberPnlDaily(memberId, startDate, endDate);
+        List<MemberPnlDto> list = memberPnlList.stream()
+                .map(p -> new MemberPnlDto(
+                        p.getDate(),
+                        p.getPnl(),
+                        p.getAsset()
+                )).toList();
 
-        MemberPnl today = getMemberPnlPort.getMemberPnl(memberId, endDate).orElseThrow(
-                () -> new CustomException(MemberPnlErrorCode.MEMBER_PNL_NOT_FOUND)
-        );
         Long prevAsset = getMemberPnlPort.getMemberPnl(memberId, startDate)
                 .map(MemberPnl::getAsset)
-                .orElse(1L);
+                .orElse(0L);
 
         return new MemberPnlPeriodResponseDto(
-                today.getAsset(),
-                today.getPnl(),
-                memberPnlList,
-                today.getAsset()- prevAsset,
-                ((double)(today.getAsset()-prevAsset)/prevAsset * 100)
+                list,
+                prevAsset
         );
     }
 
@@ -71,38 +71,13 @@ public class MemberPnlService implements GetMemberPnlPeriodUseCase , GetMemberPn
 
     @Override
     public Long getMemberPnlAcc(UUID memberId, String period) {
-        LocalDate endDate = LocalDate.now();
-        if (period.equals("Today")) {
-            LocalDate startDate = endDate.minusDays(1);
-            return getMemberPnlPort.getMemberPnlAcc(memberId,startDate,endDate);
-        } else if (period.equals("M")) {
-            LocalDate startDate = endDate.withDayOfMonth(1);
-            return getMemberPnlPort.getMemberPnlAcc(memberId, startDate, endDate);
-        } else {
-            return getMemberPnlPort.getMemberPnlAcc(memberId);
-        }
+        List<PortfolioStock> portfolioStocks = getPortfolioStocksPort.getPortfolioStocks(memberId);
+        if (period.equals("Today")) return getMemberPnlPort.todayMemerPnlAcc(memberId,portfolioStocks);
+        else if (period.equals("M")) return getMemberPnlPort.monthlyMemberPnlAcc(memberId);
+        else return getMemberPnlPort.totalMemberPnlAcc(memberId);
     }
 
-    @Override
-    public void updateTodayPnl(UUID memberId) {
-        MemberPnl todayPnl = getMemberPnlPort.getMemberPnl(memberId, LocalDate.now()).orElseThrow(
-                () -> new CustomException(MemberPnlErrorCode.MEMBER_PNL_NOT_FOUND)
-        );
-        Optional<MemberPnl> yesterDayPnl = getMemberPnlPort.getMemberPnl(memberId, LocalDate.now().minusDays(1));
-        Long yesterDayAsset;
-        if (yesterDayPnl.isEmpty()) {
-            yesterDayAsset = 0L;
-        } else {
-            yesterDayAsset = yesterDayPnl.get().getAsset();
-        }
-        List<PortfolioStock> portfolioStocks = getPortfolioStocksPort.getPortfolioStocks(memberId);
-        long asset = 0L;
-        for (PortfolioStock portfolioStock : portfolioStocks) {
-            asset += (long)portfolioStock.getEntryPrice() * portfolioStock.getStockCount();
-        }
-        todayPnl.updateAsset(asset);
-        todayPnl.initPnl(asset - yesterDayAsset);
-    }
+
 
     @EventListener
     public void createMemberPnl(MemberSignUpEvent event) {

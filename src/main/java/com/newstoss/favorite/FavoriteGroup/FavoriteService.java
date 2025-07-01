@@ -1,5 +1,6 @@
 package com.newstoss.favorite.FavoriteGroup;
 
+import com.newstoss.favorite.FavoriteStock.FavoriteStockRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,9 +15,10 @@ import java.util.UUID;
 public class FavoriteService {
 
     private final FavoriteRepository favoriteRepository;
+    private final FavoriteStockRepository favoriteStockRepository;
 
     public List<Favorite> getFavoritesByMemberId(UUID memberId) {
-        return favoriteRepository.findByMemberId(memberId);
+        return favoriteRepository.findByMemberIdOrderByGroupSequenceAsc(memberId);
     }
 
     @Transactional
@@ -35,6 +37,9 @@ public class FavoriteService {
 
     @Transactional
     public void deleteFavoriteByMemberIdAndGroupId(UUID memberId, UUID groupId) {
+        // 먼저 관련된 FavoriteStock들 삭제
+        favoriteStockRepository.deleteByFavoriteGroupId(groupId);
+        // 그 다음 Favorite 그룹 삭제
         favoriteRepository.deleteByMemberIdAndGroupId(memberId, groupId);
     }
 
