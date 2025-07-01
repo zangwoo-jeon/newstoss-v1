@@ -24,12 +24,6 @@
 
 <br />
 
-### MLOPs Architecture
-
-<br />
-
-![alt text](/readme_picture/3.webp)
-
 ## 팀원 구성
 
 |                                             조장                                              |                           조원                            |                                             조원                                              |                                            조원                                             |
